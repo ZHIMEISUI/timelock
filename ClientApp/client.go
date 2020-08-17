@@ -161,7 +161,7 @@ func txHandle(url string) {
 
 func runConsole() error {
 	for {
-		fmt.Printf("> ")
+		fmt.Printf("> ...")
 		bufReader := bufio.NewReader(os.Stdin)
 		line, more, err := bufReader.ReadLine()
 		if more {
