@@ -1,6 +1,6 @@
 package controllers
 
-import "TimeLock/lib"
+import "timeLock/lib"
 
 /*
 Transaction :事务

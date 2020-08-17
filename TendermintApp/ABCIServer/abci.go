@@ -1,8 +1,8 @@
 package main
 
 import (
-	"TimeLock/TendermintApp/ABCIServer/timelock"
-	"TimeLock/lib"
+	"timeLock/TendermintApp/ABCIServer/timelock"
+	"timeLock/lib"
 	"bufio"
 	"errors"
 	"fmt"
