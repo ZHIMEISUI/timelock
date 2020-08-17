@@ -11,9 +11,10 @@ import (
 
 	abcicli "github.com/tendermint/tendermint/abci/client"
 	"github.com/tendermint/tendermint/abci/server"
-	"github.com/tendermint/tendermint/abci/types"
+	// "github.com/tendermint/tendermint/abci/types"
 	cmn "github.com/tendermint/tendermint/tmlibs/common"
-	"github.com/tendermint/tendermint/tmlibs/log"
+	// "github.com/tendermint/tendermint/tmlibs/log"
+	"github.com/tendermint/tendermint/libs/log"
 )
 
 // client is a global variable so it can be reused by the console
