@@ -29,7 +29,7 @@ func (app *TimelockApplication) Info(req types.RequestInfo) (resInfo types.Respo
 	lib.Log.Debug("Info")
 	return types.ResponseInfo{Data: fmt.Sprintf("TimeLock Test")}
 }
-RequestDeliverTx
+
 func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.ResponseDeliverTx {
 	lib.Log.Debug("DeliverTx")
 	lib.Log.Notice(string(req.Tx))
