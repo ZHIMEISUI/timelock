@@ -88,7 +88,7 @@ func runAccountBook() error {
 }
 
 func runTimlock() error{
-	app := timelock.NewTimelockApplication(flag bool)
+	app := timelock.NewTimelockApplication()
 	logger := log.NewTMLogger(log.NewSyncWriter(os.Stdout))
 
 	// Start the listener
