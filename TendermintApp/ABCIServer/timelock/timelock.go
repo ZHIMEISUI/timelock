@@ -3,12 +3,13 @@ package timelock
 import (
 
 	"fmt"
+	"strconv"
 
 	"github.com/timelock/lib"
 
 	"github.com/tendermint/tendermint/abci/types"
 	"github.com/tendermint/tendermint/abci/example/code"
-	cmn "github.com/tendermint/tendermint/tmlibs/common"
+	// cmn "github.com/tendermint/tendermint/tmlibs/common"
 )
 
 var _ types.Application = (*TimelockApplication)(nil)
@@ -54,7 +55,7 @@ func (app *TimelockApplication) Commit() types.ResponseCommit {
 	}
 
 	lib.Log.Debug("timelock flag", flag)
-	return types.ResponseCommit{Data: "true"}
+	return types.ResponseCommit{Data: []byte(strconv.FormatBool(flag))}
 }
 
 func (app *TimelockApplication) Query(reqQuery types.RequestQuery) (resQuery types.ResponseQuery) {
