@@ -59,7 +59,7 @@ func (app *TimelockApplication) Commit() types.ResponseCommit {
 
 func (app *TimelockApplication) Query(reqQuery types.RequestQuery) (resQuery types.ResponseQuery) {
 	lib.Log.Debug("Query")
-	switch resQuery.Path{
+	switch resQuery.Path {
 	case "flag":
 		return types.ResponseQuery{Value: []byte(cmn.Fmt("%t", app.flag))}
 	default:
