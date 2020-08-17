@@ -65,14 +65,14 @@ func Execute() error {
 				_, _ = tran.Create()
 				transactions = append(transactions, tran)
 			}
-			fmt.Printf("szm log...%s", transactions)
+			fmt.Printf("szm log transactions in go func()...: %s", transactions)
 			bytes, _ := json.Marshal(&transactions)
 			data := strings.Replace(string(bytes), "\"", "'", -1)
-			lib.Log.Notice("szm log...:"+data)
+			lib.Log.Notice("szm log data in go func()...:"+data)
 
 			// tx := "id=" + lib.Int64ToString(tran.ID) + "&flag=" + tran.flag
 			tx := data
-			fmt.Printf("szm log...%s", tx)
+			fmt.Printf("szm log tx in go func()...: %s", tx)
 			// tmAsync(tx)
 			tmCommit(tx)
 		}
@@ -94,19 +94,20 @@ func tmSync(tx string) {
 }
 
 func tmCommit(tx string) {
+	fmt.Printf("szm prints tx in tmCommit()...: %s", tx)
 	url := "http://localhost:46657/broadcast_tx_async?tx=\"" + tx + "\""
 	txHandle(url)
 }
 
 func txHandle(url string) {
-	lib.Log.Debug("szm log..."+url)
+	lib.Log.Debug("szm debugs url in txHandle()...: "+url)
 	resp, err := http.Get(url)
-	fmt.Printf("szm log...:")
+	fmt.Printf("szm log in txHandle()...: ")
 	lib.HandleError(err)
 
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
-	fmt.Printf("szm log...:")
+	fmt.Printf("szm prints in txHandle()...:")
 	lib.HandleError(err)
 
 	var data interface{}
