@@ -64,9 +64,11 @@ func Execute() error {
 				}
 				_, _ = tran.Create()
 				transactions = append(transactions, tran)
+				fmt.Printf("szm log transaction in go func()...: %s", transactions)
 			}
 			fmt.Printf("szm log transactions in go func()...: %s", transactions)
 			bytes, _ := json.Marshal(&transactions)
+			lib.Log.Notice("szm log bytes in go func()...:"+bytes)
 			data := strings.Replace(string(bytes), "\"", "'", -1)
 			lib.Log.Notice("szm log data in go func()...:"+data)
 
