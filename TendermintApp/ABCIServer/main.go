@@ -1,7 +1,7 @@
 package main
 
 import (
-	"DemoBlockChain/lib"
+	"TimeLock/lib"
 	"os"
 )
 

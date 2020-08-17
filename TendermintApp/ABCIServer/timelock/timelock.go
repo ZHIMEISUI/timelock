@@ -2,10 +2,10 @@ package timelock
 
 import (
 
-	"DemoBlockChain/lib"
+	"TimeLock/lib"
 
-	"github.com/tendermint/abci/types"
-	"github.com/tendermint/abci/example/code"
+	"github.com/tendermint/tendermint/abci/types"
+	"github.com/tendermint/tendermint/abci/example/code"
 )
 // test
 var _ types.Application = (*TimelockApplication)(nil)

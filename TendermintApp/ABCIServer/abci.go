@@ -1,9 +1,7 @@
 package main
 
 import (
-	"TimeLock/TendermintApp/ABCIServer/example/counter"
-	"TimeLock/TendermintApp/ABCIServer/example/dummy"
-	"TimeLock/TendermintApp/ABCIServer/example/timelock"
+	"TimeLock/TendermintApp/ABCIServer/timelock"
 	"TimeLock/lib"
 	"bufio"
 	"errors"
@@ -11,11 +9,11 @@ import (
 	"io"
 	"os"
 
-	abcicli "github.com/tendermint/abci/client"
-	"github.com/tendermint/abci/server"
-	"github.com/tendermint/abci/types"
-	cmn "github.com/tendermint/tmlibs/common"
-	"github.com/tendermint/tmlibs/log"
+	abcicli "github.com/tendermint/tendermint/abci/client"
+	"github.com/tendermint/tendermint/abci/server"
+	"github.com/tendermint/tendermint/abci/types"
+	cmn "github.com/tendermint/tendermint/tmlibs/common"
+	"github.com/tendermint/tendermint/tmlibs/log"
 )
 
 // client is a global variable so it can be reused by the console
@@ -38,12 +36,12 @@ var (
 	flagProve  bool
 
 	// counter
-	flagAddrC  string
-	flagSerial bool
+	// flagAddrC  string
+	// flagSerial bool
 
 	// dummy
-	flagAddrD   string
-	flagPersist string
+	// flagAddrD   string
+	// flagPersist string
 
 	// timelock
 	flagAddrT string
@@ -86,60 +84,6 @@ func preRun() error {
 }
 
 func runAccountBook() error {
-	return nil
-}
-
-func runCounter() error {
-
-	app := counter.NewCounterApplication(flagSerial)
-
-	logger := log.NewTMLogger(log.NewSyncWriter(os.Stdout))
-
-	// Start the listener
-	srv, err := server.NewServer(flagAddress, flagAbci, app)
-	if err != nil {
-		return err
-	}
-	srv.SetLogger(logger.With("module", "abci-server"))
-	if err := srv.Start(); err != nil {
-		return err
-	}
-
-	// Wait forever
-	cmn.TrapSignal(func() {
-		// Cleanup
-		srv.Stop()
-	})
-	return nil
-}
-
-func runDummy() error {
-	// logger := log.NewTMLogger(log.NewSyncWriter(os.Stdout))
-
-	// Create the application - in memory or persisted to disk
-	var app types.Application
-	if flagPersist == "" {
-		app = dummy.NewDummyApplication()
-	} else {
-		app = dummy.NewPersistentDummyApplication(flagPersist)
-		app.(*dummy.PersistentDummyApplication).SetLogger(logger.With("module", "dummy"))
-	}
-
-	// Start the listener
-	srv, err := server.NewServer(flagAddress, flagAbci, app)
-	if err != nil {
-		return err
-	}
-	srv.SetLogger(logger.With("module", "abci-server"))
-	if err := srv.Start(); err != nil {
-		return err
-	}
-
-	// Wait forever
-	cmn.TrapSignal(func() {
-		// Cleanup
-		srv.Stop()
-	})
 	return nil
 }
 
