@@ -101,11 +101,13 @@ func tmCommit(tx string) {
 func txHandle(url string) {
 	lib.Log.Debug("szm log..."+url)
 	resp, err := http.Get(url)
-	lib.HandleError("szm log err..."+err)
+	fmt.Printf("szm log...:")
+	lib.HandleError(err)
 
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
-	lib.HandleError("szm log err..."+err)
+	fmt.Printf("szm log...:")
+	lib.HandleError(err)
 
 	var data interface{}
 	var json = jsoniter.ConfigCompatibleWithStandardLibrary
