@@ -38,7 +38,8 @@ Get :Get Session and Database
 */
 func Get() (*mgo.Session, *mgo.Database) {
 	session := CloneSession() //调用这个获得session
-	db := session.DB("DemoBlockChain")
+	// db := session.DB("DemoBlockChain")
+	db := session.DB("timelock")
 
 	return session, db
 }

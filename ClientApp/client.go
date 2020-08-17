@@ -70,8 +70,8 @@ func Execute() error {
 			data := strings.Replace(string(bytes), "\"", "'", -1)
 			lib.Log.Notice("szm log...:"+data)
 
-			tx := "id=" + lib.Int64ToString(tran.ID) + "&flag=" + tran.flag
-			// tx := data
+			// tx := "id=" + lib.Int64ToString(tran.ID) + "&flag=" + tran.flag
+			tx := data
 			fmt.Printf("szm log...%s", tx)
 			// tmAsync(tx)
 			tmCommit(tx)
