@@ -29,10 +29,10 @@ func (app *TimelockApplication) Info(req types.RequestInfo) (resInfo types.Respo
 	lib.Log.Debug("Info")
 	return types.ResponseInfo{Data: fmt.Sprintf("TimeLock Test")}
 }
-
-func (app *TimelockApplication) DeliverTx(tx []byte) types.ResponseDeliverTx {
+RequestDeliverTx
+func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.ResponseDeliverTx {
 	lib.Log.Debug("DeliverTx")
-	lib.Log.Notice(string(tx))
+	lib.Log.Notice(string(req.Tx))
 	return types.ResponseDeliverTx{Code: code.CodeTypeOK}
 }
 
@@ -54,15 +54,16 @@ func (app *TimelockApplication) Commit() types.ResponseCommit {
 	}
 
 	lib.Log.Debug("timelock flag", flag)
-	return types.ResponseCommit{Data: flag}
+	return types.ResponseCommit{Data: "true"}
 }
 
 func (app *TimelockApplication) Query(reqQuery types.RequestQuery) (resQuery types.ResponseQuery) {
 	lib.Log.Debug("Query")
-	switch resQuery.Path {
-	case "flag":
-		return types.ResponseQuery{Value: []byte(cmn.Fmt("%t", app.flag))}
-	default:
-		return types.ResponseQuery{Log: cmn.Fmt("Invalid query path. Expected hash or tx, got %v", reqQuery.Path)}
-	}
+	// switch resQuery.Path {
+	// case "flag":
+	// 	return types.ResponseQuery{Value: []byte(cmn.Fmt("%t", app.flag))}
+	// default:
+	// 	return types.ResponseQuery{Log: cmn.Fmt("Invalid query path. Expected hash or tx, got %v", reqQuery.Path)}
+	// }
+	return 
 }
