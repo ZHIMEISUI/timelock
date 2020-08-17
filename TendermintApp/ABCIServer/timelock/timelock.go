@@ -24,7 +24,7 @@ func NewTimelockApplication() *TimelockApplication {
 
 func (app *TimelockApplication) Info(req types.RequestInfo) (resInfo types.ResponseInfo) {
 	lib.Log.Debug("Info")
-	return types.ResponseInfo{Data: fmt.Sprintf("TimeLock Test"}
+	return types.ResponseInfo{Data: fmt.Sprintf("TimeLock Test"}}
 }
 
 func (app *TimelockApplication) DeliverTx(tx []byte) types.ResponseDeliverTx {
