@@ -62,7 +62,7 @@ func (app *TimelockApplication) Query(reqQuery types.RequestQuery) (resQuery typ
 	switch resQuery.Path{
 	case "flag":
 		return types.ResponseQuery{Value: []byte(cmn.Fmt("%t", app.flag))}
-	}
 	default:
 		return types.ResponseQuery{Log: cmn.Fmt("Invalid query path. Expected hash or tx, got %v", reqQuery.Path)}
+	}
 }
