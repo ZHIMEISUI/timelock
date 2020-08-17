@@ -64,17 +64,18 @@ func Execute() error {
 				}
 				_, _ = tran.Create()
 				transactions = append(transactions, tran)
-				fmt.Printf("szm log transaction in go func()...: %s", transactions)
+				fmt.Printf("szm log transaction in go func()...: %s \n", transactions)
 			}
-			fmt.Printf("szm log transactions in go func()...: %s", transactions)
+			fmt.Printf("szm log transactions in go func()...: %s \n", transactions)
 			bytes, _ := json.Marshal(&transactions)
-			fmt.Printf("szm log bytes in go func()...: %x", bytes)
+			fmt.Printf("szm log bytes in go func()...: %x \n", bytes)
 			data := strings.Replace(string(bytes), "\"", "'", -1)
 			lib.Log.Notice("szm log data in go func()...:"+data)
+			fmt.Printf("\n")
 
 			// tx := "id=" + lib.Int64ToString(tran.ID) + "&flag=" + tran.flag
 			tx := data
-			fmt.Printf("szm log tx in go func()...: %s", tx)
+			fmt.Printf("szm log tx in go func()...: %s \n", tx)
 			// tmAsync(tx)
 			tmCommit(tx)
 		}
@@ -96,21 +97,24 @@ func tmSync(tx string) {
 }
 
 func tmCommit(tx string) {
-	fmt.Printf("szm prints tx in tmCommit()...: %s", tx)
+	fmt.Printf("szm prints tx in tmCommit()...: %s \n", tx)
 	url := "http://localhost:46657/broadcast_tx_async?tx=\"" + tx + "\""
 	txHandle(url)
 }
 
 func txHandle(url string) {
 	lib.Log.Debug("szm debugs url in txHandle()...: "+url)
+	fmt.Printf("\n")
 	resp, err := http.Get(url)
 	fmt.Printf("szm log in txHandle()...: ")
 	lib.HandleError(err)
+	fmt.Printf("\n")
 
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	fmt.Printf("szm prints in txHandle()...:")
 	lib.HandleError(err)
+	fmt.Printf("\n")
 
 	var data interface{}
 	var json = jsoniter.ConfigCompatibleWithStandardLibrary
