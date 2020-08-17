@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/timeLock/lib"
+	"github.com/timelock/lib"
 	"os"
 )
 

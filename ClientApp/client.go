@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/timeLock/controllers"
-	"github.com/timeLock/lib"
+	"github.com/timelock/controllers"
+	"github.com/timelock/lib"
 	"bufio"
 	"errors"
 	"fmt"
