@@ -103,13 +103,14 @@ func Execute() error {
 				_, _ = tran.Create()
 				transactions = append(transactions, tran)
 			}
-
+			fmt.Printf("szm log...%s", transactions)
 			bytes, _ := json.Marshal(&transactions)
 			data := strings.Replace(string(bytes), "\"", "'", -1)
-			lib.Log.Notice(data)
+			lib.Log.Notice("szm log...:"+data)
 
-			// tx := "id=" + lib.Int64ToString(tran.ID) + "&from=" + tran.From
+			// tx := "id=" + lib.Int64ToString(tran.ID) + "&flag=" + tran.flag
 			tx := data
+			// fmt.Printf("szm log...%s", tx)
 			// tmAsync(tx)
 			tmCommit(tx)
 		}
@@ -136,7 +137,7 @@ func tmCommit(tx string) {
 }
 
 func txHandle(url string) {
-	lib.Log.Debug(url)
+	lib.Log.Debug("szm log..."+url)
 	resp, err := http.Get(url)
 	lib.HandleError(err)
 
@@ -149,7 +150,7 @@ func txHandle(url string) {
 
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
-	lib.HandleError(err)
+	lib.HandleError("szm log err..."+err)
 	// lib.Log.Debug(string(body))
 
 	var data interface{}
