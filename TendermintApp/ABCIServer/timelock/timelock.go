@@ -2,7 +2,7 @@ package timelock
 
 import (
 
-	"timeLock/lib"
+	"github.com/timeLock/lib"
 
 	"github.com/tendermint/tendermint/abci/types"
 	"github.com/tendermint/tendermint/abci/example/code"
