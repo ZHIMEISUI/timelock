@@ -7,7 +7,7 @@ import (
 	"github.com/tendermint/tendermint/abci/types"
 	"github.com/tendermint/tendermint/abci/example/code"
 )
-// test
+
 var _ types.Application = (*TimelockApplication)(nil)
 
 type TimelockApplication struct {
