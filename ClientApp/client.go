@@ -107,7 +107,7 @@ func tmSync(tx string) {
 func tmCommit(tx string) {
 	fmt.Printf("szm prints tx in tmCommit()...: %s \n", tx)
 	// url := "http://localhost:46657/broadcast_tx_async?tx=\"" + tx + "\""
-	url := "http://localhost:26658/broadcast_tx_async?tx=\"" + "ID=" +tx + "\""
+	url := "http://localhost:26657/broadcast_tx_async?tx=\"" + "ID=" +tx + "\""
 	txHandle(url)
 }
 
