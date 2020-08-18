@@ -31,7 +31,7 @@ type SettlementTransaction struct {
 /*
 Create :creating transactions
 */
-func (t *Transaction) CreateTx() (bool, error) {
+func (t *Transaction) Create() (bool, error) {
 	t.ID, _ = lib.GetNewUID()
 	t.Flag = "Transaction"
 	lib.Log.Debug("Create Transaction:", t)

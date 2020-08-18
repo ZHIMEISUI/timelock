@@ -52,7 +52,7 @@ func Execute() error {
 				// 	to = players[random.Intn(len(players))]
 				// }
 				// btc := float32(random.Intn(10) + 1)
-				flag := true
+				// flag := true
 
 				// tran := controllers.Transaction{
 				// 	From:    from,
@@ -60,7 +60,7 @@ func Execute() error {
 				// 	Bitcoin: btc,
 				// }
 				tran := controllers.Transaction{
-					Flag:    flag,
+					// Flag:    flag,
 				}
 				_, _ = tran.Create()
 				transactions = append(transactions, tran)
