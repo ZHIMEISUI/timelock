@@ -8,7 +8,7 @@ Transaction
 type Transaction struct {
 	ID      int64   `bson:"id" json:"id"`
 	Flag string `bson:"flag" json:"flag"`
-	CurrentTime uintBlock `bson:"currenttime" json:"currenttime"`
+	CurrentTime uint8 `bson:"currenttime" json:"currenttime"`
 	From    string  `bson:"from" json:"from"`
 	To      string  `bson:"to" json:"to"`
 	Coin float32 `bson:"coin" json:"coin"`
