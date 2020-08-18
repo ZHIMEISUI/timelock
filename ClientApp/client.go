@@ -116,19 +116,24 @@ func txHandle(url string) {
 	resp, err := http.Get(url)
 	fmt.Printf("szm log resp in txHandle()...: ")
 	fmt.Println(resp)
-	lib.HandleError(err)
+	if err != nil{
+		lib.HandleError(err)
+	}
 	fmt.Printf("\n")
 
-	// defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
-	fmt.Printf("szm prints in txHandle()...:")
-	lib.HandleError(err)
-	fmt.Printf("\n")
+	if resp != nil {
+		defer resp.Body.Close()
+		body, err := ioutil.ReadAll(resp.Body)
+		fmt.Printf("szm prints in txHandle()...:")
+		lib.HandleError(err)
+		fmt.Printf("\n")
 
-	var data interface{}
-	var json = jsoniter.ConfigCompatibleWithStandardLibrary
-	json.Unmarshal(body, &data)
-	lib.Log.Notice(data)
+		var data interface{}
+		var json = jsoniter.ConfigCompatibleWithStandardLibrary
+		json.Unmarshal(body, &data)
+		lib.Log.Notice(data)
+	}
+	
 }
 
 func runConsole() error {
