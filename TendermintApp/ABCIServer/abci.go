@@ -26,7 +26,8 @@ var (
 // flags
 var (
 	// global
-	flagAddress  = "tcp://0.0.0.0:46658" // Address of application socket
+	// flagAddress  = "tcp://0.0.0.0:46658" // Address of application socket
+	flagAddress  = "tcp://127.0.0.1:26658" // Address of application socket
 	flagAbci     = "socket"              // Either socket or grpc
 	flagVerbose  = false                 // for the println output
 	flagLogLevel = "debug"               // for the logger
