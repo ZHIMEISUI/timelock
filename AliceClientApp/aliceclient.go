@@ -43,7 +43,7 @@ func Execute() error {
 		
 		for i := 0; i < blocksNumber; i++ {
 			time.Sleep(time.Second * 1)
-			transactions := []controllers.Transaction{}
+			transactions := []controllers.FundingTransaction{}
 
 			for j := 0; j < transactionsPerBlock; j++ {
 				// from := players[random.Intn(len(players))]
