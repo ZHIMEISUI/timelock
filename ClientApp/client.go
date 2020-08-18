@@ -36,7 +36,7 @@ func Execute() error {
 
 	go func() {
 		blocksNumber := 5                                     // how many blocks
-		transactionsPerBlock := 10                            // how many transactions in each block
+		transactionsPerBlock := 1                            // how many transactions in each block
 		// players := []string{"Lei", "Jack", "Pony", "Richard"} // 4 players
 		// random := rand.New(rand.NewSource(time.Now().UnixNano()))
 		json := jsoniter.ConfigCompatibleWithStandardLibrary

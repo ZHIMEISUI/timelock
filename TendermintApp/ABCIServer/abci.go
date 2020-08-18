@@ -96,10 +96,14 @@ func runTimlock() error{
 	// Start the listener
 	srv, err := server.NewServer(flagAddress, flagAbci, app)
 	if err != nil {
+		fmt.Printf("server.Newserver() error...: ")
+		fmt.Println(err)
 		return err
 	}
 	srv.SetLogger(logger.With("module", "abci-server"))
 	if err := srv.Start(); err != nil {
+		fmt.Printf("srv.start() error...: ")
+		fmt.Println(err)
 		return err
 	}
 
