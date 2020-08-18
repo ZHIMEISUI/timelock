@@ -18,7 +18,7 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func Execute() error {
+func Execute(flag string) error {
 	lib.Log.Notice("Starting Alice UI Client... ")
 
 	f, err := os.Create("logs/client.log")
@@ -46,16 +46,32 @@ func Execute() error {
 			transactions := []controllers.FundingTransaction{}
 
 			for j := 0; j < transactionsPerBlock; j++ {
-
-				tran := controllers.FundingTransaction{}
-				tran.From = "Alice"
-				tran.To = "Alice&&Bob"
-				tran.Coin = 5
-				tran.NCommit = "Channel Version Commitment"
-				tran.Sig = "AliceSig"
-				_, _ = tran.CreateFundingTx()
+				if flag == "FundingTx"{
+					tran := controllers.FundingTransaction{}
+					tran.From = "Alice"
+					tran.To = "Alice&&Bob"
+					tran.Coin = 5
+					tran.NCommit = "Channel Version Commitment"
+					tran.Sig = "AliceSig"
+					_, _ = tran.CreateFundingTx()
+				}else if flag == "TriggerTx"{
+					tran := controllers.TriggerTransaction{}
+					tran.From = "Alice&&Bob"
+					tran.To = "Alice&&Bob"
+					tran.Coin = 5
+					tran.NCommit = "Channel Version Commitment"
+					tran.Sig = "AliceSig"
+					_, _ = tran.CreateTriggerTx()
+				}else if flag == "SettlementTx"{
+					tran := controllers.SettlementTransaction{}
+					tran.From = "Alice&&Bob"
+					tran.To = "Alice"
+					tran.Coin = 5
+					tran.NCommit = "Channel Version Commitment"
+					tran.Sig = "AliceSig"
+					_, _ = tran.CreateSettlementTx()
+				}
 				transactions = append(transactions, tran)
-				// fmt.Printf("szm log transaction in go func()...: %s \n", transactions)
 			}
 			fmt.Printf("szm log transactions in go func()...: %s \n", transactions)
 			fmt.Printf("szm log transactions type in go func()...: %T \n", transactions)

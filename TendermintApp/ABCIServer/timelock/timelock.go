@@ -16,7 +16,7 @@ var _ types.Application = (*TimelockApplication)(nil)
 
 type TimelockApplication struct {
 	types.BaseApplication
-
+	tx_type string
 	flag bool
 }
 
@@ -37,7 +37,7 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 	return types.ResponseDeliverTx{Code: code.CodeTypeOK}
 }
 
-// func (app *TimelockApplication) CheckTx(tx []byte) types.ResponseCheckTx {
+
 func (app *TimelockApplication) CheckTx(req types.RequestCheckTx) types.ResponseCheckTx {
 	lib.Log.Debug("CheckTx")
 	lib.Log.Notice(string(req.Tx))

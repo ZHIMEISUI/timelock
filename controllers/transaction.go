@@ -13,7 +13,7 @@ type Transaction struct {
 	To      string  `bson:"to" json:"to"`
 	Coin float32 `bson:"coin" json:"coin"`
 	NCommit string `bson:"ncommit" json:"ncommit"`
-	Sig string `bson:"ncommit" json:"ncommit"`
+	Sig string `bson:"sig" json:"sig"`
 }
 
 type FundingTransaction struct {
@@ -33,28 +33,28 @@ Create :creating transactions
 */
 func (t *Transaction) Create() (bool, error) {
 	t.ID, _ = lib.GetNewUID()
-	t.Flag = "Transaction"
+	const t.Flag = "Transaction"
 	lib.Log.Debug("Create Transaction:", t)
 	return true, nil
 }
 
 func (t *FundingTransaction) CreateFundingTx() (bool, error) {
 	t.ID, _ = lib.GetNewUID()
-	t.Flag = "FundingTx"
+	const t.Flag = "FundingTx"
 	lib.Log.Debug("Create Funding Transaction:", t)
 	return true, nil
 }
 
 func (t *TriggerTransaction) CreateTriggerTx() (bool, error) {
 	t.ID, _ = lib.GetNewUID()
-	t.Flag = "TriggerTx"
+	const t.Flag = "TriggerTx"
 	lib.Log.Debug("Create Trigger Transaction:", t)
 	return true, nil
 }
 
 func (t *SettlementTransaction) CreateSettlementTx() (bool, error) {
 	t.ID, _ = lib.GetNewUID()
-	t.Flag = "SettlementTx"
+	const t.Flag = "SettlementTx"
 	lib.Log.Debug("Create Settlement Transaction:", t)
 	return true, nil
 }
