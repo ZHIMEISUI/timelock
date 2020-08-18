@@ -72,11 +72,13 @@ func Execute() error {
 			fmt.Println(bytes)
 			data := strings.Replace(string(bytes), "\"", "'", -1)
 			lib.Log.Notice("szm log data in go func()...:"+data)
+			fmt.Printf("szm log data type in go func()...: %T \n", data)
 			fmt.Printf("\n")
 
 			// tx := "id=" + lib.Int64ToString(tran.ID) + "&flag=" + tran.flag
 			tx := data
 			fmt.Printf("szm log tx in go func()...: %s \n", tx)
+			fmt.Printf("szm log tx type in go func()...: %T \n", tx)
 			// tmAsync(tx)
 			tmCommit(tx)
 		}
