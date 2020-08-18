@@ -19,7 +19,7 @@ import (
 )
 
 func Execute() error {
-	lib.Log.Notice("Starting UI Client")
+	lib.Log.Notice("Starting Bob UI Client... ")
 
 	f, err := os.Create("logs/client.log")
 	if err != nil {
