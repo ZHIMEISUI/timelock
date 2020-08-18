@@ -68,6 +68,7 @@ func Execute() error {
 			}
 			fmt.Printf("szm log transactions in go func()...: %s \n", transactions)
 			fmt.Printf("szm log transactions type in go func()...: %T \n", transactions)
+
 			bytes, _ := json.Marshal(&transactions)
 			fmt.Printf("szm log bytes in go func()...: ")
 			fmt.Println(bytes)
@@ -110,7 +111,8 @@ func txHandle(url string) {
 	lib.Log.Debug("szm debugs url in txHandle()...: "+url)
 	fmt.Printf("\n")
 	resp, err := http.Get(url)
-	fmt.Printf("szm log in txHandle()...: ")
+	fmt.Printf("szm log resp in txHandle()...: ")
+	fmt.Println(resp)
 	lib.HandleError(err)
 	fmt.Printf("\n")
 
