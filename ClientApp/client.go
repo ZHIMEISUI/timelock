@@ -119,7 +119,7 @@ func txHandle(url string) {
 	lib.HandleError(err)
 	fmt.Printf("\n")
 
-	defer resp.Body.Close()
+	// defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	fmt.Printf("szm prints in txHandle()...:")
 	lib.HandleError(err)
