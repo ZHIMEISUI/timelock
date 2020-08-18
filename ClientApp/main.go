@@ -2,8 +2,8 @@ package main
 
 import (
 	"github.com/timelock/lib"
-	"github.com/timelock/ClientApp/AliceClient"
-	"github.com/timelock/ClientApp/BobClient"
+	// "github.com/timelock/ClientApp/AliceClient"
+	// "github.com/timelock/ClientApp/BobClient"
 	"os"
 )
 
@@ -13,12 +13,12 @@ func main() {
 		lib.Log.Error(err)
 		os.Exit(1)
 	}
-	err = AliceClient.ExecuteAlice()
+	err = ExecuteAlice()
 	if err != nil {
 		lib.Log.Error(err)
 		os.Exit(1)
 	}
-	err = BobClient.ExecuteBob()
+	err = ExecuteBob()
 	if err != nil {
 		lib.Log.Error(err)
 		os.Exit(1)

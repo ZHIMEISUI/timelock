@@ -1,4 +1,4 @@
-package BobClient
+package main
 
 import (
 	"github.com/timelock/controllers"
@@ -18,8 +18,8 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func ExecuteBob() error {
-	lib.Log.Notice("Starting Bob UI Client... ")
+func ExecuteAlice() error {
+	lib.Log.Notice("Starting Alice UI Client... ")
 
 	f, err := os.Create("logs/client.log")
 	if err != nil {
