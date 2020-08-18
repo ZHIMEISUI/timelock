@@ -46,34 +46,33 @@ func Execute(flag string) error {
 			transactions := []controllers.FundingTransaction{}
 
 			for j := 0; j < transactionsPerBlock; j++ {
+				tran := controllers.Transaction{}
 				if flag == "FundingTx"{
-					tran := controllers.FundingTransaction{}
+					tran = controllers.FundingTransaction{}
 					tran.From = "Alice"
 					tran.To = "Alice&&Bob"
 					tran.Coin = 5
 					tran.NCommit = "Channel Version Commitment"
 					tran.Sig = "AliceSig"
 					_, _ = tran.CreateFundingTx()
-					transactions = append(transactions, tran)
 				}else if flag == "TriggerTx"{
-					tran := controllers.TriggerTransaction{}
+					tran = controllers.TriggerTransaction{}
 					tran.From = "Alice&&Bob"
 					tran.To = "Alice&&Bob"
 					tran.Coin = 5
 					tran.NCommit = "Channel Version Commitment"
 					tran.Sig = "AliceSig"
 					_, _ = tran.CreateTriggerTx()
-					transactions = append(transactions, tran)
 				}else if flag == "SettlementTx"{
-					tran := controllers.SettlementTransaction{}
+					tran = controllers.SettlementTransaction{}
 					tran.From = "Alice&&Bob"
 					tran.To = "Alice"
 					tran.Coin = 5
 					tran.NCommit = "Channel Version Commitment"
 					tran.Sig = "AliceSig"
 					_, _ = tran.CreateSettlementTx()
-					transactions = append(transactions, tran)
 				}
+				transactions = append(transactions, tran)
 			}
 			fmt.Printf("szm log transactions in go func()...: %s \n", transactions)
 			fmt.Printf("szm log transactions type in go func()...: %T \n", transactions)
