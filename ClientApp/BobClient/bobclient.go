@@ -18,7 +18,7 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func Execute() error {
+func ExecuteBob() error {
 	lib.Log.Notice("Starting Bob UI Client... ")
 
 	f, err := os.Create("logs/client.log")
