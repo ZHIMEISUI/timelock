@@ -92,18 +92,21 @@ func Execute() error {
 }
 
 func tmAsync(tx string) {
-	url := "http://localhost:46657/broadcast_tx_async?tx=\"" + tx + "\""
+	// url := "http://localhost:46657/broadcast_tx_async?tx=\"" + tx + "\""
+	url := "http://localhost:26658/broadcast_tx_async?tx=\"" + tx + "\""
 	txHandle(url)
 }
 
 func tmSync(tx string) {
-	url := "http://localhost:46657/broadcast_tx_sync?tx=\"" + tx + "\""
+	// url := "http://localhost:46657/broadcast_tx_sync?tx=\"" + tx + "\""
+	url := "http://localhost:26658/broadcast_tx_sync?tx=\"" + tx + "\""
 	txHandle(url)
 }
 
 func tmCommit(tx string) {
 	fmt.Printf("szm prints tx in tmCommit()...: %s \n", tx)
-	url := "http://localhost:46657/broadcast_tx_async?tx=\"" + tx + "\""
+	// url := "http://localhost:46657/broadcast_tx_async?tx=\"" + tx + "\""
+	url := "http://localhost:26658/broadcast_tx_async?tx=\"" + tx + "\""
 	txHandle(url)
 }
 
