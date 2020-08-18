@@ -60,7 +60,7 @@ func Execute(flag string) error {
 					// tran.NCommit = "Channel Version Commitment"
 					// tran.Sig = "AliceSig"
 					_, _ = tran.CreateFundingTx()
-					transactions = []controllers.FundingTransaction{}
+					transactions = append(transactions, controllers.GeneralTransaction{tran})
 				}else if flag == "TriggerTx"{
 					tran := controllers.TriggerTransaction{}
 					tran.From = "Alice&&Bob"
@@ -69,7 +69,7 @@ func Execute(flag string) error {
 					tran.NCommit = "Channel Version Commitment"
 					tran.Sig = "AliceSig"
 					_, _ = tran.CreateTriggerTx()
-					transactions = []controllers.TriggerTransaction{}
+					transactions = append(transactions, controllers.GeneralTransaction{tran})
 				}else if flag == "SettlementTx"{
 					tran := controllers.SettlementTransaction{}
 					tran.From = "Alice&&Bob"
@@ -78,9 +78,9 @@ func Execute(flag string) error {
 					tran.NCommit = "Channel Version Commitment"
 					tran.Sig = "AliceSig"
 					_, _ = tran.CreateSettlementTx()
-					transactions = []controllers.SettlementTransaction{}
+					transactions = append(transactions, controllers.GeneralTransaction{tran})
 				}
-				transactions = append(transactions, tran)
+				// transactions = append(transactions, tran)
 			}
 			fmt.Printf("szm log transactions in go func()...: %s \n", transactions)
 			fmt.Printf("szm log transactions type in go func()...: %T \n", transactions)
