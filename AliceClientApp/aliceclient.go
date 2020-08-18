@@ -46,7 +46,7 @@ func Execute(flag string) error {
 			transactions := []controllers.FundingTransaction{}
 
 			for j := 0; j < transactionsPerBlock; j++ {
-				var tran
+				var tran controllers.Transaction
 				if flag == "FundingTx"{
 					tran = controllers.FundingTransaction{}
 					tran.From = "Alice"
