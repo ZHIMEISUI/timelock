@@ -40,21 +40,21 @@ func (t *Transaction) CreateTx() (bool, error) {
 
 func (t *FundingTransaction) CreateFundingTx() (bool, error) {
 	t.ID, _ = lib.GetNewUID()
-	t.flag = "FundingTx"
+	t.Flag = "FundingTx"
 	lib.Log.Debug("Create Funding Transaction:", t)
 	return true, nil
 }
 
 func (t *TriggerTransaction) CreateTriggerTx() (bool, error) {
 	t.ID, _ = lib.GetNewUID()
-	t.flag = "TriggerTx"
+	t.Flag = "TriggerTx"
 	lib.Log.Debug("Create Trigger Transaction:", t)
 	return true, nil
 }
 
 func (t *SettlementTransaction) CreateSettlementTx() (bool, error) {
 	t.ID, _ = lib.GetNewUID()
-	t.flag = "SettlementTx"
+	t.Flag = "SettlementTx"
 	lib.Log.Debug("Create Settlement Transaction:", t)
 	return true, nil
 }
