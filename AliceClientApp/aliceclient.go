@@ -43,37 +43,43 @@ func Execute(flag string) error {
 		
 		for i := 0; i < blocksNumber; i++ {
 			time.Sleep(time.Second * 1)
-			transactions := []controllers.FundingTransaction{}
+			// transactions := []controllers.FundingTransaction{}
+			var transactions
 
 			for j := 0; j < transactionsPerBlock; j++ {
-				var tran
 				if flag == "FundingTx"{
-					trans := controllers.FundingTransaction{}
-					tran.From = "Alice"
-					tran.To = "Alice&&Bob"
-					tran.Coin = 5
-					tran.NCommit = "Channel Version Commitment"
-					tran.Sig = "AliceSig"
+					tran := controllers.FundingTransaction{Transaction{
+						From: 		"Alice",
+						To:			"Alice&&Bob",
+						Coin:		5,
+						NCommit: 	"Channel Version Commitment",
+						Sig:		"AliceSig",
+					}}
+					// tran.From = "Alice"
+					// tran.To = "Alice&&Bob"
+					// tran.Coin = 5
+					// tran.NCommit = "Channel Version Commitment"
+					// tran.Sig = "AliceSig"
 					_, _ = tran.CreateFundingTx()
-					tran = trans
+					transactions = []controllers.FundingTransaction{}
 				}else if flag == "TriggerTx"{
-					trans := controllers.TriggerTransaction{}
+					tran := controllers.TriggerTransaction{}
 					tran.From = "Alice&&Bob"
 					tran.To = "Alice&&Bob"
 					tran.Coin = 5
 					tran.NCommit = "Channel Version Commitment"
 					tran.Sig = "AliceSig"
 					_, _ = tran.CreateTriggerTx()
-					tran = trans
+					transactions = []controllers.TriggerTransaction{}
 				}else if flag == "SettlementTx"{
-					trans := controllers.SettlementTransaction{}
+					tran := controllers.SettlementTransaction{}
 					tran.From = "Alice&&Bob"
 					tran.To = "Alice"
 					tran.Coin = 5
 					tran.NCommit = "Channel Version Commitment"
 					tran.Sig = "AliceSig"
 					_, _ = tran.CreateSettlementTx()
-					tran = trans
+					transactions = []controllers.SettlementTransaction{}
 				}
 				transactions = append(transactions, tran)
 			}
