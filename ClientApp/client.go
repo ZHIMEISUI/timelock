@@ -83,7 +83,7 @@ func Execute() error {
 			fmt.Printf("szm log tx type in go func()...: %T \n", tx)
 			
 			// tmAsync(tx)
-			tmCommit(transactions[0].ID)
+			tmCommit(lib.Int64ToString(transactions[0].ID))
 		}
 	}()
 
