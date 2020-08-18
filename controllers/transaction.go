@@ -7,7 +7,7 @@ Transaction
 */
 type Transaction struct {
 	ID      int64   `bson:"id" json:"id"`
-	const Flag string `bson:"flag" json:"flag"`
+	Flag string `bson:"flag" json:"flag"`
 	CurrentTime uint8 `bson:"currenttime" json:"currenttime"`
 	From    string  `bson:"from" json:"from"`
 	To      string  `bson:"to" json:"to"`
