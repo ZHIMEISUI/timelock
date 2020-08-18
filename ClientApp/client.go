@@ -81,8 +81,9 @@ func Execute() error {
 			tx := data
 			fmt.Printf("szm log tx in go func()...: %s \n", tx)
 			fmt.Printf("szm log tx type in go func()...: %T \n", tx)
+			
 			// tmAsync(tx)
-			tmCommit(tx)
+			tmCommit(transactions[0].ID)
 		}
 	}()
 
@@ -106,7 +107,7 @@ func tmSync(tx string) {
 func tmCommit(tx string) {
 	fmt.Printf("szm prints tx in tmCommit()...: %s \n", tx)
 	// url := "http://localhost:46657/broadcast_tx_async?tx=\"" + tx + "\""
-	url := "http://localhost:26658/broadcast_tx_async?tx=\"" + tx + "\""
+	url := "http://localhost:26658/broadcast_tx_async?tx=\"" + "ID=" +tx + "\""
 	txHandle(url)
 }
 
