@@ -47,13 +47,12 @@ func Execute() error {
 
 			for j := 0; j < transactionsPerBlock; j++ {
 
-				tran := controllers.FundingTransaction{
-						From:    "Alice",
-						To:      "Alice&&Bob",
-						Coin:    5,
-						NCommit: "Channel Version Commitment",
-						Sig: 	  "AliceSig",
-				}
+				tran := controllers.FundingTransaction{}
+				tran.From = "Alice"
+				tran.To = "Alice&&Bob"
+				tran.Coin = 5
+				tran.NCommit = "Channel Version Commitment"
+				tran.Sig = "AliceSig"
 				_, _ = tran.CreateFundingTx()
 				transactions = append(transactions, tran)
 				// fmt.Printf("szm log transaction in go func()...: %s \n", transactions)
