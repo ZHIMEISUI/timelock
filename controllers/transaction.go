@@ -28,6 +28,12 @@ type SettlementTransaction struct {
 	Transaction
 }
 
+type GeneralTransaction struct{
+	FundingTransaction
+	TriggerTransaction
+	SettlementTransaction
+}
+
 /*
 Create :creating transactions
 */

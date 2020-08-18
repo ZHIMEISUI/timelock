@@ -43,8 +43,7 @@ func Execute(flag string) error {
 		
 		for i := 0; i < blocksNumber; i++ {
 			time.Sleep(time.Second * 1)
-			// transactions := []controllers.FundingTransaction{}
-			var transactions
+			transactions := []controllers.GeneralTransaction{}
 
 			for j := 0; j < transactionsPerBlock; j++ {
 				if flag == "FundingTx"{
