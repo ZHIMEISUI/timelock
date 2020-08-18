@@ -46,21 +46,13 @@ func Execute() error {
 			transactions := []controllers.FundingTransaction{}
 
 			for j := 0; j < transactionsPerBlock; j++ {
-				// from := players[random.Intn(len(players))]
-				// to := players[random.Intn(len(players))]
-				// for from == to {
-				// 	to = players[random.Intn(len(players))]
-				// }
-				// btc := float32(random.Intn(10) + 1)
-				// flag := true
 
-				// tran := controllers.Transaction{
-				// 	From:    from,
-				// 	To:      to,
-				// 	Bitcoin: btc,
-				// }
 				tran := controllers.FundingTransaction{
-					// Flag:    flag,
+						From:    "Alice",
+						To:      "Alice&&Bob",
+						Coin:    5,
+						NCommit: "Channel Version Commitment",
+						Sig: 	  "AliceSig",
 				}
 				_, _ = tran.CreateFundingTx()
 				transactions = append(transactions, tran)
