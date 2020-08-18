@@ -67,6 +67,7 @@ func Execute() error {
 				fmt.Printf("szm log transaction in go func()...: %s \n", transactions)
 			}
 			fmt.Printf("szm log transactions in go func()...: %s \n", transactions)
+			fmt.Printf("szm log transactions type in go func()...: %T \n", transactions)
 			bytes, _ := json.Marshal(&transactions)
 			fmt.Printf("szm log bytes in go func()...: ")
 			fmt.Println(bytes)
