@@ -59,10 +59,10 @@ func Execute() error {
 				// 	To:      to,
 				// 	Bitcoin: btc,
 				// }
-				tran := controllers.Transaction{
+				tran := controllers.FundingTransaction{
 					Flag:    flag,
 				}
-				_, _ = tran.Create()
+				_, _ = tran.CreateFundingTx()
 				transactions = append(transactions, tran)
 				// fmt.Printf("szm log transaction in go func()...: %s \n", transactions)
 			}
