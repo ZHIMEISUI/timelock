@@ -16,23 +16,23 @@ type Transaction struct {
 	Sig string `bson:"sig" json:"sig"`
 }
 
-type FundingTransaction struct {
-	Transaction
-}
+// type FundingTransaction struct {
+// 	Transaction
+// }
 
-type TriggerTransaction struct {
-	Transaction
-}
+// type TriggerTransaction struct {
+// 	Transaction
+// }
 
-type SettlementTransaction struct {
-	Transaction
-}
+// type SettlementTransaction struct {
+// 	Transaction
+// }
 
-type GeneralTransaction struct{
-	FundingTransaction
-	TriggerTransaction
-	SettlementTransaction
-}
+// type GeneralTransaction struct{
+// 	FundingTransaction
+// 	TriggerTransaction
+// 	SettlementTransaction
+// }
 
 /*
 Create :creating transactions
@@ -44,23 +44,44 @@ func (t *Transaction) Create() (bool, error) {
 	return true, nil
 }
 
-func (t *FundingTransaction) CreateFundingTx() (bool, error) {
+func (t *Transaction) CreateFundingTx(
+	From string, To string, Coin float32, NCommit string, Sig string) 
+	(bool, error) {
 	t.ID, _ = lib.GetNewUID()
 	t.Flag = "FundingTx"
+	t.From = From
+	t.To = To
+	t.Coin = Coin
+	t.NCommit = NCommit
+	t.Sig = Sig
 	lib.Log.Debug("Create Funding Transaction:", t)
 	return true, nil
 }
 
-func (t *TriggerTransaction) CreateTriggerTx() (bool, error) {
+func (t *Transaction) CreateTriggerTx(
+	From string, To string, Coin float32, NCommit string, Sig string) 
+	(bool, error) {
 	t.ID, _ = lib.GetNewUID()
 	t.Flag = "TriggerTx"
+	t.From = From
+	t.To = To
+	t.Coin = Coin
+	t.NCommit = NCommit
+	t.Sig = Sig
 	lib.Log.Debug("Create Trigger Transaction:", t)
 	return true, nil
 }
 
-func (t *SettlementTransaction) CreateSettlementTx() (bool, error) {
+func (t *Transaction) CreateSettlementTx(
+	From string, To string, Coin float32, NCommit string, Sig string) 
+	(bool, error) {
 	t.ID, _ = lib.GetNewUID()
 	t.Flag = "SettlementTx"
+	t.From = From
+	t.To = To
+	t.Coin = Coin
+	t.NCommit = NCommit
+	t.Sig = Sig
 	lib.Log.Debug("Create Settlement Transaction:", t)
 	return true, nil
 }

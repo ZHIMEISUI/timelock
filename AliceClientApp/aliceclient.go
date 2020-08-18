@@ -43,41 +43,35 @@ func Execute(flag string) error {
 		
 		for i := 0; i < blocksNumber; i++ {
 			time.Sleep(time.Second * 1)
-			transactions := []controllers.GeneralTransaction{}
+			transactions := []controllers.Transaction{}
+			tran := controllers.Transaction{}
 
 			for j := 0; j < transactionsPerBlock; j++ {
 				if flag == "FundingTx"{
-					tran := controllers.FundingTransaction{Transaction{
-						From: 		"Alice",
-						To:			"Alice&&Bob",
-						Coin:		5,
-						NCommit: 	"Channel Version Commitment",
-						Sig:		"AliceSig",
-					}}
 					// tran.From = "Alice"
 					// tran.To = "Alice&&Bob"
 					// tran.Coin = 5
 					// tran.NCommit = "Channel Version Commitment"
 					// tran.Sig = "AliceSig"
-					_, _ = tran.CreateFundingTx()
-					transactions = append(transactions, controllers.GeneralTransaction{tran})
+					_, _ = tran.CreateFundingTx("Alice", "Alice&&Bob", 5, "Channel Version Commitment", "AliceSig")
+					// transactions = append(transactions, tran)
 				}else if flag == "TriggerTx"{
-					tran := controllers.TriggerTransaction{}
-					tran.From = "Alice&&Bob"
-					tran.To = "Alice&&Bob"
-					tran.Coin = 5
-					tran.NCommit = "Channel Version Commitment"
-					tran.Sig = "AliceSig"
-					_, _ = tran.CreateTriggerTx()
-					transactions = append(transactions, controllers.GeneralTransaction{tran})
+					// tran := controllers.TriggerTransaction{}
+					// tran.From = "Alice&&Bob"
+					// tran.To = "Alice&&Bob"
+					// tran.Coin = 5
+					// tran.NCommit = "Channel Version Commitment"
+					// tran.Sig = "AliceSig"
+					_, _ = tran.CreateTriggerTx("Alice", "Alice&&Bob", 5, "Channel Version Commitment", "AliceSig")
+					// transactions = append(transactions, tran)
 				}else if flag == "SettlementTx"{
-					tran := controllers.SettlementTransaction{}
-					tran.From = "Alice&&Bob"
-					tran.To = "Alice"
-					tran.Coin = 5
-					tran.NCommit = "Channel Version Commitment"
-					tran.Sig = "AliceSig"
-					_, _ = tran.CreateSettlementTx()
+					// tran := controllers.SettlementTransaction{}
+					// tran.From = "Alice&&Bob"
+					// tran.To = "Alice"
+					// tran.Coin = 5
+					// tran.NCommit = "Channel Version Commitment"
+					// tran.Sig = "AliceSig"
+					_, _ = tran.CreateSettlementTx("Alice", "Alice&&Bob", 5, "Channel Version Commitment", "AliceSig")
 					transactions = append(transactions, controllers.GeneralTransaction{tran})
 				}
 				// transactions = append(transactions, tran)
