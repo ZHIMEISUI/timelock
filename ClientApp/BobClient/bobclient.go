@@ -1,4 +1,4 @@
-package main
+package BobClient
 
 import (
 	"github.com/timelock/controllers"

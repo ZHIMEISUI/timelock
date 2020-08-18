@@ -1,4 +1,4 @@
-package main
+package AliceClient
 
 import (
 	"github.com/timelock/controllers"
