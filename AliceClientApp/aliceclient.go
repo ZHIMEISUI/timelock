@@ -46,31 +46,34 @@ func Execute(flag string) error {
 			transactions := []controllers.FundingTransaction{}
 
 			for j := 0; j < transactionsPerBlock; j++ {
-				var tran controllers.Transaction
+				var tran
 				if flag == "FundingTx"{
-					tran = controllers.FundingTransaction{}
+					trans := controllers.FundingTransaction{}
 					tran.From = "Alice"
 					tran.To = "Alice&&Bob"
 					tran.Coin = 5
 					tran.NCommit = "Channel Version Commitment"
 					tran.Sig = "AliceSig"
 					_, _ = tran.CreateFundingTx()
+					tran = trans
 				}else if flag == "TriggerTx"{
-					tran = controllers.TriggerTransaction{}
+					trans := controllers.TriggerTransaction{}
 					tran.From = "Alice&&Bob"
 					tran.To = "Alice&&Bob"
 					tran.Coin = 5
 					tran.NCommit = "Channel Version Commitment"
 					tran.Sig = "AliceSig"
 					_, _ = tran.CreateTriggerTx()
+					tran = trans
 				}else if flag == "SettlementTx"{
-					tran = controllers.SettlementTransaction{}
+					trans := controllers.SettlementTransaction{}
 					tran.From = "Alice&&Bob"
 					tran.To = "Alice"
 					tran.Coin = 5
 					tran.NCommit = "Channel Version Commitment"
 					tran.Sig = "AliceSig"
 					_, _ = tran.CreateSettlementTx()
+					tran = trans
 				}
 				transactions = append(transactions, tran)
 			}
