@@ -17,7 +17,8 @@ import (
 
 func FundingTxVerify(tx map[string]string) bool {
 	if tx["Flag"] == "FundingTx"{
-		if strconv.Atoi(tx["Coin"]) <= 0 {return false}
+		coin,_ = strconv.Atoi(tx["Coin"])
+		if coin <= 0 {return false}
 		return true
 	}
 	return false
