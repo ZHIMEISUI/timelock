@@ -37,12 +37,30 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 	lib.Log.Debug("DeliverTx")
 	lib.Log.Notice(string(req.Tx))
 	// lib.Log.Notice(req.Tx)
-	tx := strings.Replace(string(req.Tx), "'", "", -1)
-	tx = strings.Replace(string(tx), "{", "", -1)
-	tx = strings.Replace(string(tx), "[", "", -1)
-	lib.Log.Debug(tx)
-	lib.Log.Debug(strings.Split(string(tx), ",")[0])
-	return types.ResponseDeliverTx{Code: code.CodeTypeOK}
+	txhandle := strings.Replace(string(req.Tx), "'", "", -1)
+	txhandle = strings.Replace(string(txhandle), "{", "", -1)
+	txhandle = strings.Replace(string(txhandle), "[", "", -1)
+	lib.Log.Debug(txhandle)
+	txs := strings.Split(string(tx), ",")
+	txmap := make(map[string]string)
+	for _ , t := rang txs {
+		tsplit := strings.Split(string(t), ":")
+		txmap[tsplit[0]] = tsplit[1]
+	}
+	if txmap["Flag"] == "FundingTx"{
+		lib.Log.Debug("From: "+txmap["From"])
+		lib.Log.Debug("To: "+txmap["To"])
+		return types.ResponseDeliverTx{Code: code.CodeTypeOK}
+	}
+	else if txmap["Flag"] == "TriggerTx"{
+		return types.ResponseDeliverTx{Code: code.CodeTypeOK}
+	}
+	else if txmap["Flag"] == "SettlementTx"{
+		return types.ResponseDeliverTx{Code: code.CodeTypeOK}
+	}
+	
+	lib.Log.Debug()
+	return types.ResponseDeliverTx{Code: code.CodeTypeUnknownError}
 }
 
 
