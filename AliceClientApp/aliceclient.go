@@ -62,7 +62,7 @@ func Execute(flag string) error {
 					// tran.Coin = 5
 					// tran.NCommit = "Channel Version Commitment"
 					// tran.Sig = "AliceSig"
-					_, _ = tran.CreateTriggerTx("Alice", "Alice&&Bob", 5, "Channel Version Commitment", "AliceSig")
+					_, _ = tran.CreateTriggerTx("Alice&&Bob", "Alice&&Bob", 5, "Channel Version Commitment", "AliceSig")
 					// transactions = append(transactions, tran)
 				}else if flag == "SettlementTx"{
 					// tran := controllers.SettlementTransaction{}
@@ -71,7 +71,7 @@ func Execute(flag string) error {
 					// tran.Coin = 5
 					// tran.NCommit = "Channel Version Commitment"
 					// tran.Sig = "AliceSig"
-					_, _ = tran.CreateSettlementTx("Alice", "Alice&&Bob", 5, "Channel Version Commitment", "AliceSig")
+					_, _ = tran.CreateSettlementTx("Alice&&Bob", "Alice", 5, "Channel Version Commitment", "AliceSig")
 					// transactions = append(transactions, controllers.GeneralTransaction{tran})
 				}
 				transactions = append(transactions, tran)
@@ -118,7 +118,7 @@ func tmSync(tx string) {
 func tmCommit(tx string) {
 	fmt.Printf("szm prints tx in tmCommit()...: %s \n", tx)
 	// url := "http://localhost:46657/broadcast_tx_async?tx=\"" + tx + "\""
-	url := "http://localhost:26657/broadcast_tx_async?tx=\"" + "ID=" +tx + "\""
+	url := "http://localhost:26657/broadcast_tx_async?tx=\"" + tx + "\""
 	txHandle(url)
 }
 
