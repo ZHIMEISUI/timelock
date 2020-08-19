@@ -18,7 +18,7 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func Execute(flag string, ChannelVersion uint8, Coins float32) error {
+func Execute(flag string, ChannelVersion uint8, Coins float64) error {
 	lib.Log.Notice("Starting Alice UI Client... ")
 
 	f, err := os.Create("logs/client.log")
