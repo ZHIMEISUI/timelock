@@ -31,14 +31,28 @@ func FundingTxVerify(tx map[string]string) bool {
 
 func TriggerTxVerify(tx map[string]string) bool {
 	if tx["Flag"] == "TriggerTx"{
-		// TODO
+		from,_ := tx["From"]
+		if from != "Alice&&Bob" {
+			lib.Log.Warning("Your Trigger Transaction is not valid")
+			lib.Log.Warning(tx["Flag"]+" should send to both Alice and Bob!")
+			return false
+		}
+		lib.Log.Notice("Your Trigger Transaction is recorded successfully!")
+		return true
 	}
 	return false
 }
 
 func SettlementTxVerify(tx map[string]string) bool {
 	if tx["Flag"] == "SettlementTx"{
-		// TODO
+		from,_ := tx["From"]
+		if from != "Alice&&Bob" {
+			lib.Log.Warning("Your Settlement Transaction is not valid")
+			lib.Log.Warning(tx["Flag"]+" should send from both Alice and Bob!")
+			return false
+		}
+		lib.Log.Notice("Your Settlement Transaction is recorded successfully!")
+		return true
 	}
 	return false
 }
@@ -101,6 +115,10 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 		lib.Log.Debug("Deposit Coins: "+txmap["Coin"])
 		lib.Log.Debug("Channel Version: "+txmap["NCommit"])
 		lib.Log.Debug("Sig: "+txmap["Sig"])
+		if !TriggerTxVerify(txmap) {
+			lib.Log.Warning("Code: "+strconv.FormatUint(uint64(code.CodeTypeBadNonce), 10))
+			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
+		}
 		return types.ResponseDeliverTx{Code: code.CodeTypeOK}
 	} else if txmap["Flag"] == "SettlementTx" {
 		lib.Log.Debug("Transaction ID: "+txmap["ID"])
@@ -111,6 +129,10 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 		lib.Log.Debug("Channel Version: "+txmap["NCommit"])
 		lib.Log.Debug("Sig: "+txmap["Sig"])
 		return types.ResponseDeliverTx{Code: code.CodeTypeOK}
+		if !SettlementTxVerify(txmap) {
+			lib.Log.Warning("Code: "+strconv.FormatUint(uint64(code.CodeTypeBadNonce), 10))
+			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
+		}
 	}
 	
 	lib.Log.Debug()
