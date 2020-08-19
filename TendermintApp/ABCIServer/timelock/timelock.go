@@ -48,8 +48,13 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 		txmap[tsplit[0]] = tsplit[1]
 	}
 	if txmap["Flag"] == "FundingTx" {
+		lib.Log.Debug("Transaction ID: "+txmap["ID"])
+		lib.Log.Debug("Transaction Type: "+txmap["Flag"])
+		lib.Log.Debug("Current Time: "+txmap["CurrentTime"])
 		lib.Log.Debug("From: "+txmap["From"])
-		lib.Log.Debug("To: "+txmap["To"])
+		lib.Log.Debug("Deposit Coins: "+txmap["Coin"])
+		lib.Log.Debug("Channel Version: "+txmap["NCommit"])
+		lib.Log.Debug("Sig: "+txmap["Sig"])
 		return types.ResponseDeliverTx{Code: code.CodeTypeOK}
 	} else if txmap["Flag"] == "TriggerTx" {
 		return types.ResponseDeliverTx{Code: code.CodeTypeOK}
