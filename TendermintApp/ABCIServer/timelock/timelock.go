@@ -20,8 +20,7 @@ func FundingTxVerify(tx map[string]string) bool {
 		coin,_ := strconv.Atoi(tx["Coin"])
 		if coin <= 0 {
 			lib.Log.Warning("Transaction is not valid")
-			lib.Log.Warning(tx["From"]+" deposits coin is: "+ tx["Coin"]
-			+". The expected deposit coin in Funding Transaction is higher than 0.")
+			lib.Log.Warning(tx["From"]+" deposits coin is: "+ tx["Coin"] + ". The expected deposit coin in Funding Transaction is higher than 0.")
 			return false
 		}
 		return true
