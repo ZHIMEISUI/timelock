@@ -18,7 +18,7 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func Execute(flag string) error {
+func Execute(flag string, ChannelVersion uint8) error {
 	lib.Log.Notice("Starting Alice UI Client... ")
 
 	f, err := os.Create("logs/client.log")
@@ -48,16 +48,16 @@ func Execute(flag string) error {
 
 			for j := 0; j < transactionsPerBlock; j++ {
 				if flag == "FundingTx"{
-					_, _ = tran.CreateFundingTx("Alice", "Alice&&Bob", 5, "ChannelVersion", "AliceSig")
+					_, _ = tran.CreateFundingTx("Alice", "Alice&&Bob", 5, "AliceSig")
 				}else if flag == "TriggerTx"{
-					_, _ = tran.CreateTriggerTx("Alice&&Bob", "Alice&&Bob", 5, "ChannelVersion", "AliceSig")
+					_, _ = tran.CreateTriggerTx("Alice&&Bob", "Alice&&Bob", 5, ChannelVersion, "AliceSig")
 				}else if flag == "SettlementTx"{
-					_, _ = tran.CreateSettlementTx("Alice&&Bob", "Alice", 5, "ChannelVersion", "AliceSig")
+					_, _ = tran.CreateSettlementTx("Alice&&Bob", "Alice", 5, ChannelVersion, "AliceSig")
 				}
 				transactions = append(transactions, tran)
 			}
-			fmt.Printf("szm log transactions in go func()...: %s \n", transactions)
-			fmt.Printf("szm log transactions type in go func()...: %T \n", transactions)
+			// fmt.Printf("szm log transactions in go func()...: %s \n", transactions)
+			// fmt.Printf("szm log transactions type in go func()...: %T \n", transactions)
 
 			bytes, _ := json.Marshal(&transactions)
 			// fmt.Printf("szm log bytes in go func()...: ")
@@ -69,8 +69,8 @@ func Execute(flag string) error {
 
 			// tx := "id=" + lib.Int64ToString(tran.ID) + "&flag=" + tran.flag
 			tx := data
-			fmt.Printf("szm log tx in go func()...: %s \n", tx)
-			fmt.Printf("szm log tx type in go func()...: %T \n", tx)
+			// fmt.Printf("szm log tx in go func()...: %s \n", tx)
+			// fmt.Printf("szm log tx type in go func()...: %T \n", tx)
 			
 			// tmAsync(tx)
 			// tmCommit(lib.Int64ToString(transactions[0].ID))
@@ -96,7 +96,7 @@ func tmSync(tx string) {
 }
 
 func tmCommit(tx string) {
-	fmt.Printf("szm prints tx in tmCommit()...: %s \n", tx)
+	// fmt.Printf("szm prints tx in tmCommit()...: %s \n", tx)
 	// url := "http://localhost:46657/broadcast_tx_async?tx=\"" + tx + "\""
 	url := "http://localhost:26657/broadcast_tx_async?tx=\"" + tx + "\""
 	txHandle(url)

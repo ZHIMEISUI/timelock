@@ -12,7 +12,7 @@ type Transaction struct {
 	From    	string  `bson:"from" 			json:"from"`
 	To      	string  `bson:"to" 				json:"to"`
 	Coin 		float32 `bson:"coin" 			json:"coin"`
-	NCommit 	string 	`bson:"channelversion" 	json:"channelversion"`
+	NCommit 	uint8 	`bson:"channelversion" 	json:"channelversion"`
 	Sig 		string 	`bson:"sig" 			json:"sig"`
 }
 
@@ -44,19 +44,19 @@ func (t *Transaction) Create() (bool, error) {
 	return true, nil
 }
 
-func (t *Transaction) CreateFundingTx(From string, To string, Coin float32, NCommit string, Sig string) (bool, error) {
+func (t *Transaction) CreateFundingTx(From string, To string, Coin float32, Sig string) (bool, error) {
 	t.ID, _ = lib.GetNewUID()
 	t.Flag = "FundingTx"
 	t.From = From
 	t.To = To
 	t.Coin = Coin
-	t.NCommit = NCommit
+	t.NCommit = 0
 	t.Sig = Sig
 	lib.Log.Debug("Create Funding Transaction:", t)
 	return true, nil
 }
 
-func (t *Transaction) CreateTriggerTx(From string, To string, Coin float32, NCommit string, Sig string) (bool, error) {
+func (t *Transaction) CreateTriggerTx(From string, To string, Coin float32, NCommit uint8, Sig string) (bool, error) {
 	t.ID, _ = lib.GetNewUID()
 	t.Flag = "TriggerTx"
 	t.From = From
@@ -68,7 +68,7 @@ func (t *Transaction) CreateTriggerTx(From string, To string, Coin float32, NCom
 	return true, nil
 }
 
-func (t *Transaction) CreateSettlementTx(From string, To string, Coin float32, NCommit string, Sig string) (bool, error) {
+func (t *Transaction) CreateSettlementTx(From string, To string, Coin float32, NCommit uint8, Sig string) (bool, error) {
 	t.ID, _ = lib.GetNewUID()
 	t.Flag = "SettlementTx"
 	t.From = From

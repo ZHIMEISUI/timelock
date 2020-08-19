@@ -7,10 +7,12 @@ import (
 )
 
 func main() {
-	var txFlag string
+	txFlag := "FundingTx"
+	ChannelVersion := 0
 	flag.StringVar(&txFlag, "t", "FundingTx", "set transactin type")
+	flag.IntVar(&ChannelVersion, "cv", 0, "set channel version")
 	flag.Parse()
-	err := Execute(txFlag)
+	err := Execute(txFlag, ChannelVersion)
 	if err != nil {
 		lib.Log.Error(err)
 		os.Exit(1)
