@@ -20,7 +20,7 @@ func FundingTxVerify(tx map[string]string) bool {
 		coin,_ := strconv.Atoi(tx["Coin"])
 		if coin <= 0 {
 			lib.Log.Warning("Transaction is not valid")
-			lib.Log.Warning(tx["From"]+" deposits coin is: "+ tx["Coin"] + ". The expected deposit coin in Funding Transaction is higher than 0.")
+			lib.Log.Warning(tx["From"]+" deposits coin is: "+ tx["Coin"] + ". The expected deposits in Funding Transaction is higher than 0.")
 			return false
 		}
 		return true
@@ -80,10 +80,6 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 		txmap[tsplit[0]] = tsplit[1]
 	}
 	if txmap["Flag"] == "FundingTx" {
-		if !FundingTxVerify(txmap) {
-			lib.Log.Warning("Code: "+strconv.FormatUint(uint64(code.CodeTypeBadNonce), 10))
-			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
-		}
 		lib.Log.Debug("Transaction ID: "+txmap["ID"])
 		lib.Log.Debug("Transaction Type: "+txmap["Flag"])
 		lib.Log.Debug("Current Time: "+txmap["CurrentTime"])
@@ -91,6 +87,10 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 		lib.Log.Debug("Deposit Coins: "+txmap["Coin"])
 		lib.Log.Debug("Channel Version: "+txmap["NCommit"])
 		lib.Log.Debug("Sig: "+txmap["Sig"])
+		if !FundingTxVerify(txmap) {
+			lib.Log.Warning("Code: "+strconv.FormatUint(uint64(code.CodeTypeBadNonce), 10))
+			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
+		}
 		return types.ResponseDeliverTx{Code: code.CodeTypeOK}
 	} else if txmap["Flag"] == "TriggerTx" {
 		lib.Log.Debug("Transaction ID: "+txmap["ID"])
