@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strconv"
 	// "bytes"
+	"strings"
 
 	"github.com/timelock/lib"
 
@@ -34,9 +35,9 @@ func (app *TimelockApplication) Info(req types.RequestInfo) (resInfo types.Respo
 
 func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.ResponseDeliverTx {
 	lib.Log.Debug("DeliverTx")
-	// lib.Log.Notice(string(req.Tx))
-	lib.Log.Notice(req.Tx)
-	// lib.Log.Debug(fmt.Println(bytes.Split(req.Tx, []byte(","))))
+	lib.Log.Notice(string(req.Tx))
+	// lib.Log.Notice(req.Tx)
+	lib.Log.Debug(strings.Split(string(req.Tx), ","))
 	return types.ResponseDeliverTx{Code: code.CodeTypeOK}
 }
 
