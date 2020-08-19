@@ -48,7 +48,7 @@ func Execute(flag string, ChannelVersion uint8) error {
 
 			for j := 0; j < transactionsPerBlock; j++ {
 				if flag == "FundingTx"{
-					_, _ = tran.CreateFundingTx("Alice", "Alice&&Bob", 5, "AliceSig")
+					_, _ = tran.CreateFundingTx("Alice", "Alice&&Bob", 0, "AliceSig")
 				}else if flag == "TriggerTx"{
 					_, _ = tran.CreateTriggerTx("Alice&&Bob", "Alice&&Bob", 5, ChannelVersion, "AliceSig")
 				}else if flag == "SettlementTx"{
