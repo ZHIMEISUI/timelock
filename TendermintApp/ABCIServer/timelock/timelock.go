@@ -39,6 +39,7 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 	// lib.Log.Notice(req.Tx)
 	tx := strings.Replace(string(req.Tx), "'", "", -1)
 	tx = strings.Replace(string(tx), "{", "", -1)
+	tx = strings.Replace(string(tx), "[", "", -1)
 	lib.Log.Debug(tx)
 	lib.Log.Debug(strings.Split(string(tx), ",")[0])
 	return types.ResponseDeliverTx{Code: code.CodeTypeOK}
