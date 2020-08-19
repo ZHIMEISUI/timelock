@@ -60,12 +60,12 @@ func Execute(flag string) error {
 			fmt.Printf("szm log transactions type in go func()...: %T \n", transactions)
 
 			bytes, _ := json.Marshal(&transactions)
-			fmt.Printf("szm log bytes in go func()...: ")
-			fmt.Println(bytes)
+			// fmt.Printf("szm log bytes in go func()...: ")
+			// fmt.Println(bytes)
 			data := strings.Replace(string(bytes), "\"", "'", -1)
-			lib.Log.Notice("szm log data in go func()...:"+data)
-			fmt.Printf("szm log data type in go func()...: %T \n", data)
-			fmt.Printf("\n")
+			// lib.Log.Notice("szm log data in go func()...:"+data)
+			// fmt.Printf("szm log data type in go func()...: %T \n", data)
+			// fmt.Printf("\n")
 
 			// tx := "id=" + lib.Int64ToString(tran.ID) + "&flag=" + tran.flag
 			tx := data
