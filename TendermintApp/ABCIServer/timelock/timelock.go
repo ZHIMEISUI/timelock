@@ -47,15 +47,13 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 		tsplit := strings.Split(string(t), ":")
 		txmap[tsplit[0]] = tsplit[1]
 	}
-	if txmap["Flag"] == "FundingTx"{
+	if txmap["Flag"] == "FundingTx" {
 		lib.Log.Debug("From: "+txmap["From"])
 		lib.Log.Debug("To: "+txmap["To"])
 		return types.ResponseDeliverTx{Code: code.CodeTypeOK}
-	}
-	else if txmap["Flag"] == "TriggerTx"{
+	} else if txmap["Flag"] == "TriggerTx" {
 		return types.ResponseDeliverTx{Code: code.CodeTypeOK}
-	}
-	else if txmap["Flag"] == "SettlementTx"{
+	} else if txmap["Flag"] == "SettlementTx" {
 		return types.ResponseDeliverTx{Code: code.CodeTypeOK}
 	}
 	
