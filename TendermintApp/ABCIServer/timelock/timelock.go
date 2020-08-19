@@ -41,7 +41,7 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 	txhandle = strings.Replace(string(txhandle), "{", "", -1)
 	txhandle = strings.Replace(string(txhandle), "[", "", -1)
 	lib.Log.Debug(txhandle)
-	txs := strings.Split(string(tx), ",")
+	txs := strings.Split(string(txhandle), ",")
 	txmap := make(map[string]string)
 	for _ , t := range txs {
 		tsplit := strings.Split(string(t), ":")
