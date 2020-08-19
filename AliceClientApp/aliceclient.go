@@ -48,31 +48,11 @@ func Execute(flag string) error {
 
 			for j := 0; j < transactionsPerBlock; j++ {
 				if flag == "FundingTx"{
-					// tran.From = "Alice"
-					// tran.To = "Alice&&Bob"
-					// tran.Coin = 5
-					// tran.NCommit = "Channel Version Commitment"
-					// tran.Sig = "AliceSig"
 					_, _ = tran.CreateFundingTx("Alice", "Alice&&Bob", 5, "Channel Version Commitment", "AliceSig")
-					// transactions = append(transactions, tran)
 				}else if flag == "TriggerTx"{
-					// tran := controllers.TriggerTransaction{}
-					// tran.From = "Alice&&Bob"
-					// tran.To = "Alice&&Bob"
-					// tran.Coin = 5
-					// tran.NCommit = "Channel Version Commitment"
-					// tran.Sig = "AliceSig"
 					_, _ = tran.CreateTriggerTx("Alice&&Bob", "Alice&&Bob", 5, "Channel Version Commitment", "AliceSig")
-					// transactions = append(transactions, tran)
 				}else if flag == "SettlementTx"{
-					// tran := controllers.SettlementTransaction{}
-					// tran.From = "Alice&&Bob"
-					// tran.To = "Alice"
-					// tran.Coin = 5
-					// tran.NCommit = "Channel Version Commitment"
-					// tran.Sig = "AliceSig"
 					_, _ = tran.CreateSettlementTx("Alice&&Bob", "Alice", 5, "Channel Version Commitment", "AliceSig")
-					// transactions = append(transactions, controllers.GeneralTransaction{tran})
 				}
 				transactions = append(transactions, tran)
 			}

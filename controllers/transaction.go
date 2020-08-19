@@ -47,8 +47,8 @@ func (t *Transaction) Create() (bool, error) {
 func (t *Transaction) CreateFundingTx(From string, To string, Coin float32, NCommit string, Sig string) (bool, error) {
 	t.ID, _ = lib.GetNewUID()
 	t.Flag = "FundingTx"
-	t.From = From
-	t.To = To
+	// t.From = From
+	// t.To = To
 	t.Coin = Coin
 	t.NCommit = NCommit
 	t.Sig = Sig
