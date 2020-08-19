@@ -35,7 +35,7 @@ func (app *TimelockApplication) Info(req types.RequestInfo) (resInfo types.Respo
 func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.ResponseDeliverTx {
 	lib.Log.Debug("DeliverTx")
 	lib.Log.Notice(string(req.Tx))
-	lib.Log.Debug(bytes.Split(req.Tx, []byte(",")))
+	lib.Log.Debug([]byte(bytes.Split(req.Tx, []byte(","))))
 	return types.ResponseDeliverTx{Code: code.CodeTypeOK}
 }
 
