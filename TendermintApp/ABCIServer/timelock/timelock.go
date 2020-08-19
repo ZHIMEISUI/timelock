@@ -81,7 +81,7 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 	}
 	if txmap["Flag"] == "FundingTx" {
 		if !FundingTxVerify(txmap) {
-			lib.Log.Warning("Code: "+code.CodeTypeBadNonce)
+			lib.Log.Warning("Code: "+strconv.FormatUint(uint64(code.CodeTypeBadNonce), 10))
 			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
 		}
 		lib.Log.Debug("Transaction ID: "+txmap["ID"])
