@@ -72,9 +72,9 @@ func Execute(flag string) error {
 					// tran.NCommit = "Channel Version Commitment"
 					// tran.Sig = "AliceSig"
 					_, _ = tran.CreateSettlementTx("Alice", "Alice&&Bob", 5, "Channel Version Commitment", "AliceSig")
-					transactions = append(transactions, controllers.GeneralTransaction{tran})
+					// transactions = append(transactions, controllers.GeneralTransaction{tran})
 				}
-				// transactions = append(transactions, tran)
+				transactions = append(transactions, tran)
 			}
 			fmt.Printf("szm log transactions in go func()...: %s \n", transactions)
 			fmt.Printf("szm log transactions type in go func()...: %T \n", transactions)
