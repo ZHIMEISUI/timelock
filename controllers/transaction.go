@@ -44,8 +44,7 @@ func (t *Transaction) Create() (bool, error) {
 	return true, nil
 }
 
-func (t *Transaction) CreateFundingTx(From string, To string, Coin float32, NCommit string, Sig string) 
-	(bool, error) {
+func (t *Transaction) CreateFundingTx(From string, To string, Coin float32, NCommit string, Sig string) (bool, error) {
 	t.ID, _ = lib.GetNewUID()
 	t.Flag = "FundingTx"
 	t.From = From
@@ -57,8 +56,7 @@ func (t *Transaction) CreateFundingTx(From string, To string, Coin float32, NCom
 	return true, nil
 }
 
-func (t *Transaction) CreateTriggerTx(From string, To string, Coin float32, NCommit string, Sig string) 
-	(bool, error) {
+func (t *Transaction) CreateTriggerTx(From string, To string, Coin float32, NCommit string, Sig string) (bool, error) {
 	t.ID, _ = lib.GetNewUID()
 	t.Flag = "TriggerTx"
 	t.From = From
@@ -70,8 +68,7 @@ func (t *Transaction) CreateTriggerTx(From string, To string, Coin float32, NCom
 	return true, nil
 }
 
-func (t *Transaction) CreateSettlementTx(From string, To string, Coin float32, NCommit string, Sig string) 
-	(bool, error) {
+func (t *Transaction) CreateSettlementTx(From string, To string, Coin float32, NCommit string, Sig string) (bool, error) {
 	t.ID, _ = lib.GetNewUID()
 	t.Flag = "SettlementTx"
 	t.From = From
