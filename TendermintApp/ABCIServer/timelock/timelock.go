@@ -15,7 +15,7 @@ import (
 )
 
 
-func FundingTxVerify(tx map) bool {
+func FundingTxVerify(tx map[string]string) bool {
 	if tx["Flag"] == "FundingTx"{
 		if tx["Coin"] <= 0 {return false}
 		return true
@@ -23,16 +23,16 @@ func FundingTxVerify(tx map) bool {
 	return false
 }
 
-func TriggerTxVerify(tx map) bool {
+func TriggerTxVerify(tx map[string]string) bool {
 	if tx["Flag"] == "TriggerTx"{
-
+		// TODO
 	}
 	return false
 }
 
-func SettlementTxVerify(tx map) bool {
+func SettlementTxVerify(tx map[string]string) bool {
 	if tx["Flag"] == "SettlementTx"{
-		
+		// TODO
 	}
 	return false
 }
