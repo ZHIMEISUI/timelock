@@ -50,7 +50,7 @@ func (t *Transaction) CreateFundingTx(From string, To string, Coin float32, NCom
 	t.From = From
 	t.To = To
 	t.Coin = Coin
-	// t.NCommit = NCommit
+	t.NCommit = NCommit
 	t.Sig = Sig
 	lib.Log.Debug("Create Funding Transaction:", t)
 	return true, nil
@@ -75,7 +75,7 @@ func (t *Transaction) CreateSettlementTx(From string, To string, Coin float32, N
 	t.To = To
 	t.Coin = Coin
 	t.NCommit = NCommit
-	// t.Sig = Sig
+	t.Sig = Sig
 	lib.Log.Debug("Create Settlement Transaction:", t)
 	return true, nil
 }

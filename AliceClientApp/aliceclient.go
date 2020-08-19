@@ -48,11 +48,11 @@ func Execute(flag string) error {
 
 			for j := 0; j < transactionsPerBlock; j++ {
 				if flag == "FundingTx"{
-					_, _ = tran.CreateFundingTx("Alice", "Alice&&Bob", 5, "Channel Version Commitment", "AliceSig")
+					_, _ = tran.CreateFundingTx("Alice", "Alice&&Bob", 5, "ChannelVersion", "AliceSig")
 				}else if flag == "TriggerTx"{
-					_, _ = tran.CreateTriggerTx("Alice&&Bob", "Alice&&Bob", 5, "Channel Version Commitment", "AliceSig")
+					_, _ = tran.CreateTriggerTx("Alice&&Bob", "Alice&&Bob", 5, "ChannelVersion", "AliceSig")
 				}else if flag == "SettlementTx"{
-					_, _ = tran.CreateSettlementTx("Alice&&Bob", "Alice", 5, "Channel Version Commitment", "AliceSig")
+					_, _ = tran.CreateSettlementTx("Alice&&Bob", "Alice", 5, "ChannelVersion", "AliceSig")
 				}
 				transactions = append(transactions, tran)
 			}
