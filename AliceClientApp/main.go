@@ -13,7 +13,7 @@ func main() {
 	Coins = 0.0
 	flag.StringVar(&txFlag, "t", "FundingTx", "set transactin type")
 	flag.IntVar(&ChannelVersion, "cv", 0, "set channel version")
-	flag.Float64Var(&Coins, "coins", 0.0, "set deposit coins")
+	flag.Float64Var(&Coins, "coins", Coins, "set deposit coins")
 	flag.Parse()
 	err := Execute(txFlag, uint8(ChannelVersion), Coins)
 	if err != nil {
