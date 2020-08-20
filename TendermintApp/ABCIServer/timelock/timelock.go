@@ -131,11 +131,11 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 		lib.Log.Debug("Deposit Coins: "+txmap["Coin"])
 		lib.Log.Debug("Channel Version: "+txmap["NCommit"])
 		lib.Log.Debug("Sig: "+txmap["Sig"])
-		return types.ResponseDeliverTx{Code: code.CodeTypeOK}
 		if !SettlementTxVerify(txmap) {
 			lib.Log.Warning("Code: "+strconv.FormatUint(uint64(code.CodeTypeBadNonce), 10))
 			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
 		}
+		return types.ResponseDeliverTx{Code: code.CodeTypeOK}
 	}
 	
 	lib.Log.Debug()
