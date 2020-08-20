@@ -18,7 +18,7 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func Execute() error {
+func Execute(flag string, ChannelVersion uint8, Coins float64) error {
 	lib.Log.Notice("Starting Bob UI Client... ")
 
 	f, err := os.Create("logs/client.log")
@@ -35,8 +35,8 @@ func Execute() error {
 
 
 	go func() {
-		blocksNumber := 5                                     // how many blocks
-		transactionsPerBlock := 10                            // how many transactions in each block
+		blocksNumber := 1                                     // how many blocks
+		transactionsPerBlock := 1                            // how many transactions in each block
 		// players := []string{"Lei", "Jack", "Pony", "Richard"} // 4 players
 		// random := rand.New(rand.NewSource(time.Now().UnixNano()))
 		json := jsoniter.ConfigCompatibleWithStandardLibrary
@@ -44,43 +44,33 @@ func Execute() error {
 		for i := 0; i < blocksNumber; i++ {
 			time.Sleep(time.Second * 1)
 			transactions := []controllers.Transaction{}
+			tran := controllers.Transaction{}
 
 			for j := 0; j < transactionsPerBlock; j++ {
-				// from := players[random.Intn(len(players))]
-				// to := players[random.Intn(len(players))]
-				// for from == to {
-				// 	to = players[random.Intn(len(players))]
-				// }
-				// btc := float32(random.Intn(10) + 1)
-				// flag := true
-
-				// tran := controllers.Transaction{
-				// 	From:    from,
-				// 	To:      to,
-				// 	Bitcoin: btc,
-				// }
-				tran := controllers.Transaction{
-					// Flag:    flag,
+				if flag == "FundingTx"{
+					_, _ = tran.CreateFundingTx("Bob", "Alice&&Bob", float32(Coins), "BobSig")
+				}else if flag == "TriggerTx"{
+					_, _ = tran.CreateTriggerTx("Alice&&Bob", "Alice&&Bob", float32(Coins), ChannelVersion, "BobSig")
+				}else if flag == "SettlementTx"{
+					_, _ = tran.CreateSettlementTx("Alice&&Bob", "Bob", float32(Coins), ChannelVersion, "BobSig")
 				}
-				_, _ = tran.Create()
 				transactions = append(transactions, tran)
-				// fmt.Printf("szm log transaction in go func()...: %s \n", transactions)
 			}
-			fmt.Printf("szm log transactions in go func()...: %s \n", transactions)
-			fmt.Printf("szm log transactions type in go func()...: %T \n", transactions)
+			// fmt.Printf("szm log transactions in go func()...: %s \n", transactions)
+			// fmt.Printf("szm log transactions type in go func()...: %T \n", transactions)
 
 			bytes, _ := json.Marshal(&transactions)
 			// fmt.Printf("szm log bytes in go func()...: ")
 			// fmt.Println(bytes)
 			data := strings.Replace(string(bytes), "\"", "'", -1)
-			lib.Log.Notice("szm log data in go func()...:"+data)
-			fmt.Printf("szm log data type in go func()...: %T \n", data)
-			fmt.Printf("\n")
+			// lib.Log.Notice("szm log data in go func()...:"+data)
+			// fmt.Printf("szm log data type in go func()...: %T \n", data)
+			// fmt.Printf("\n")
 
 			// tx := "id=" + lib.Int64ToString(tran.ID) + "&flag=" + tran.flag
 			tx := data
-			fmt.Printf("szm log tx in go func()...: %s \n", tx)
-			fmt.Printf("szm log tx type in go func()...: %T \n", tx)
+			// fmt.Printf("szm log tx in go func()...: %s \n", tx)
+			// fmt.Printf("szm log tx type in go func()...: %T \n", tx)
 			
 			// tmAsync(tx)
 			// tmCommit(lib.Int64ToString(transactions[0].ID))
@@ -106,9 +96,9 @@ func tmSync(tx string) {
 }
 
 func tmCommit(tx string) {
-	fmt.Printf("szm prints tx in tmCommit()...: %s \n", tx)
+	// fmt.Printf("szm prints tx in tmCommit()...: %s \n", tx)
 	// url := "http://localhost:46657/broadcast_tx_async?tx=\"" + tx + "\""
-	url := "http://localhost:26657/broadcast_tx_async?tx=\"" + "ID=" +tx + "\""
+	url := "http://localhost:26657/broadcast_tx_async?tx=\"" + tx + "\""
 	txHandle(url)
 }
 
