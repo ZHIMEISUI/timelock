@@ -50,13 +50,13 @@ func loadState(db dbm.DB) State{
 }
 
 func setStateTx(txmap map[string]string, state State){
-	state.Tx.ID = txmap["ID"]
+	state.Tx.ID = strconv.ParseInt(txmap["ID"], 10, 64）
 	state.Tx.Flag = txmap["Flag"]
-	state.Tx.Height = txmap["Height"]
+	state.Tx.Height = strconv.ParseInt(txmap["Height"], 10, 64）
 	state.Tx.From = txmap["From"]
 	state.Tx.To = txmap["To"]
-	state.Tx.Coin = txmap["Coin"]
-	state.Tx.NCommit = txmap["NCommit"]
+	state.Tx.Coin = strconv.ParseFloat(txmap["Coin"], 32)
+	state.Tx.NCommit = strconv.ParseUint(txmap["NCommit"], 10, 8)
 	state.Tx.Sig = txmap["Sig"]
 }
 
