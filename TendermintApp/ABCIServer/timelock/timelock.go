@@ -58,7 +58,7 @@ func setStateTx(txmap map[string]string, state State){
 	coin,_ := strconv.ParseFloat(txmap["Coin"], 32)
 	state.Tx.Coin = float32(coin)
 	ncommit,_ := strconv.ParseUint(txmap["NCommit"], 10, 8)
-	state.Tx.NCommit, _ = uint8(ncommit)
+	state.Tx.NCommit = uint8(ncommit)
 	state.Tx.Sig = txmap["Sig"]
 }
 
