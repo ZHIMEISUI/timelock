@@ -227,7 +227,7 @@ func (app *TimelockApplication) Commit() types.ResponseCommit {
 	statejson, errs := json.Marshal(app.state)
 	lib.Log.Debug(string(statejson))
 	if errs != nil {return types.ResponseCommit{}}
-	return types.ResponseCommit{Data: txjson}
+	return types.ResponseCommit{Data: statejson}
 }
 
 func (app *TimelockApplication) Query(reqQuery types.RequestQuery) (resQuery types.ResponseQuery) {
