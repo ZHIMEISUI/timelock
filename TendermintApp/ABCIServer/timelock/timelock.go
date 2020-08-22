@@ -25,7 +25,7 @@ var (
 )
 
 type State struct{
-	db dbm.DB
+	DB dbm.DB
 	Height int		`bson:"height"	json:"height"`
 	AppHash	[]byte	`json:"app_hash"`
 	Tx controllers.Transaction
@@ -33,7 +33,7 @@ type State struct{
 
 func loadState(db dbm.DB) State{
 	var state State
-	state.db = db
+	state.DB = db
 	stateBytes, err := db.Get(stateKey)
 	if err != nil {
 		panic(err)
@@ -53,14 +53,15 @@ func saveState(state State) {
 	if err != nil {
 		panic(err)
 	}
-	err = state.db.Set(stateKey, stateBytes)
+	err = state.DB.Set(stateKey, stateBytes)
 	if err != nil {
 		panic(err)
 	}
 }
 
 
-func logTx(txmap map[string]string){
+func logTx(funcname string, txmap map[string]string){
+	lib.Log.Debug(funcname+" starts Debug...")
 	lib.Log.Debug("Transaction ID: "+txmap["ID"])
 	lib.Log.Debug("Transaction Type: "+txmap["Flag"])
 	lib.Log.Debug("Current Time: "+txmap["CurrentTime"])
@@ -69,6 +70,7 @@ func logTx(txmap map[string]string){
 	lib.Log.Debug("Deposit Coins: "+txmap["Coin"])
 	lib.Log.Debug("Channel Version: "+txmap["NCommit"])
 	lib.Log.Debug("Sig: "+txmap["Sig"])
+	lib.Log.Debug(funcname+" ends Debug...")
 }
 
 func FundingTxVerify(tx map[string]string) bool {
@@ -152,14 +154,8 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 	}
 	if txmap["Flag"] == "FundingTx" {
 		logTx(txmap)
-		lib.Log.Debug("Transaction ID: "+txmap["ID"])
-		lib.Log.Debug("Transaction Type: "+txmap["Flag"])
-		lib.Log.Debug("Current Time: "+txmap["CurrentTime"])
-		lib.Log.Debug("From: "+txmap["From"])
-		lib.Log.Debug("To: "+txmap["To"])
-		lib.Log.Debug("Deposit Coins: "+txmap["Coin"])
-		lib.Log.Debug("Channel Version: "+txmap["NCommit"])
-		lib.Log.Debug("Sig: "+txmap["Sig"])
+		statejson, _ = json.Marshal(app.state)
+		lib.Log.Debug(statejson)
 		if !FundingTxVerify(txmap) {
 			lib.Log.Warning("Code: "+strconv.FormatUint(uint64(code.CodeTypeBadNonce), 10))
 			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
@@ -193,15 +189,7 @@ func (app *TimelockApplication) CheckTx(req types.RequestCheckTx) types.Response
 
 func (app *TimelockApplication) Commit() types.ResponseCommit {
 	lib.Log.Debug("Commit")
-	// Save a new version
-	// var flag bool
-	// flag = app.flag
-
-	// if app.flag{
-	// 	lib.Log.Notice("flag",flag)
-	// }
-
-	// lib.Log.Debug("timelock flag", flag)
+	app.state.Height++
 	saveState(app.state)
 	txjson, errs := json.Marshal(app.state.Tx)
 	if errs != nil {return types.ResponseCommit{}}
