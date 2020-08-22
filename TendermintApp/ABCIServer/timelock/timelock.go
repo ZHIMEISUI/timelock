@@ -155,7 +155,7 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 	if txmap["Flag"] == "FundingTx" {
 		logTx("DeliverTx", txmap)
 		statejson, _ := json.Marshal(app.state)
-		lib.Log.Debug(statejson)
+		lib.Log.Debug(string(statejson))
 		if !FundingTxVerify(txmap) {
 			lib.Log.Warning("Code: "+strconv.FormatUint(uint64(code.CodeTypeBadNonce), 10))
 			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
