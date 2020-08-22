@@ -28,7 +28,7 @@ type State struct{
 	db dbm.DB
 	Height int		`bson:"height"	json:"height"`
 	AppHash	[]byte	`json:"app_hash"`
-	Tx controllers.Transaction{}
+	Tx controllers.Transaction
 }
 
 func loadState(db dbm.DB) State{
