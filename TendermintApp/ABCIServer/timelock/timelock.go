@@ -71,7 +71,8 @@ func saveState(state State) {
 	}
 	err = state.DB.Set(stateKey, stateBytes)
 	if err != nil {
-		lib.Log.Error("state.DB.Set() err: "+err)
+		lib.Log.Error("state.DB.Set() err: ")
+		lib.Log.Error(err)
 		panic(err)
 	}
 }
