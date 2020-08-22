@@ -137,7 +137,7 @@ func (app *TimelockApplication) Info(req types.RequestInfo) (resInfo types.Respo
 func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.ResponseDeliverTx {
 	lib.Log.Debug("DeliverTx")
 	lib.Log.Notice(string(req.Tx))
-	// lib.Log.Notice(req.Tx)
+
 	txhandle := strings.Replace(string(req.Tx), "'", "", -1)
 	txhandle = strings.Replace(string(txhandle), "{", "", -1)
 	txhandle = strings.Replace(string(txhandle), "[", "", -1)
@@ -152,6 +152,14 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 	}
 	if txmap["Flag"] == "FundingTx" {
 		logTx(txmap)
+		lib.Log.Debug("Transaction ID: "+txmap["ID"])
+		lib.Log.Debug("Transaction Type: "+txmap["Flag"])
+		lib.Log.Debug("Current Time: "+txmap["CurrentTime"])
+		lib.Log.Debug("From: "+txmap["From"])
+		lib.Log.Debug("To: "+txmap["To"])
+		lib.Log.Debug("Deposit Coins: "+txmap["Coin"])
+		lib.Log.Debug("Channel Version: "+txmap["NCommit"])
+		lib.Log.Debug("Sig: "+txmap["Sig"])
 		if !FundingTxVerify(txmap) {
 			lib.Log.Warning("Code: "+strconv.FormatUint(uint64(code.CodeTypeBadNonce), 10))
 			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
@@ -173,7 +181,6 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 		return types.ResponseDeliverTx{Code: code.CodeTypeOK}
 	}
 	
-	lib.Log.Debug()
 	return types.ResponseDeliverTx{Code: code.CodeTypeUnknownError}
 }
 
