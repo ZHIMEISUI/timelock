@@ -37,9 +37,11 @@ func loadState(db dbm.DB) State{
 	state.DB = db
 	stateBytes, err := db.Get(stateKey)
 	if err != nil {
+		lib.Log.Error(err)
 		panic(err)
 	}
 	if len(stateBytes) == 0 {
+		lib.Log.Error("stateBytes is nil...")
 		return state
 	}
 	err = json.Unmarshal(stateBytes, &state)
@@ -69,6 +71,7 @@ func saveState(state State) {
 	}
 	err = state.DB.Set(stateKey, stateBytes)
 	if err != nil {
+		lib.Log.Error("state.DB.Set() err: "+err)
 		panic(err)
 	}
 }
