@@ -8,7 +8,7 @@ Transaction
 type Transaction struct {
 	ID      	int64   `bson:"id" 				json:"id"`
 	Flag 		string 	`bson:"flag" 			json:"flag"`
-	CurrentTime uint8 	`bson:"currenttime" 	json:"currenttime"`
+	Height  	uint64	`bson:"height" 			json:"height"`
 	From    	string  `bson:"from" 			json:"from"`
 	To      	string  `bson:"to" 				json:"to"`
 	Coin 		float32 `bson:"coin" 			json:"coin"`
@@ -46,7 +46,7 @@ func (t *Transaction) Create() (bool, error) {
 
 func (t *Transaction) CreateFundingTx(From string, To string, Coin float32, Sig string) (bool, error) {
 	t.ID, _ = lib.GetNewUID()
-	t.Flag = "FundingTx"
+	t.preTxID = ""
 	t.From = From
 	t.To = To
 	t.Coin = Coin

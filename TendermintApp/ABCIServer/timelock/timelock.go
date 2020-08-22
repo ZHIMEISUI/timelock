@@ -8,12 +8,65 @@ import (
 	"strings"
 
 	"github.com/timelock/lib"
+	dbm "github.com/tendermint/tm-db"
 
 	"github.com/tendermint/tendermint/abci/types"
 	"github.com/tendermint/tendermint/abci/example/code"
 	// cmn "github.com/tendermint/tendermint/tmlibs/common"
 )
 
+var (
+	stateKey        = []byte("stateKey")
+
+	ProtocolVersion uint64 = 0x1
+)
+
+type State struct{
+	db dbm.DB
+	Height int		`bson:"height"	json:"height"`
+	AppHash	[]byte	`json:"app_hash"`
+	Tx Transaction
+}
+
+func loadState(db dbm.DB) State{
+	var state State
+	state.db = db
+	stateBytes, err := db.Get(stateKey)
+	if err != nil {
+		panic(err)
+	}
+	if len(stateBytes) == 0 {
+		return state
+	}
+	err = json.Unmarshal(stateBytes, &state)
+	if err != nil {
+		panic(err)
+	}
+	return state
+}
+
+func saveState(state State) {
+	stateBytes, err := json.Marshal(state)
+	if err != nil {
+		panic(err)
+	}
+	err = state.db.Set(stateKey, stateBytes)
+	if err != nil {
+		panic(err)
+	}
+}
+
+
+func logTx(tx map[string]string){
+	lib.Log.Debug("Transaction ID: "+txmap["ID"])
+	lib.Log.Debug("Transaction Type: "+txmap["Flag"])
+	lib.Log.Debug("Current Time: "+txmap["CurrentTime"])
+	lib.Log.Debug("From: "+txmap["From"])
+	lib.Log.Debug("To: "+txmap["To"])
+	lib.Log.Debug("Deposit Coins: "+txmap["Coin"])
+	lib.Log.Debug("Channel Version: "+txmap["NCommit"])
+	lib.Log.Debug("Sig: "+txmap["Sig"])
+}
 
 func FundingTxVerify(tx map[string]string) bool {
 	if tx["Flag"] == "FundingTx"{
@@ -63,19 +116,19 @@ var _ types.Application = (*TimelockApplication)(nil)
 
 type TimelockApplication struct {
 	types.BaseApplication
-	tx_type string
-	flag bool
+	
+	state State
 }
 
 func NewTimelockApplication() *TimelockApplication {
 	lib.Log.Debug("NewTimelockApplication")
-	flag := true
-	return &TimelockApplication{flag: flag}
+	state := loadState(dbm.NewMemDB())
+	return &TimelockApplication{state: state}
 }
 
 func (app *TimelockApplication) Info(req types.RequestInfo) (resInfo types.ResponseInfo) {
 	lib.Log.Debug("Info")
-	return types.ResponseInfo{Data: fmt.Sprintf("TimeLock Test")}
+	return types.ResponseInfo{Data: fmt.Sprintf("Info(): TimeLock Test")}
 }
 
 func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.ResponseDeliverTx {
@@ -95,42 +148,21 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 		txmap[tsplit[0]] = tsplit[1]
 	}
 	if txmap["Flag"] == "FundingTx" {
-		lib.Log.Debug("Transaction ID: "+txmap["ID"])
-		lib.Log.Debug("Transaction Type: "+txmap["Flag"])
-		lib.Log.Debug("Current Time: "+txmap["CurrentTime"])
-		lib.Log.Debug("From: "+txmap["From"])
-		lib.Log.Debug("To: "+txmap["To"])
-		lib.Log.Debug("Deposit Coins: "+txmap["Coin"])
-		lib.Log.Debug("Channel Version: "+txmap["NCommit"])
-		lib.Log.Debug("Sig: "+txmap["Sig"])
+		logTx(txmap)
 		if !FundingTxVerify(txmap) {
 			lib.Log.Warning("Code: "+strconv.FormatUint(uint64(code.CodeTypeBadNonce), 10))
 			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
 		}
 		return types.ResponseDeliverTx{Code: code.CodeTypeOK}
 	} else if txmap["Flag"] == "TriggerTx" {
-		lib.Log.Debug("Transaction ID: "+txmap["ID"])
-		lib.Log.Debug("Transaction Type: "+txmap["Flag"])
-		lib.Log.Debug("Current Time: "+txmap["CurrentTime"])
-		lib.Log.Debug("From: "+txmap["From"])
-		lib.Log.Debug("To: "+txmap["To"])
-		lib.Log.Debug("Deposit Coins: "+txmap["Coin"])
-		lib.Log.Debug("Channel Version: "+txmap["NCommit"])
-		lib.Log.Debug("Sig: "+txmap["Sig"])
+		logTx(txmap)
 		if !TriggerTxVerify(txmap) {
 			lib.Log.Warning("Code: "+strconv.FormatUint(uint64(code.CodeTypeBadNonce), 10))
 			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
 		}
 		return types.ResponseDeliverTx{Code: code.CodeTypeOK}
 	} else if txmap["Flag"] == "SettlementTx" {
-		lib.Log.Debug("Transaction ID: "+txmap["ID"])
-		lib.Log.Debug("Transaction Type: "+txmap["Flag"])
-		lib.Log.Debug("Current Time: "+txmap["CurrentTime"])
-		lib.Log.Debug("From: "+txmap["From"])
-		lib.Log.Debug("To: "+txmap["To"])
-		lib.Log.Debug("Deposit Coins: "+txmap["Coin"])
-		lib.Log.Debug("Channel Version: "+txmap["NCommit"])
-		lib.Log.Debug("Sig: "+txmap["Sig"])
+		logTx(txmap)
 		if !SettlementTxVerify(txmap) {
 			lib.Log.Warning("Code: "+strconv.FormatUint(uint64(code.CodeTypeBadNonce), 10))
 			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
@@ -152,15 +184,16 @@ func (app *TimelockApplication) CheckTx(req types.RequestCheckTx) types.Response
 func (app *TimelockApplication) Commit() types.ResponseCommit {
 	lib.Log.Debug("Commit")
 	// Save a new version
-	var flag bool
-	flag = app.flag
+	// var flag bool
+	// flag = app.flag
 
-	if app.flag{
-		lib.Log.Notice("flag",flag)
-	}
+	// if app.flag{
+	// 	lib.Log.Notice("flag",flag)
+	// }
 
-	lib.Log.Debug("timelock flag", flag)
-	return types.ResponseCommit{Data: []byte(strconv.FormatBool(flag))}
+	// lib.Log.Debug("timelock flag", flag)
+	saveState(app.state)
+	return types.ResponseCommit{Data: []byte(json.Marshal(app.Tx))}
 }
 
 func (app *TimelockApplication) Query(reqQuery types.RequestQuery) (resQuery types.ResponseQuery) {
