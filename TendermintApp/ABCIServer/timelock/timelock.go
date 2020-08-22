@@ -6,10 +6,13 @@ import (
 	"strconv"
 	// "bytes"
 	"strings"
+	"encoding/json"
+
 
 	"github.com/timelock/lib"
-	dbm "github.com/tendermint/tm-db"
+	"github.com/timelock/controllers"
 
+	dbm "github.com/tendermint/tm-db"
 	"github.com/tendermint/tendermint/abci/types"
 	"github.com/tendermint/tendermint/abci/example/code"
 	// cmn "github.com/tendermint/tendermint/tmlibs/common"
@@ -57,7 +60,7 @@ func saveState(state State) {
 }
 
 
-func logTx(tx map[string]string){
+func logTx(txmap map[string]string){
 	lib.Log.Debug("Transaction ID: "+txmap["ID"])
 	lib.Log.Debug("Transaction Type: "+txmap["Flag"])
 	lib.Log.Debug("Current Time: "+txmap["CurrentTime"])
