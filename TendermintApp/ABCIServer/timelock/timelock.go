@@ -153,8 +153,8 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 		txmap[tsplit[0]] = tsplit[1]
 	}
 	if txmap["Flag"] == "FundingTx" {
-		logTx(txmap)
-		statejson, _ = json.Marshal(app.state)
+		logTx("DeliverTx", txmap)
+		statejson, _ := json.Marshal(app.state)
 		lib.Log.Debug(statejson)
 		if !FundingTxVerify(txmap) {
 			lib.Log.Warning("Code: "+strconv.FormatUint(uint64(code.CodeTypeBadNonce), 10))
@@ -162,14 +162,14 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 		}
 		return types.ResponseDeliverTx{Code: code.CodeTypeOK}
 	} else if txmap["Flag"] == "TriggerTx" {
-		logTx(txmap)
+		logTx("DeliverTx", txmap)
 		if !TriggerTxVerify(txmap) {
 			lib.Log.Warning("Code: "+strconv.FormatUint(uint64(code.CodeTypeBadNonce), 10))
 			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
 		}
 		return types.ResponseDeliverTx{Code: code.CodeTypeOK}
 	} else if txmap["Flag"] == "SettlementTx" {
-		logTx(txmap)
+		logTx("DeliverTx", txmap)
 		if !SettlementTxVerify(txmap) {
 			lib.Log.Warning("Code: "+strconv.FormatUint(uint64(code.CodeTypeBadNonce), 10))
 			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
