@@ -20,6 +20,7 @@ import (
 
 var (
 	stateKey        = []byte("stateKey")
+	txRecord		= controllers.Transaction{}
 
 	ProtocolVersion uint64 = 0x1
 )
@@ -48,6 +49,17 @@ func loadState(db dbm.DB) State{
 	return state
 }
 
+func setStateTx(txmap map[string]string, state State){
+	state.Tx.ID = txmap["ID"]
+	state.Tx.Flag = txmap["Flag"]
+	state.Tx.Height = txmap["Height"]
+	state.Tx.From = txmap["From"]
+	state.Tx.To = txmap["To"]
+	state.Tx.Coin = txmap["Coin"]
+	state.Tx.NCommit = txmap["NCommit"]
+	state.Tx.Sig = txmap["Sig"]
+}
+
 func saveState(state State) {
 	stateBytes, err := json.Marshal(state)
 	if err != nil {
@@ -59,6 +71,21 @@ func saveState(state State) {
 	}
 }
 
+func txHandle(tx string) map[string]string {
+	txhandle := strings.Replace(tx, "'", "", -1)
+	txhandle = strings.Replace(string(txhandle), "{", "", -1)
+	txhandle = strings.Replace(string(txhandle), "[", "", -1)
+	txhandle = strings.Replace(string(txhandle), "]", "", -1)
+	txhandle = strings.Replace(string(txhandle), "}", "", -1)
+	txs := strings.Split(string(txhandle), ",")
+	txmap := make(map[string]string)
+	
+	for _ , t := range txs {
+		tsplit := strings.Split(string(t), ":")
+		txmap[tsplit[0]] = tsplit[1]
+	}
+	return txmap
+}
 
 func logTx(funcname string, txmap map[string]string){
 	lib.Log.Debug(funcname+" starts Debug...")
@@ -140,18 +167,20 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 	lib.Log.Debug("DeliverTx")
 	lib.Log.Notice(string(req.Tx))
 
-	txhandle := strings.Replace(string(req.Tx), "'", "", -1)
-	txhandle = strings.Replace(string(txhandle), "{", "", -1)
-	txhandle = strings.Replace(string(txhandle), "[", "", -1)
-	txhandle = strings.Replace(string(txhandle), "]", "", -1)
-	txhandle = strings.Replace(string(txhandle), "}", "", -1)
-	lib.Log.Debug(txhandle)
-	txs := strings.Split(string(txhandle), ",")
-	txmap := make(map[string]string)
-	for _ , t := range txs {
-		tsplit := strings.Split(string(t), ":")
-		txmap[tsplit[0]] = tsplit[1]
-	}
+	// txhandle := strings.Replace(string(req.Tx), "'", "", -1)
+	// txhandle = strings.Replace(string(txhandle), "{", "", -1)
+	// txhandle = strings.Replace(string(txhandle), "[", "", -1)
+	// txhandle = strings.Replace(string(txhandle), "]", "", -1)
+	// txhandle = strings.Replace(string(txhandle), "}", "", -1)
+	// lib.Log.Debug(txhandle)
+	// txs := strings.Split(string(txhandle), ",")
+	// txmap := make(map[string]string)
+	
+	// for _ , t := range txs {
+	// 	tsplit := strings.Split(string(t), ":")
+	// 	txmap[tsplit[0]] = tsplit[1]
+	// }
+	txmap:= txHandle(string(req.Tx))
 	if txmap["Flag"] == "FundingTx" {
 		logTx("DeliverTx", txmap)
 		statejson, _ := json.Marshal(app.state)
@@ -160,24 +189,24 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 			lib.Log.Warning("Code: "+strconv.FormatUint(uint64(code.CodeTypeBadNonce), 10))
 			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
 		}
-		return types.ResponseDeliverTx{Code: code.CodeTypeOK}
+		// return types.ResponseDeliverTx{Code: code.CodeTypeOK}
 	} else if txmap["Flag"] == "TriggerTx" {
 		logTx("DeliverTx", txmap)
 		if !TriggerTxVerify(txmap) {
 			lib.Log.Warning("Code: "+strconv.FormatUint(uint64(code.CodeTypeBadNonce), 10))
 			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
 		}
-		return types.ResponseDeliverTx{Code: code.CodeTypeOK}
+		// return types.ResponseDeliverTx{Code: code.CodeTypeOK}
 	} else if txmap["Flag"] == "SettlementTx" {
 		logTx("DeliverTx", txmap)
 		if !SettlementTxVerify(txmap) {
 			lib.Log.Warning("Code: "+strconv.FormatUint(uint64(code.CodeTypeBadNonce), 10))
 			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
 		}
-		return types.ResponseDeliverTx{Code: code.CodeTypeOK}
+		// return types.ResponseDeliverTx{Code: code.CodeTypeOK}
 	}
-	
-	return types.ResponseDeliverTx{Code: code.CodeTypeUnknownError}
+	setStateTx(txmap, app.state)
+	return types.ResponseDeliverTx{Code: code.CodeTypeOK}
 }
 
 
