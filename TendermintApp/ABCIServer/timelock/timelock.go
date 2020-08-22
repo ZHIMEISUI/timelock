@@ -28,7 +28,7 @@ type State struct{
 	db dbm.DB
 	Height int		`bson:"height"	json:"height"`
 	AppHash	[]byte	`json:"app_hash"`
-	Tx Transaction
+	Tx controllers.Transaction{}
 }
 
 func loadState(db dbm.DB) State{
@@ -196,7 +196,7 @@ func (app *TimelockApplication) Commit() types.ResponseCommit {
 
 	// lib.Log.Debug("timelock flag", flag)
 	saveState(app.state)
-	return types.ResponseCommit{Data: []byte(json.Marshal(app.Tx))}
+	return types.ResponseCommit{Data: json.Marshal(app.state.Tx)}
 }
 
 func (app *TimelockApplication) Query(reqQuery types.RequestQuery) (resQuery types.ResponseQuery) {
