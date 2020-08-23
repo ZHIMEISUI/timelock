@@ -36,6 +36,8 @@ func loadState(db dbm.DB) State{
 	var state State
 	state.DB = db
 	stateBytes, err := db.Get(stateKey)
+	lib.Log.Debug("stateKey: ")
+	lib.Log.Debug(stateKey)
 	if err != nil {
 		lib.Log.Error(err)
 		panic(err)
