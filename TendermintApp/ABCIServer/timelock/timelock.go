@@ -221,7 +221,7 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 	events :=  []types.Event{
 		{
 			Type: "app",
-			Attribute: []types.EventAttribute{
+			Attributes: []types.EventAttribute{
 				{Key:[]byte("Transaction Type"), Value:[]byte(txmap["Flag"]), Index:true},
 				{Key:[]byte("Transaction ID"), Value:[]byte(txmap["ID"]), Index:true},
 				{Key:[]byte("Blockheight"), Value:[]byte(app.state.Height), Index:true},
