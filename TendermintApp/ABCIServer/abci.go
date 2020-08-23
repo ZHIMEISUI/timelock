@@ -60,7 +60,7 @@ func Execute() error {
 	go func() {
 		// err := runCounter()
 		// err := runDummy()
-		err := runTimlock()
+		err := runTimlock(memDB)
 		lib.HandleError(err)
 	}()
 
@@ -97,6 +97,9 @@ func runAccountBook() error {
 }
 
 func runTimlock(memDB dbm.DB) error{
+	if memDB == nil{
+		return fmt.Errorf("Timelock fail to connect database...")
+	}
 	app := timelock.NewTimelockApplication(memDB)
 	logger := log.NewTMLogger(log.NewSyncWriter(os.Stdout))
 
