@@ -233,8 +233,7 @@ func (app *TimelockApplication) Commit() types.ResponseCommit {
 	app.state.Height++
 	saveState(app.state)
 
-	txmap:= txHandle(string(req.Tx))
-	stateKey = []byte(txmap["ID"])
+	stateKey = []byte(app.state.Tx.ID)
 	app.state = loadState(app.state.DB)
 	lib.Log.Debug("loadState(app.state.DB) app.state: ")
 	lib.Log.Debug(app.state)
