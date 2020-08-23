@@ -3,12 +3,14 @@ package main
 import (
 	"github.com/timelock/TendermintApp/ABCIServer/timelock"
 	"github.com/timelock/lib"
+
 	"bufio"
 	"errors"
 	"fmt"
 	"io"
 	"os"
 
+	dbm "github.com/tendermint/tm-db"
 	abcicli "github.com/tendermint/tendermint/abci/client"
 	"github.com/tendermint/tendermint/abci/server"
 	// "github.com/tendermint/tendermint/abci/types"
@@ -19,8 +21,9 @@ import (
 
 // client is a global variable so it can be reused by the console
 var (
-	client abcicli.Client
-	logger log.Logger
+	client 	abcicli.Client
+	logger 	log.Logger
+	memDB 	dbm.db.MemDB
 )
 
 // flags
@@ -72,6 +75,9 @@ func preRun() error {
 		if err != nil {
 			return err
 		}
+		if memDB == nil{
+			memDB = dbm.db.NewMemDB(memDB)
+		}
 
 		f, err := os.Create("logs/abci.log")
 		if err != nil {
@@ -81,6 +87,7 @@ func preRun() error {
 
 		// logger = log.NewFilter(log.NewTMLogger(log.NewSyncWriter(os.Stdout)), allowLevel)
 		logger = log.NewFilter(log.NewTMLogger(log.NewSyncWriter(multiWriter)), allowLevel)
+
 	}
 	return nil
 }
@@ -89,8 +96,8 @@ func runAccountBook() error {
 	return nil
 }
 
-func runTimlock() error{
-	app := timelock.NewTimelockApplication()
+func runTimlock(memDB dbm.db.MemDB) error{
+	app := timelock.NewTimelockApplication(memDB)
 	logger := log.NewTMLogger(log.NewSyncWriter(os.Stdout))
 
 	// Start the listener
