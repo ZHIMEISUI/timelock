@@ -100,6 +100,8 @@ func runTimlock(memDB dbm.DB) error{
 	if memDB == nil{
 		return fmt.Errorf("Timelock fail to connect database...")
 	}
+	lib.Log.Debug("Timelock creates database successfully...")
+	lib.Log.Debug(memDB)
 	app := timelock.NewTimelockApplication(memDB)
 	logger := log.NewTMLogger(log.NewSyncWriter(os.Stdout))
 
