@@ -23,7 +23,7 @@ import (
 var (
 	client 	abcicli.Client
 	logger 	log.Logger
-	memDB 	dbm.db.MemDB
+	memDB 	dbm.DB
 )
 
 // flags
@@ -76,7 +76,7 @@ func preRun() error {
 			return err
 		}
 		if memDB == nil{
-			memDB = dbm.db.NewMemDB(memDB)
+			memDB = dbm.DB.NewMemDB(memDB)
 		}
 
 		f, err := os.Create("logs/abci.log")
@@ -96,7 +96,7 @@ func runAccountBook() error {
 	return nil
 }
 
-func runTimlock(memDB dbm.db.MemDB) error{
+func runTimlock(memDB dbm.DB) error{
 	app := timelock.NewTimelockApplication(memDB)
 	logger := log.NewTMLogger(log.NewSyncWriter(os.Stdout))
 
