@@ -158,7 +158,7 @@ type TimelockApplication struct {
 	state State
 }
 
-func NewTimelockApplication(memDB dbm.db.MemDB) *TimelockApplication {
+func NewTimelockApplication(memDB dbm.DB.MemDB) *TimelockApplication {
 	lib.Log.Debug("NewTimelockApplication")
 	state := loadState(memDB)
 	return &TimelockApplication{state: state}
