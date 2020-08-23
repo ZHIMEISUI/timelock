@@ -7,6 +7,7 @@ import (
 	// "bytes"
 	"strings"
 	"encoding/json"
+	"encoding/binary"
 
 
 	"github.com/timelock/lib"
@@ -27,8 +28,9 @@ var (
 
 type State struct{
 	DB 		dbm.DB						`bson:"db"			json:"db"`
-	Height 	int							`bson:"height"		json:"height"`
+	Height 	int64						`bson:"height"		json:"height"`
 	AppHash	[]byte						`bson:"app_hash"	json:"app_hash"`
+	Size 	int64  						`bson:"size"		json:"size"`
 	Tx 		controllers.Transaction		`bson:"tx"			json:"tx"`
 }
 
@@ -216,7 +218,7 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 	}
 	setStateTx(txmap, app.state)
 	// saveState(app.state)
-	events :=  []types.Events{
+	events :=  []types.Event{
 		{
 			Type: "app",
 			Attribute: []types.EventAttribute{
