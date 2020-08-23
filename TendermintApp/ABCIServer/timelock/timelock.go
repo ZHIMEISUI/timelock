@@ -26,10 +26,10 @@ var (
 )
 
 type State struct{
-	DB dbm.DB
-	Height int		`bson:"height"	json:"height"`
-	AppHash	[]byte	`json:"app_hash"`
-	Tx controllers.Transaction
+	DB 		dbm.DB						`bson:"db"			json:"db"`
+	Height 	int							`bson:"height"		json:"height"`
+	AppHash	[]byte						`bson:"app_hash"	json:"app_hash"`
+	Tx 		controllers.Transaction		`bson:"tx"			json:"tx"`
 }
 
 func loadState(db dbm.DB) State{
@@ -217,7 +217,8 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 		}
 		// return types.ResponseDeliverTx{Code: code.CodeTypeOK}
 	}
-	
+	setStateTx(txmap, app.state)
+	saveState(app.state)
 	return types.ResponseDeliverTx{Code: code.CodeTypeOK}
 }
 
@@ -231,7 +232,6 @@ func (app *TimelockApplication) CheckTx(req types.RequestCheckTx) types.Response
 func (app *TimelockApplication) Commit() types.ResponseCommit {
 	lib.Log.Debug("Commit")
 	app.state.Height++
-	setStateTx(txmap, app.state)
 	saveState(app.state)
 
 	// stateKey = []byte(app.state.Tx.ID)
@@ -240,9 +240,9 @@ func (app *TimelockApplication) Commit() types.ResponseCommit {
 	lib.Log.Debug(app.state)
 
 	stateDBjson, _ := json.Marshal(app.state.DB)
-	lib.Log.Debug(string(stateDBjson))
+	lib.Log.Debug("stateDBjson: "+string(stateDBjson))
 	statejson, errs := json.Marshal(app.state)
-	lib.Log.Debug(string(statejson))
+	lib.Log.Debug("statejson: "+string(statejson))
 	if errs != nil {return types.ResponseCommit{}}
 	return types.ResponseCommit{Data: statejson}
 }
