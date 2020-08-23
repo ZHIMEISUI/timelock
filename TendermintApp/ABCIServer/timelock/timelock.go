@@ -217,7 +217,7 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 		}
 		// return types.ResponseDeliverTx{Code: code.CodeTypeOK}
 	}
-	setStateTx(txmap, app.state)
+	
 	return types.ResponseDeliverTx{Code: code.CodeTypeOK}
 }
 
@@ -231,6 +231,7 @@ func (app *TimelockApplication) CheckTx(req types.RequestCheckTx) types.Response
 func (app *TimelockApplication) Commit() types.ResponseCommit {
 	lib.Log.Debug("Commit")
 	app.state.Height++
+	setStateTx(txmap, app.state)
 	saveState(app.state)
 
 	// stateKey = []byte(app.state.Tx.ID)
