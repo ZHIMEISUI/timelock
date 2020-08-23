@@ -76,7 +76,7 @@ func preRun() error {
 			return err
 		}
 		if memDB == nil{
-			memDB = dbm.DB.NewMemDB(memDB)
+			memDB = dbm.DB.NewDB(memDB)
 		}
 
 		f, err := os.Create("logs/abci.log")
