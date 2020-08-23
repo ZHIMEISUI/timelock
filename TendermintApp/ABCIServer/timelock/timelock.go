@@ -201,25 +201,37 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 			lib.Log.Warning("Code: "+strconv.FormatUint(uint64(code.CodeTypeBadNonce), 10))
 			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
 		}
-		// return types.ResponseDeliverTx{Code: code.CodeTypeOK}
 	} else if txmap["Flag"] == "TriggerTx" {
 		logTx("DeliverTx", txmap)
 		if !TriggerTxVerify(txmap) {
 			lib.Log.Warning("Code: "+strconv.FormatUint(uint64(code.CodeTypeBadNonce), 10))
 			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
 		}
-		// return types.ResponseDeliverTx{Code: code.CodeTypeOK}
 	} else if txmap["Flag"] == "SettlementTx" {
 		logTx("DeliverTx", txmap)
 		if !SettlementTxVerify(txmap) {
 			lib.Log.Warning("Code: "+strconv.FormatUint(uint64(code.CodeTypeBadNonce), 10))
 			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
 		}
-		// return types.ResponseDeliverTx{Code: code.CodeTypeOK}
 	}
 	setStateTx(txmap, app.state)
-	saveState(app.state)
-	return types.ResponseDeliverTx{Code: code.CodeTypeOK}
+	// saveState(app.state)
+	events :=  []types.Events{
+		{
+			Type: "app",
+			Attribute: []types.EventAttribute{
+				{Key:[]byte("Transaction Type"), Value:[]byte(txmap["Flag"]), Index:true},
+				{Key:[]byte("Transaction ID"), Value:[]byte(txmap["ID"]), Index:true},
+				{Key:[]byte("Blockheight"), Value:[]byte(app.state.Height), Index:true},
+				{Key:[]byte("From"), Value:[]byte(txmap["From"]), Index:true},
+				{Key:[]byte("To"), Value:[]byte(txmap["To"]), Index:true},
+				{Key:[]byte("Deposit Coins"), Value:[]byte(txmap["Coin"]), Index:true},
+				{Key:[]byte("Channel Version"), Value:[]byte(txmap["NCommit"]), Index:true},
+				{Key:[]byte("Sig"), Value:[]byte(txmap["Sig"]), Index:true},
+			},
+		},
+	}
+	return types.ResponseDeliverTx{Code: code.CodeTypeOK, Events: events}
 }
 
 
@@ -231,6 +243,9 @@ func (app *TimelockApplication) CheckTx(req types.RequestCheckTx) types.Response
 
 func (app *TimelockApplication) Commit() types.ResponseCommit {
 	lib.Log.Debug("Commit")
+	appHash := make([]byte, 8)
+	binary.PutVarint(appHash, app.state.Size)
+	app.state.AppHash = appHash
 	app.state.Height++
 	saveState(app.state)
 
