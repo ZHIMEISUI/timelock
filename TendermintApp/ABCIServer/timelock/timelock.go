@@ -235,9 +235,9 @@ func (app *TimelockApplication) Commit() types.ResponseCommit {
 	saveState(app.state)
 
 	// stateKey = []byte(app.state.Tx.ID)
-	app.state = loadState(app.state.DB)
-	lib.Log.Debug("loadState(app.state.DB) app.state: ")
-	lib.Log.Debug(app.state)
+	// app.state = loadState(app.state.DB)
+	// lib.Log.Debug("loadState(app.state.DB) app.state: ")
+	// lib.Log.Debug(app.state)
 
 	stateDBjson, _ := json.Marshal(app.state.DB)
 	lib.Log.Debug("stateDBjson: "+string(stateDBjson))
