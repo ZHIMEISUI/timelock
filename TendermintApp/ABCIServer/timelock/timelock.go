@@ -149,6 +149,14 @@ func TriggerTxVerify(tx map[string]string) bool {
 	tsplit := strings.Split(string(tldb), "stateKey")
 	lib.Log.Notice(tsplit[3])
 
+	var txmap map[string]interface{}
+    if err := json.Unmarshal([]byte(tldb), &txmap); err == nil {
+        fmt.Println(txmap)
+        // fmt.Println(txmap["status"])
+    } else {
+        fmt.Println(err)
+    } 
+
 	if tx["Flag"] == "TriggerTx"{
 		from,_ := tx["From"]
 		if from != "Alice&&Bob" {
