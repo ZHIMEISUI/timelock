@@ -76,7 +76,8 @@ func clearTx(app *TimelockApplication)  {
 	app.state.Tx.To = ""
 	coin,_ := strconv.ParseFloat("", 32)
 	app.state.Tx.Coin = float32(coin)
-	app.state.Tx.NCommit = uint8("")
+	ncommit,_ := strconv.ParseUint("", 10, 8)
+	app.state.Tx.NCommit = uint8(ncommit)
 	app.state.Tx.Sig = ""
 }
 
