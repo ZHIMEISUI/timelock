@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strconv"
 	// "bytes"
-	"io/ioutil"
+	// "io/ioutil"
 	"strings"
 	"encoding/json"
 	"encoding/binary"
@@ -162,8 +162,12 @@ func TriggerTxVerify(app *TimelockApplication, tx map[string]string) bool {
 	// 	return false
 	// }
 	// lib.Log.Notice(txmap)
-
-	app.state.DB.Has(app.state.Tx.PreTxId)
+	pretxid := strconv.ParseInt(txmap["PreTxiId"], 10, 64)
+	if b,err := app.state.DB.Has(pretxid); err != nil{
+		lib.Log.Warning(err)
+		lib.Log.Warning("Your Trigger Transaction is not valid")
+		return false
+	}
 
 	if tx["Flag"] == "TriggerTx"{
 		from,_ := tx["From"]
@@ -231,7 +235,7 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 		}
 	} else if txmap["Flag"] == "TriggerTx" {
 		logTx("DeliverTx", txmap)
-		if !TriggerTxVerify(txmap) {
+		if !TriggerTxVerify(app, txmap) {
 			lib.Log.Warning("Code: "+strconv.FormatUint(uint64(code.CodeTypeBadNonce), 10))
 			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
 		}
