@@ -147,6 +147,7 @@ func TriggerTxVerify(tx map[string]string) bool {
 	lib.Log.Notice(string(tldb))
 
 	tsplit := strings.Split(string(tldb), "stateKey")
+	lib.Log.Notice(tsplit)
 
 	if tx["Flag"] == "TriggerTx"{
 		from,_ := tx["From"]
