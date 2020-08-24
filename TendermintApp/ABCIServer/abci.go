@@ -77,7 +77,7 @@ func preRun() error {
 		}
 		if memDB == nil{
 			// memDB = dbm.NewMemDB()
-			memDB, err = dbm.NewGoLevelDB("timelock","/log")
+			memDB, err = dbm.NewGoLevelDB("timelock","./log")
 			if err != nil{
 				return err
 			}
