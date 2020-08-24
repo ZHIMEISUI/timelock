@@ -192,7 +192,7 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 	// }
 	txmap:= txHandle(string(req.Tx))
 	stateKey = []byte(txmap["ID"])
-	app.state = loadState(app.state.DB)
+	// app.state = loadState(app.state.DB)
 	lib.Log.Debug("app.state: ")
 	lib.Log.Debug(app.state)
 	if txmap["Flag"] == "FundingTx" {
