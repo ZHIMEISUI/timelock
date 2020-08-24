@@ -144,7 +144,7 @@ func TriggerTxVerify(tx map[string]string) bool {
 		lib.Log.Warning(err)
 		return false
 	}
-	lib.Log.Notice(tldb)
+	lib.Log.Notice(string(tldb))
 	if tx["Flag"] == "TriggerTx"{
 		from,_ := tx["From"]
 		if from != "Alice&&Bob" {
