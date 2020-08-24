@@ -58,8 +58,6 @@ func Execute() error {
 	lib.HandleError(err)
 
 	go func() {
-		// err := runCounter()
-		// err := runDummy()
 		err := runTimlock(memDB)
 		lib.HandleError(err)
 	}()
@@ -76,8 +74,8 @@ func preRun() error {
 			return err
 		}
 		if memDB == nil{
-			// memDB = dbm.NewMemDB()
-			memDB, err = dbm.NewGoLevelDB("timelock","./log")
+			memDB = dbm.NewMemDB()
+			// memDB, err = dbm.NewGoLevelDB("timelock","./log")
 			if err != nil{
 				return err
 			}
@@ -96,9 +94,9 @@ func preRun() error {
 	return nil
 }
 
-func runAccountBook() error {
-	return nil
-}
+// func runAccountBook() error {
+// 	return nil
+// }
 
 func runTimlock(memDB dbm.DB) error{
 	if memDB == nil{
