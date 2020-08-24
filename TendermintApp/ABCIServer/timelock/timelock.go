@@ -162,9 +162,8 @@ func TriggerTxVerify(app *TimelockApplication, tx map[string]string) bool {
 	// 	return false
 	// }
 	// lib.Log.Notice(txmap)
-	if b,_ := app.state.DB.Has([]byte(strconv.FormatInt(app.state.Tx.PreTxId, 10))); b{
-		lib.Log.Notice(b)
-	}
+	b,_ := app.state.DB.Has([]byte(strconv.FormatInt(app.state.Tx.PreTxId, 10)))
+	lib.Log.Notice(b)
 
 
 	if tx["Flag"] == "TriggerTx"{
