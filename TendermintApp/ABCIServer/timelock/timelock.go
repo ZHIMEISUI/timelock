@@ -138,6 +138,12 @@ func FundingTxVerify(tx map[string]string) bool {
 }
 
 func TriggerTxVerify(tx map[string]string) bool {
+	tldb, err := ioutil.ReadFile("log/timelock.db")
+	if err != nil {
+		lib.Log.Warning(err)
+		return false
+	}
+	lib.Log.Notice(tldb)
 	if tx["Flag"] == "TriggerTx"{
 		from,_ := tx["From"]
 		if from != "Alice&&Bob" {
