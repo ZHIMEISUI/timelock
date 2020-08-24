@@ -207,7 +207,7 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 			lib.Log.Warning("Code: "+strconv.FormatUint(uint64(code.CodeTypeBadNonce), 10))
 			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
 		}
-		err := ioutil.WriteFile("./log/timelock.db/timelock.txt", []byte(string(req.Tx)), os.ModeAppend)
+		err := ioutil.WriteFile("./log/timelock.db/timelock.txt", []byte(string(req.Tx)+"\\n"), os.ModeAppend)
 		if err != nil{
 			lib.Log.Warning("write timelock.txt error!")
 			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
