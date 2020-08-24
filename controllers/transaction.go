@@ -8,7 +8,7 @@ Transaction
 type Transaction struct {
 	ID      	int64   `bson:"id" 				json:"id"`
 	Flag 		string 	`bson:"flag" 			json:"flag"`
-	Height  	uint64	`bson:"height" 			json:"height"`
+	// Height  	uint64	`bson:"height" 			json:"height"`
 	From    	string  `bson:"from" 			json:"from"`
 	To      	string  `bson:"to" 				json:"to"`
 	Coin 		float32 `bson:"coin" 			json:"coin"`
