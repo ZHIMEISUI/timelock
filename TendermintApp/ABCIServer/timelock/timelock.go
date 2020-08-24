@@ -150,12 +150,15 @@ func TriggerTxVerify(tx map[string]string) bool {
 	lib.Log.Notice(tsplit[3])
 
 	var txmap map[string]interface{}
-    if err := json.Unmarshal([]byte(tldb), &txmap); err == nil {
-        lib.Log.Notice(txmap)
-        // fmt.Println(txmap["status"])
-    } else {
-        fmt.Println(err)
-    } 
+    // if err := json.Unmarshal([]byte(tldb), &txmap); err == nil {
+    //     lib.Log.Notice(txmap)
+    //     // fmt.Println(txmap["status"])
+    // } else {
+    //     fmt.Println(err)
+	// } 
+	err = json.Unmarshal([]byte(tldb), &txmap)
+	if err != nil{return false}
+	lib.Log.Notice(txmap)
 
 	if tx["Flag"] == "TriggerTx"{
 		from,_ := tx["From"]
