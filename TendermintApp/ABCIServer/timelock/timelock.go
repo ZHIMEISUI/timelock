@@ -218,7 +218,7 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 		}
 	}
 	setStateTx(txmap, app.state)
-	lib.Log.Debug(app.state.Tx)
+	lib.Log.Debug("app.state.Tx ---> "+string(app.state.Tx))
 	// saveState(app.state)
 	events :=  []types.Event{
 		{
