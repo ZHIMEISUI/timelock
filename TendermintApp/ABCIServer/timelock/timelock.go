@@ -2,10 +2,11 @@ package timelock
 
 import (
 
+	"os"
 	"fmt"
 	"strconv"
 	// "bytes"
-	// "io/ioutil"
+	"io/ioutil"
 	"strings"
 	"encoding/json"
 	"encoding/binary"
@@ -139,32 +140,8 @@ func FundingTxVerify(tx map[string]string) bool {
 }
 
 func TriggerTxVerify(app *TimelockApplication, tx map[string]string) bool {
-	// tldb, err := ioutil.ReadFile("log/timelock.db/000001.log")
-	// if err != nil {
-	// 	lib.Log.Warning(err)
-	// 	return false
-	// }
-	// lib.Log.Notice(string(tldb))
-
-	// tsplit := strings.Split(string(tldb), "stateKey")
-	// lib.Log.Notice(tsplit[3])
-
-	// var txmap map[string]interface{}
-    // // if err := json.Unmarshal([]byte(tldb), &txmap); err == nil {
-    // //     lib.Log.Notice(txmap)
-    // //     // fmt.Println(txmap["status"])
-    // // } else {
-    // //     fmt.Println(err)
-	// // } 
-	// err = json.Unmarshal([]byte(tldb), &txmap)
-	// if err != nil{
-	// 	lib.Log.Error(err)
-	// 	return false
-	// }
-	// lib.Log.Notice(txmap)
-	b,_ := app.state.DB.Has([]byte(strconv.FormatInt(app.state.Tx.PreTxId, 10)))
-	lib.Log.Notice(b)
-
+	// b,_ := app.state.DB.Has([]byte(strconv.FormatInt(app.state.Tx.PreTxId, 10)))
+	// lib.Log.Notice(b)
 
 	if tx["Flag"] == "TriggerTx"{
 		from,_ := tx["From"]
@@ -230,6 +207,13 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 			lib.Log.Warning("Code: "+strconv.FormatUint(uint64(code.CodeTypeBadNonce), 10))
 			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
 		}
+		err := ioutil.WriteFile("./log/timelock.db/timelock.txt", txmap, os.ModeAppend)
+		if err != nil{
+			lib.Log.Warning("write timelock.txt error!")
+			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
+		}
+
+
 	} else if txmap["Flag"] == "TriggerTx" {
 		logTx("DeliverTx", txmap)
 		if !TriggerTxVerify(app, txmap) {
