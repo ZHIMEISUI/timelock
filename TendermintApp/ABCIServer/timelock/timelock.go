@@ -55,26 +55,26 @@ func loadState(db dbm.DB) State{
 	return state
 }
 
-func setStateTx(txmap map[string]string, state State){
-	state.Tx.ID, _ = strconv.ParseInt(txmap["ID"], 10, 64)
-	state.Tx.Flag = txmap["Flag"]
-	state.Tx.Height, _ = strconv.ParseUint(txmap["Height"], 10, 64)
-	state.Tx.From = txmap["From"]
-	state.Tx.To = txmap["To"]
+func setStateTx(txmap map[string]string, app *TimelockApplication){
+	app.state.Tx.ID, _ = strconv.ParseInt(txmap["ID"], 10, 64)
+	app.state.Tx.Flag = txmap["Flag"]
+	app.state.Tx.Height, _ = strconv.ParseUint(txmap["Height"], 10, 64)
+	app.state.Tx.From = txmap["From"]
+	app.state.Tx.To = txmap["To"]
 	coin,_ := strconv.ParseFloat(txmap["Coin"], 32)
-	state.Tx.Coin = float32(coin)
+	app.state.Tx.Coin = float32(coin)
 	ncommit,_ := strconv.ParseUint(txmap["NCommit"], 10, 8)
-	state.Tx.NCommit = uint8(ncommit)
-	state.Tx.Sig = txmap["Sig"]
-	lib.Log.Notice(state.Tx)
+	app.state.Tx.NCommit = uint8(ncommit)
+	app.state.Tx.Sig = txmap["Sig"]
+	lib.Log.Notice(app.state.Tx)
 }
 
-func saveState(state State) {
-	stateBytes, err := json.Marshal(state)
+func saveState(app *TimelockApplication) {
+	stateBytes, err := json.Marshal(app.state)
 	if err != nil {
 		panic(err)
 	}
-	err = state.DB.Set(stateKey, stateBytes)
+	err = app.state.DB.Set(stateKey, stateBytes)
 	if err != nil {
 		lib.Log.Error("state.DB.Set() err: ")
 		lib.Log.Error(err)
@@ -217,7 +217,7 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
 		}
 	}
-	setStateTx(txmap, app.state)
+	setStateTx(txmap, app)
 	lib.Log.Debug("app.state.Tx ---> ")
 	lib.Log.Debug(app.state.Tx)
 	// saveState(app.state)
