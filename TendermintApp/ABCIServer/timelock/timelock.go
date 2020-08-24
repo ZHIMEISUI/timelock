@@ -252,7 +252,7 @@ func (app *TimelockApplication) Commit() types.ResponseCommit {
 	binary.PutVarint(appHash, app.state.Size)
 	app.state.AppHash = appHash
 	app.state.Height++
-	saveState(app.state)
+	saveState(app)
 
 	// stateKey = []byte(app.state.Tx.ID)
 	// app.state = loadState(app.state.DB)
