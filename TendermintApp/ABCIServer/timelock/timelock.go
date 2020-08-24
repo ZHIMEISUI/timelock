@@ -68,6 +68,16 @@ func setStateTx(txmap map[string]string, app *TimelockApplication){
 	app.state.Tx.Sig = txmap["Sig"]
 	lib.Log.Notice(app.state.Tx)
 }
+func clearTx(app *TimelockApplication)  {
+	app.state.Tx.ID = ""
+	app.state.Tx.Flag = ""
+	app.state.Tx.Height = ""
+	app.state.Tx.From = ""
+	app.state.Tx.To = ""
+	app.state.Tx.Coin = ""
+	app.state.Tx.NCommit = ""
+	app.state.Tx.Sig = ""
+}
 
 func saveState(app *TimelockApplication) {
 	stateBytes, err := json.Marshal(app.state)
@@ -178,22 +188,8 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 	lib.Log.Debug("DeliverTx")
 	lib.Log.Notice(string(req.Tx))
 
-	// txhandle := strings.Replace(string(req.Tx), "'", "", -1)
-	// txhandle = strings.Replace(string(txhandle), "{", "", -1)
-	// txhandle = strings.Replace(string(txhandle), "[", "", -1)
-	// txhandle = strings.Replace(string(txhandle), "]", "", -1)
-	// txhandle = strings.Replace(string(txhandle), "}", "", -1)
-	// lib.Log.Debug(txhandle)
-	// txs := strings.Split(string(txhandle), ",")
-	// txmap := make(map[string]string)
-	
-	// for _ , t := range txs {
-	// 	tsplit := strings.Split(string(t), ":")
-	// 	txmap[tsplit[0]] = tsplit[1]
-	// }
 	txmap:= txHandle(string(req.Tx))
-	// stateKey = []byte(txmap["ID"])
-	// app.state = loadState(app.state.DB)
+
 	lib.Log.Debug("app.state: ")
 	lib.Log.Debug(app.state)
 	if txmap["Flag"] == "FundingTx" {
@@ -220,7 +216,7 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 	setStateTx(txmap, app)
 	lib.Log.Debug("app.state.Tx ---> ")
 	lib.Log.Debug(app.state.Tx)
-	// saveState(app.state)
+
 	events :=  []types.Event{
 		{
 			Type: "app",
@@ -254,15 +250,11 @@ func (app *TimelockApplication) Commit() types.ResponseCommit {
 	app.state.Height++
 	saveState(app)
 
-	// stateKey = []byte(app.state.Tx.ID)
-	// app.state = loadState(app.state.DB)
-	// lib.Log.Debug("loadState(app.state.DB) app.state: ")
-	// lib.Log.Debug(app.state)
-
 	stateDBjson, _ := json.Marshal(app.state.DB)
 	lib.Log.Debug("stateDBjson: "+string(stateDBjson))
 	statejson, errs := json.Marshal(app.state)
 	lib.Log.Debug("statejson: "+string(statejson))
+	clearTx(app)
 	if errs != nil {return types.ResponseCommit{}}
 	return types.ResponseCommit{Data: statejson}
 }
