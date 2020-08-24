@@ -139,7 +139,7 @@ func FundingTxVerify(tx map[string]string) bool {
 }
 
 func TriggerTxVerify(tx map[string]string) bool {
-	tldb, err := ioutil.ReadFile("log/timelock.db")
+	tldb, err := ioutil.ReadFile("log/timelock.db/000001.log")
 	if err != nil {
 		lib.Log.Warning(err)
 		return false
