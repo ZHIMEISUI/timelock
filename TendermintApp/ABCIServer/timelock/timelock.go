@@ -147,7 +147,7 @@ func TriggerTxVerify(tx map[string]string) bool {
 	lib.Log.Notice(string(tldb))
 
 	tsplit := strings.Split(string(tldb), "stateKey")
-	// lib.Log.Notice(tsplit[3])
+	lib.Log.Notice(tsplit[3])
 
 	var txmap map[string]interface{}
     // if err := json.Unmarshal([]byte(tldb), &txmap); err == nil {
