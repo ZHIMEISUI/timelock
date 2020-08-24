@@ -8,6 +8,7 @@ Transaction
 type Transaction struct {
 	ID      	int64   `bson:"id" 				json:"id"`
 	Flag 		string 	`bson:"flag" 			json:"flag"`
+	PreTxId		int64	`bson:"pretxid" 		json:"pretxid"`
 	// Height  	uint64	`bson:"height" 			json:"height"`
 	From    	string  `bson:"from" 			json:"from"`
 	To      	string  `bson:"to" 				json:"to"`
@@ -56,9 +57,10 @@ func (t *Transaction) CreateFundingTx(From string, To string, Coin float32, Sig 
 	return true, nil
 }
 
-func (t *Transaction) CreateTriggerTx(From string, To string, Coin float32, NCommit uint8, Sig string) (bool, error) {
+func (t *Transaction) CreateTriggerTx(PreTxId int64, From string, To string, Coin float32, NCommit uint8, Sig string) (bool, error) {
 	t.ID, _ = lib.GetNewUID()
 	t.Flag = "TriggerTx"
+	t.PreTxId = PreTxId
 	t.From = From
 	t.To = To
 	t.Coin = Coin
@@ -68,9 +70,10 @@ func (t *Transaction) CreateTriggerTx(From string, To string, Coin float32, NCom
 	return true, nil
 }
 
-func (t *Transaction) CreateSettlementTx(From string, To string, Coin float32, NCommit uint8, Sig string) (bool, error) {
+func (t *Transaction) CreateSettlementTx(PreTxId int64, From string, To string, Coin float32, NCommit uint8, Sig string) (bool, error) {
 	t.ID, _ = lib.GetNewUID()
 	t.Flag = "SettlementTx"
+	t.PreTxId = PreTxId
 	t.From = From
 	t.To = To
 	t.Coin = Coin

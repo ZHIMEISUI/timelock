@@ -138,30 +138,32 @@ func FundingTxVerify(tx map[string]string) bool {
 	return false
 }
 
-func TriggerTxVerify(tx map[string]string) bool {
-	tldb, err := ioutil.ReadFile("log/timelock.db/000001.log")
-	if err != nil {
-		lib.Log.Warning(err)
-		return false
-	}
-	lib.Log.Notice(string(tldb))
+func TriggerTxVerify(app *TimelockApplication, tx map[string]string) bool {
+	// tldb, err := ioutil.ReadFile("log/timelock.db/000001.log")
+	// if err != nil {
+	// 	lib.Log.Warning(err)
+	// 	return false
+	// }
+	// lib.Log.Notice(string(tldb))
 
-	tsplit := strings.Split(string(tldb), "stateKey")
-	lib.Log.Notice(tsplit[3])
+	// tsplit := strings.Split(string(tldb), "stateKey")
+	// lib.Log.Notice(tsplit[3])
 
-	var txmap map[string]interface{}
-    // if err := json.Unmarshal([]byte(tldb), &txmap); err == nil {
-    //     lib.Log.Notice(txmap)
-    //     // fmt.Println(txmap["status"])
-    // } else {
-    //     fmt.Println(err)
-	// } 
-	err = json.Unmarshal([]byte(tldb), &txmap)
-	if err != nil{
-		lib.Log.Error(err)
-		return false
-	}
-	lib.Log.Notice(txmap)
+	// var txmap map[string]interface{}
+    // // if err := json.Unmarshal([]byte(tldb), &txmap); err == nil {
+    // //     lib.Log.Notice(txmap)
+    // //     // fmt.Println(txmap["status"])
+    // // } else {
+    // //     fmt.Println(err)
+	// // } 
+	// err = json.Unmarshal([]byte(tldb), &txmap)
+	// if err != nil{
+	// 	lib.Log.Error(err)
+	// 	return false
+	// }
+	// lib.Log.Notice(txmap)
+
+	app.state.DB.Has(app.state.Tx.PreTxId)
 
 	if tx["Flag"] == "TriggerTx"{
 		from,_ := tx["From"]
@@ -249,6 +251,7 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 			Type: "app",
 			Attributes: []types.EventAttribute{
 				{Key:[]byte("Transaction Type"), Value:[]byte(txmap["Flag"]), Index:true},
+				{Key:[]byte("Previous Transaction ID"), Value:[]byte(txmap["PreTxId"]), Index:true},
 				{Key:[]byte("Transaction ID"), Value:[]byte(txmap["ID"]), Index:true},
 				{Key:[]byte("Blockheight"), Value:[]byte(strconv.FormatInt(app.state.Height, 10)), Index:true},
 				{Key:[]byte("From"), Value:[]byte(txmap["From"]), Index:true},
