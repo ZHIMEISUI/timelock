@@ -162,11 +162,10 @@ func TriggerTxVerify(app *TimelockApplication, tx map[string]string) bool {
 	// 	return false
 	// }
 	// lib.Log.Notice(txmap)
-	if b,err := app.state.DB.Has([]byte(strconv.FormatInt(app.state.Tx.PreTxId, 10))); err != nil{
-		lib.Log.Warning(err)
-		lib.Log.Warning("Your Trigger Transaction is not valid")
-		return false
+	if b,_ := app.state.DB.Has([]byte(strconv.FormatInt(app.state.Tx.PreTxId, 10))); b{
+		lib.Log.Notice(b)
 	}
+
 
 	if tx["Flag"] == "TriggerTx"{
 		from,_ := tx["From"]
