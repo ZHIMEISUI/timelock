@@ -66,6 +66,7 @@ func setStateTx(txmap map[string]string, state State){
 	ncommit,_ := strconv.ParseUint(txmap["NCommit"], 10, 8)
 	state.Tx.NCommit = uint8(ncommit)
 	state.Tx.Sig = txmap["Sig"]
+	lib.Log.Notice(state.Tx)
 }
 
 func saveState(state State) {
@@ -191,7 +192,7 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 	// 	txmap[tsplit[0]] = tsplit[1]
 	// }
 	txmap:= txHandle(string(req.Tx))
-	stateKey = []byte(txmap["ID"])
+	// stateKey = []byte(txmap["ID"])
 	// app.state = loadState(app.state.DB)
 	lib.Log.Debug("app.state: ")
 	lib.Log.Debug(app.state)
