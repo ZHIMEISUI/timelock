@@ -69,13 +69,14 @@ func setStateTx(txmap map[string]string, app *TimelockApplication){
 	lib.Log.Notice(app.state.Tx)
 }
 func clearTx(app *TimelockApplication)  {
-	app.state.Tx.ID = ""
+	app.state.Tx.ID, _ = strconv.ParseInt("", 10, 64)
 	app.state.Tx.Flag = ""
-	app.state.Tx.Height = ""
+	app.state.Tx.Height, _ = strconv.ParseUint("", 10, 64)
 	app.state.Tx.From = ""
 	app.state.Tx.To = ""
-	app.state.Tx.Coin = ""
-	app.state.Tx.NCommit = ""
+	coin,_ := strconv.ParseFloat("", 32)
+	app.state.Tx.Coin = float32(coin)
+	app.state.Tx.NCommit = uint8("")
 	app.state.Tx.Sig = ""
 }
 
