@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"strconv"
 	// "bytes"
-	"io/ioutil"
+	// "io/ioutil"
 	"strings"
 	"encoding/json"
 	"encoding/binary"
@@ -209,7 +209,7 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 		}
 
 		// err := ioutil.WriteFile("./log/timelock.db/timelock.txt", []byte(string(req.Tx)+"\n"), os.ModeAppend)
-		f, err := os.Open("./log/timelock.db/timelock.txt", os.O_RDWR|os.O_CREATE, 0755)
+		f, err := os.OpenFile("./log/timelock.db/timelock.txt", os.O_RDWR|os.O_CREATE, 0755)
 		if err != nil{
 			lib.Log.Warning("write timelock.txt error!")
 			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
@@ -224,7 +224,7 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
 		}
 		// err := ioutil.WriteFile("./log/timelock.db/timelock.txt", []byte(string(req.Tx)+"\n"), os.ModeAppend)
-		f, err := os.Open("./log/timelock.db/timelock.txt", os.O_RDWR|os.O_CREATE, 0755)
+		f, err := os.OpenFile("./log/timelock.db/timelock.txt", os.O_RDWR|os.O_CREATE, 0755)
 		if err != nil{
 			lib.Log.Warning("write timelock.txt error!")
 			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
@@ -238,7 +238,7 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
 		}
 		// err := ioutil.WriteFile("./log/timelock.db/timelock.txt", []byte(string(req.Tx)+"\n"), os.ModeAppend)
-		f, err := os.Open("./log/timelock.db/timelock.txt", os.O_RDWR|os.O_CREATE, 0755)
+		f, err := os.OpenFile("./log/timelock.db/timelock.txt", os.O_RDWR|os.O_CREATE, 0755)
 		if err != nil{
 			lib.Log.Warning("write timelock.txt error!")
 			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
