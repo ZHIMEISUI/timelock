@@ -237,7 +237,7 @@ func SettlementTxVerify(app *TimelockApplication, tx map[string]string, f *os.Fi
 	}
 	var txarray []string
 	txarray = append(txarray, txstring)
-	if _, b = has(txarray, "SettlementTx", "Flag"); !b {
+	if _, b = has(txarray, "TriggerTx", "Flag"); !b {
 		return false
 	}
 	
