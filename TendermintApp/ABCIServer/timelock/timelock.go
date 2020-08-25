@@ -183,11 +183,12 @@ func TriggerTxVerify(app *TimelockApplication, tx map[string]string, f *os.File)
 
 		lib.Log.Notice(string(chunk))
 		txs := strings.Split(string(chunk), "\\n")
-		from := strconv.FormatInt(app.state.Tx.From, 10)
-		lib.Log.Notice(app.state.Tx)
+		// from := tx["From"]
+		// strconv.FormatInt(app.state.Tx.From, 10)
+		lib.Log.Notice(tx["From"])
 		
 
-		txstring, b := has(txs, from, "ID")
+		txstring, b := has(txs, tx["From"], "ID")
 		if !b {
 			lib.Log.Warning("Your Trigger Transaction is not valid")
 			return false
