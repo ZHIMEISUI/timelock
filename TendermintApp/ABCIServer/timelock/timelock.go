@@ -61,7 +61,7 @@ func setStateTx(txmap map[string]string, app *TimelockApplication){
 	app.state.Tx.ID, _ = strconv.ParseInt(txmap["ID"], 10, 64)
 	app.state.Tx.Flag = txmap["Flag"]
 	// app.state.Tx.Height, _ = strconv.ParseUint(txmap["Height"], 10, 64)
-	app.state.Tx.PreTxId = strconv.ParseInt(txmap["PreTxId"], 10, 64)
+	app.state.Tx.PreTxId, _ = strconv.ParseInt(txmap["PreTxId"], 10, 64)
 	app.state.Tx.From = txmap["From"]
 	app.state.Tx.To = txmap["To"]
 	coin,_ := strconv.ParseFloat(txmap["Coin"], 32)
@@ -210,7 +210,7 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 		}
 
 		// err := ioutil.WriteFile("./log/timelock.db/timelock.txt", []byte(string(req.Tx)+"\n"), os.ModeAppend)
-		f, err := os.OpenFile("./log/timelock.db/timelock.txt", os.O_RDWR|O_TRUNC, 0755)
+		f, err := os.OpenFile("./log/timelock.db/timelock.txt", os.O_RDWR|os.O_TRUNC, 0755)
 		if err != nil{
 			lib.Log.Warning("write timelock.txt error!")
 			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
