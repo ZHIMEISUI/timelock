@@ -184,6 +184,7 @@ func TriggerTxVerify(app *TimelockApplication, tx map[string]string, f *os.File)
 		lib.Log.Notice(string(chunk))
 		txs := strings.Split(string(chunk), "\\n")
 		from := strconv.FormatInt(app.state.Tx.From, 10)
+		lib.Log.Notice(app.state.Tx)
 		
 
 		txstring, b := has(txs, from, "ID")
