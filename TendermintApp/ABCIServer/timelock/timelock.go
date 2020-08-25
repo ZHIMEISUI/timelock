@@ -152,7 +152,7 @@ func TriggerTxVerify(app *TimelockApplication, tx map[string]string, f *os.File)
         n, err := f.Read(buf)
         if err != nil && err != io.EOF{
             fmt.Println("read buf fail", err)
-            return ""
+            return false
         }
         //说明读取结束
         if n == 0 {
