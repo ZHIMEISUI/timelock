@@ -140,10 +140,27 @@ func FundingTxVerify(tx map[string]string) bool {
 	return false
 }
 
-func TriggerTxVerify(app *TimelockApplication, tx map[string]string) bool {
+func TriggerTxVerify(app *TimelockApplication, tx map[string]string, f *os.OpenFile) bool {
 	// b,_ := app.state.DB.Has([]byte(strconv.FormatInt(app.state.Tx.PreTxId, 10)))
 	// lib.Log.Notice(b)
+	var chunk []byte
+    buf := make([]byte, 1024)
 
+    for {
+        //从file读取到buf中
+        n, err := f.Read(buf)
+        if err != nil && err != io.EOF{
+            fmt.Println("read buf fail", err)
+            return ""
+        }
+        //说明读取结束
+        if n == 0 {
+            break
+        }
+        //读取到最终的缓冲区中
+        chunk = append(chunk, buf[:n]...)
+	}
+	lib.Log.Notice(chunk)
 	if tx["Flag"] == "TriggerTx"{
 		from,_ := tx["From"]
 		if from != "Alice&&Bob" {
@@ -209,7 +226,6 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
 		}
 
-		// err := ioutil.WriteFile("./log/timelock.db/timelock.txt", []byte(string(req.Tx)+"\n"), os.ModeAppend)
 		f, err := os.OpenFile("./log/timelock.db/timelock.txt", os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0755)
 		if err != nil{
 			lib.Log.Warning("write timelock.txt error!")
@@ -221,16 +237,17 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 
 	} else if txmap["Flag"] == "TriggerTx" {
 		logTx("DeliverTx", txmap)
-		if !TriggerTxVerify(app, txmap) {
-			lib.Log.Warning("Code: "+strconv.FormatUint(uint64(code.CodeTypeBadNonce), 10))
-			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
-		}
-		// err := ioutil.WriteFile("./log/timelock.db/timelock.txt", []byte(string(req.Tx)+"\n"), os.ModeAppend)
 		f, err := os.OpenFile("./log/timelock.db/timelock.txt", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0755)
 		if err != nil{
 			lib.Log.Warning("write timelock.txt error!")
 			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
 		}
+
+		if !TriggerTxVerify(app, txmap, f) {
+			lib.Log.Warning("Code: "+strconv.FormatUint(uint64(code.CodeTypeBadNonce), 10))
+			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
+		}
+		
 		txline, err := f.Write([]byte(string(req.Tx)+"\n"))
 		lib.Log.Notice(txline)
 		defer f.Close()
@@ -240,7 +257,6 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 			lib.Log.Warning("Code: "+strconv.FormatUint(uint64(code.CodeTypeBadNonce), 10))
 			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
 		}
-		// err := ioutil.WriteFile("./log/timelock.db/timelock.txt", []byte(string(req.Tx)+"\n"), os.ModeAppend)
 		f, err := os.OpenFile("./log/timelock.db/timelock.txt", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0755)
 		if err != nil{
 			lib.Log.Warning("write timelock.txt error!")
