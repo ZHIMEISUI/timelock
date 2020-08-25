@@ -18,7 +18,7 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func Execute(flag string, PreTxId int64, ChannelVersion uint8, Coins float64) error {
+func Execute(flag string, From int64, ChannelVersion uint8, Coins float64) error {
 	lib.Log.Notice("Starting Alice UI Client... ")
 
 	f, err := os.Create("logs/client.log")
@@ -48,11 +48,11 @@ func Execute(flag string, PreTxId int64, ChannelVersion uint8, Coins float64) er
 
 			for j := 0; j < transactionsPerBlock; j++ {
 				if flag == "FundingTx"{
-					_, _ = tran.CreateFundingTx("Alice", "Alice&&Bob", float32(Coins), "AliceSig")
+					_, _ = tran.CreateFundingTx(From, "Alice&&Bob", float32(Coins), "AliceSig")
 				}else if flag == "TriggerTx"{
-					_, _ = tran.CreateTriggerTx(PreTxId, "Alice&&Bob", "Alice&&Bob", float32(Coins), ChannelVersion, "AliceSig")
+					_, _ = tran.CreateTriggerTx(From, "Alice&&Bob", float32(Coins), ChannelVersion, "AliceSig")
 				}else if flag == "SettlementTx"{
-					_, _ = tran.CreateSettlementTx(PreTxId, "Alice&&Bob", "Alice", float32(Coins), ChannelVersion, "AliceSig")
+					_, _ = tran.CreateSettlementTx(From, "Alice", float32(Coins), ChannelVersion, "AliceSig")
 				}
 				transactions = append(transactions, tran)
 			}

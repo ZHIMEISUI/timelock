@@ -31,7 +31,7 @@ var (
 
 type State struct{
 	DB 		dbm.DB						`bson:"db"			json:"db"`
-	Height 	int64						`bson:"height"		json:"height"`
+	Height 	uint8						`bson:"height"		json:"height"`
 	AppHash	[]byte						`bson:"app_hash"	json:"app_hash"`
 	Size 	int64  						`bson:"size"		json:"size"`
 	Tx 		controllers.Transaction		`bson:"tx"			json:"tx"`
@@ -80,8 +80,8 @@ func clearTx(app *TimelockApplication)  {
 	app.state.Tx.Flag = ""
 	// app.state.Tx.Height, _ = strconv.ParseUint("", 10, 64)
 	timelock,_ := strconv.ParseUint("", 10, 8)
-	app.state.Tx.TimeLock = timelock
-	app.state.Tx.From = strconv.ParseInt("", 10, 64)
+	app.state.Tx.TimeLock = uint8(timelock)
+	app.state.Tx.From, _ = strconv.ParseInt("", 10, 64)
 	app.state.Tx.To = ""
 	coin,_ := strconv.ParseFloat("", 32)
 	app.state.Tx.Coin = float32(coin)
@@ -239,15 +239,17 @@ func SettlementTxVerify(app *TimelockApplication, tx map[string]string, f *os.Fi
 		}
 		var txarray []string
 		txarray = append(txarray, txstring)
-		if _, b = has(txarray, "TriggerTx", "Flag"); !b {
+		if txstring, b = has(txarray, "TriggerTx", "Flag"); !b {
 			lib.Log.Warning("Your Settlement Transaction is not valid")
 			lib.Log.Warning(tx["Flag"]+" should send from both Alice and Bob!")
 			return false
 		}
-		txmap := txHandle(txarray)
-		
-		if app.state.Tx.Height <= strconv.FormatUint(txmap["BlockHeight"],10)+strconv.FormatUint(txmap["TimeLock"],10){
-			if app.state.Tx.NCommit > strconv.FormatUint(txmap["NCommit"],10) { // 若另一方提供更高版本的NCommit
+		txmap := txHandle(txstring)
+		bh,_ := strconv.ParseUint(txmap["BlockHeight"],10,8)
+		tl,_ := strconv.ParseUint(txmap["TimeLock"],10,8)
+		nc,_ := strconv.ParseUint(txmap["NCommit"],10,8)
+		if app.state.Height <= bh+tl {
+			if app.state.Tx.NCommit > nc { // 若另一方提供更高版本的NCommit
 				// 该交易owner(不同于TriggerTx的owner)可以拿走全部deposit
 			} else { // 若另一方不提供更高版本的NCommit
 				// 验证t_alice
@@ -308,7 +310,7 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 		}
 		txstripe := strings.Replace(string(req.Tx), "[{", "", -1)
 		txstripe = strings.Replace(string(req.Tx), "}]", "", -1)
-		txline, err := f.Write([]byte("[{" +txstripe+ ",'BlockHeight':'" +strconv.FormatInt(app.state.Height,10)+ "'}]" + "\n"))
+		txline, err := f.Write([]byte("[{" +txstripe+ ",'BlockHeight':'" +strconv.FormatUint(uint64(app.state.Height),10)+ "'}]" + "\n"))
 		lib.Log.Notice(txline)
 		defer f.Close()
 
@@ -326,7 +328,7 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 		}
 		txstripe := strings.Replace(string(req.Tx), "[{", "", -1)
 		txstripe = strings.Replace(txstripe, "}]", "", -1)
-		txline, err := f.Write([]byte("[{" +txstripe+ ",'BlockHeight':'" +strconv.FormatInt(app.state.Height,10)+ "'}]" + "\n"))
+		txline, err := f.Write([]byte("[{" +txstripe+ ",'BlockHeight':'" +strconv.FormatUint(uint64(app.state.Height),10)+ "'}]" + "\n"))
 		lib.Log.Notice(txline)
 		defer f.Close()
 	} else if txmap["Flag"] == "SettlementTx" {
@@ -343,7 +345,7 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 		}
 		txstripe := strings.Replace(string(req.Tx), "[{", "", -1)
 		txstripe = strings.Replace(txstripe, "}]", "", -1)
-		txline, err := f.Write([]byte("[{" +txstripe+ ",'BlockHeight':'" +strconv.FormatInt(app.state.Height,10)+ "'}]" + "\n"))
+		txline, err := f.Write([]byte("[{" +txstripe+ ",'BlockHeight':'" +strconv.FormatUint(uint64(app.state.Height),10)+ "'}]" + "\n"))
 		lib.Log.Notice(txline)
 		defer f.Close()
 	}
@@ -358,7 +360,7 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 				{Key:[]byte("Transaction Type"), Value:[]byte(txmap["Flag"]), Index:true},
 				{Key:[]byte("Previous Transaction ID"), Value:[]byte(txmap["From"]), Index:true},
 				{Key:[]byte("Transaction ID"), Value:[]byte(txmap["ID"]), Index:true},
-				{Key:[]byte("Blockheight"), Value:[]byte(strconv.FormatInt(app.state.Height, 10)), Index:true},
+				{Key:[]byte("Blockheight"), Value:[]byte(strconv.FormatUint(uint64(app.state.Height), 10)), Index:true},
 				// {Key:[]byte("From"), Value:[]byte(txmap["From"]), Index:true},
 				{Key:[]byte("To"), Value:[]byte(txmap["To"]), Index:true},
 				{Key:[]byte("Deposit Coins"), Value:[]byte(txmap["Coin"]), Index:true},
