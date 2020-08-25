@@ -161,7 +161,16 @@ func TriggerTxVerify(app *TimelockApplication, tx map[string]string, f *os.File)
         //读取到最终的缓冲区中
         chunk = append(chunk, buf[:n]...)
 	}
+
 	lib.Log.Notice(string(chunk))
+	txmap := txHandle(string(chunk))
+	
+	pti, _ = strconv.ParseInt(txmap["PreTxId"], 10, 64)
+	if app.state.Tx.PreTxId != pti {
+		return false
+	}
+	
+
 	if tx["Flag"] == "TriggerTx"{
 		from,_ := tx["From"]
 		if from != "Alice&&Bob" {
