@@ -131,17 +131,17 @@ func logTx(funcname string, txmap map[string]string){
 }
 
 
-func has(strs []string, str string, index string) bool {
+func has(strs []string, str string, index string) string, bool {
 	// txs:= strings.Split(string(chunk), "\\n")
 	
 	for _,t := range strs{
 		txmap := txHandle(t)
 		if str == txmap[index] {
 			lib.Log.Notice(str+ "==?" +txmap[index])
-			return true
+			return t, true
 		}
 	}
-	return false
+	return "",false
 }
 
 func FundingTxVerify(tx map[string]string) bool {
@@ -183,7 +183,10 @@ func TriggerTxVerify(app *TimelockApplication, tx map[string]string, f *os.File)
 	txs := strings.Split(string(chunk), "\\n")
 	pti := strconv.FormatInt(app.state.Tx.PreTxId, 10)
 
-	if !has(txs, "FundingTx", "Flag") && !has(txs, pti, "PreTxId") {
+	if txhas, b := !has(txs, "FundingTx", "Flag"); !b {
+		return false
+	}
+	if txhas, b: = has(txhas, pti, "PreTxId"); !b {
 		return false
 	}
 
