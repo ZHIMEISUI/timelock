@@ -208,31 +208,31 @@ func TriggerTxVerify(app *TimelockApplication, tx map[string]string, f *os.File)
 
 func SettlementTxVerify(tx map[string]string) bool {
 
-	var chunk []byte
-    buf := make([]byte, 1024)
+	// var chunk []byte
+    // buf := make([]byte, 1024)
 
-    for {
-        //从file读取到buf中
-        n, err := f.Read(buf)
-        if err != nil && err != io.EOF{
-            fmt.Println("read buf fail", err)
-            return false
-        }
-        //说明读取结束
-        if n == 0 {
-            break
-        }
-        //读取到最终的缓冲区中
-        chunk = append(chunk, buf[:n]...)
-	}
+    // for {
+    //     //从file读取到buf中
+    //     n, err := f.Read(buf)
+    //     if err != nil && err != io.EOF{
+    //         fmt.Println("read buf fail", err)
+    //         return false
+    //     }
+    //     //说明读取结束
+    //     if n == 0 {
+    //         break
+    //     }
+    //     //读取到最终的缓冲区中
+    //     chunk = append(chunk, buf[:n]...)
+	// }
 
-	lib.Log.Notice(string(chunk))
-	txmap := txHandle(string(chunk))
+	// lib.Log.Notice(string(chunk))
+	// txmap := txHandle(string(chunk))
 
-	pti, _ := strconv.ParseInt(txmap["PreTxId"], 10, 64)
-	if txmap["PreTxId"] == "FundingTx" && app.state.Tx.PreTxId != pti {
-		return false
-	}
+	// pti, _ := strconv.ParseInt(txmap["PreTxId"], 10, 64)
+	// if txmap["PreTxId"] == "FundingTx" && app.state.Tx.PreTxId != pti {
+	// 	return false
+	// }
 	
 
 
