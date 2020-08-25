@@ -131,7 +131,7 @@ func logTx(funcname string, txmap map[string]string){
 }
 
 
-func has(strs []string, str string, index string) string, bool {
+func has(strs []string, str string, index string) (string, bool) {
 	// txs:= strings.Split(string(chunk), "\\n")
 	
 	for _,t := range strs{
@@ -186,7 +186,7 @@ func TriggerTxVerify(app *TimelockApplication, tx map[string]string, f *os.File)
 	if txhas, b := !has(txs, "FundingTx", "Flag"); !b {
 		return false
 	}
-	if txhas, b: = has(txhas, pti, "PreTxId"); !b {
+	if txhas, b := has(txhas, pti, "PreTxId"); !b {
 		return false
 	}
 
