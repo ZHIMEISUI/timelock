@@ -138,8 +138,8 @@ func has(strs []string, str string, index string) (string, bool) {
 	
 	for _,t := range strs{
 		txmap := txHandle(t)
+		lib.Log.Notice(str+ "==?" +txmap[index])
 		if str == txmap[index] {
-			lib.Log.Notice(str+ "==?" +txmap[index])
 			return t, true
 		}
 	}
