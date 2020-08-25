@@ -127,6 +127,18 @@ func logTx(funcname string, txmap map[string]string){
 	lib.Log.Debug(funcname+" ends Debug...")
 }
 
+func has(strs []string, str string, index string) bool {
+	// txs:= strings.Split(string(chunk), "\\n")
+	
+	for t := range strs{
+		txmap := txHandle(txs)
+		if str == txmap[index] {
+			return true
+		}
+	}
+	return false
+}
+
 func FundingTxVerify(tx map[string]string) bool {
 	if tx["Flag"] == "FundingTx"{
 		coin,_ := strconv.Atoi(tx["Coin"])
@@ -153,7 +165,7 @@ func TriggerTxVerify(app *TimelockApplication, tx map[string]string, f *os.File)
         if err != nil && err != io.EOF{
             fmt.Println("read buf fail", err)
             return false
-        }
+		}
         //说明读取结束
         if n == 0 {
             break
@@ -163,12 +175,22 @@ func TriggerTxVerify(app *TimelockApplication, tx map[string]string, f *os.File)
 	}
 
 	lib.Log.Notice(string(chunk))
-	txmap := txHandle(string(chunk))
+	txs := strings.Split(string(chunk), "\\n")
+	pti := strconv.FormatInt(txmap["PreTxId"], 10)
 
-	pti, _ := strconv.ParseInt(txmap["PreTxId"], 10, 64)
-	if app.state.Tx.PreTxId != pti {
+	if !has(txs, "FundingTx", "Flag") && !has(txs, pti, "PreTxId") {
 		return false
 	}
+
+
+	// for t := range txs{
+	// 	txmap := txHandle(txs)
+	// }
+
+	// pti, _ := strconv.ParseInt(txmap["PreTxId"], 10, 64)
+	// if txmap["PreTxId"] == "FundingTx" && app.state.Tx.PreTxId != pti {
+	// 	return false
+	// }
 	
 
 	if tx["Flag"] == "TriggerTx"{
@@ -185,6 +207,35 @@ func TriggerTxVerify(app *TimelockApplication, tx map[string]string, f *os.File)
 }
 
 func SettlementTxVerify(tx map[string]string) bool {
+
+	var chunk []byte
+    buf := make([]byte, 1024)
+
+    for {
+        //从file读取到buf中
+        n, err := f.Read(buf)
+        if err != nil && err != io.EOF{
+            fmt.Println("read buf fail", err)
+            return false
+        }
+        //说明读取结束
+        if n == 0 {
+            break
+        }
+        //读取到最终的缓冲区中
+        chunk = append(chunk, buf[:n]...)
+	}
+
+	lib.Log.Notice(string(chunk))
+	txmap := txHandle(string(chunk))
+
+	pti, _ := strconv.ParseInt(txmap["PreTxId"], 10, 64)
+	if txmap["PreTxId"] == "FundingTx" && app.state.Tx.PreTxId != pti {
+		return false
+	}
+	
+
+
 	if tx["Flag"] == "SettlementTx"{
 		from,_ := tx["From"]
 		if from != "Alice&&Bob" {
