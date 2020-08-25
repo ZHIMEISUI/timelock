@@ -185,17 +185,15 @@ func TriggerTxVerify(app *TimelockApplication, tx map[string]string, f *os.File)
 		from := strconv.FormatInt(app.state.Tx.From, 10)
 		
 
-		txstring, b := has(txs, from, "From")
+		txstring, b := has(txs, from, "ID")
 		if !b {
 			lib.Log.Warning("Your Trigger Transaction is not valid")
-			lib.Log.Warning(tx["Flag"]+" should send to both Alice and Bob!")
 			return false
 		}
 		var txarray []string
 		txarray = append(txarray, txstring)
 		if _, b = has(txarray, "FundingTx", "Flag"); !b {
 			lib.Log.Warning("Your Trigger Transaction is not valid")
-			lib.Log.Warning(tx["Flag"]+" should send to both Alice and Bob!")
 			return false
 		}
 
@@ -231,17 +229,15 @@ func SettlementTxVerify(app *TimelockApplication, tx map[string]string, f *os.Fi
 		from := strconv.FormatInt(app.state.Tx.From, 10)
 		
 
-		txstring, b := has(txs, from, "From")
+		txstring, b := has(txs, from, "ID")
 		if !b {
 			lib.Log.Warning("Your Settlement Transaction is not valid")
-			lib.Log.Warning(tx["Flag"]+" should send from both Alice and Bob!")
 			return false
 		}
 		var txarray []string
 		txarray = append(txarray, txstring)
 		if txstring, b = has(txarray, "TriggerTx", "Flag"); !b {
 			lib.Log.Warning("Your Settlement Transaction is not valid")
-			lib.Log.Warning(tx["Flag"]+" should send from both Alice and Bob!")
 			return false
 		}
 		txmap := txHandle(txstring)
