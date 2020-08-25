@@ -164,8 +164,8 @@ func TriggerTxVerify(app *TimelockApplication, tx map[string]string, f *os.File)
 
 	lib.Log.Notice(string(chunk))
 	txmap := txHandle(string(chunk))
-	
-	pti, _ = strconv.ParseInt(txmap["PreTxId"], 10, 64)
+
+	pti, _ := strconv.ParseInt(txmap["PreTxId"], 10, 64)
 	if app.state.Tx.PreTxId != pti {
 		return false
 	}
