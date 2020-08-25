@@ -159,8 +159,7 @@ func FundingTxVerify(tx map[string]string) bool {
 }
 
 func TriggerTxVerify(app *TimelockApplication, tx map[string]string, f *os.File) bool {
-	// b,_ := app.state.DB.Has([]byte(strconv.FormatInt(app.state.Tx.PreTxId, 10)))
-	// lib.Log.Notice(b)
+
 	var chunk []byte
     buf := make([]byte, 1024)
 
@@ -207,33 +206,40 @@ func TriggerTxVerify(app *TimelockApplication, tx map[string]string, f *os.File)
 	return false
 }
 
-func SettlementTxVerify(tx map[string]string) bool {
+func SettlementTxVerify(app *TimelockApplication, tx map[string]string, f *os.File) bool {
 
-	// var chunk []byte
-    // buf := make([]byte, 1024)
+	var chunk []byte
+    buf := make([]byte, 1024)
 
-    // for {
-    //     //从file读取到buf中
-    //     n, err := f.Read(buf)
-    //     if err != nil && err != io.EOF{
-    //         fmt.Println("read buf fail", err)
-    //         return false
-    //     }
-    //     //说明读取结束
-    //     if n == 0 {
-    //         break
-    //     }
-    //     //读取到最终的缓冲区中
-    //     chunk = append(chunk, buf[:n]...)
-	// }
+    for {
+        //从file读取到buf中
+        n, err := f.Read(buf)
+        if err != nil && err != io.EOF{
+            fmt.Println("read buf fail", err)
+            return false
+		}
+        //说明读取结束
+        if n == 0 {
+            break
+        }
+        //读取到最终的缓冲区中
+        chunk = append(chunk, buf[:n]...)
+	}
 
-	// lib.Log.Notice(string(chunk))
-	// txmap := txHandle(string(chunk))
+	lib.Log.Notice(string(chunk))
+	txs := strings.Split(string(chunk), "\\n")
+	pti := strconv.FormatInt(app.state.Tx.PreTxId, 10)
+	
 
-	// pti, _ := strconv.ParseInt(txmap["PreTxId"], 10, 64)
-	// if txmap["PreTxId"] == "FundingTx" && app.state.Tx.PreTxId != pti {
-	// 	return false
-	// }
+	txstring, b := has(txs, pti, "PreTxId")
+	if !b {
+		return false
+	}
+	var txarray []string
+	txarray = append(txarray, txstring)
+	if _, b = has(txarray, "SettlementTx", "Flag"); !b {
+		return false
+	}
 	
 
 
@@ -318,13 +324,14 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 		defer f.Close()
 	} else if txmap["Flag"] == "SettlementTx" {
 		logTx("DeliverTx", txmap)
-		if !SettlementTxVerify(txmap) {
-			lib.Log.Warning("Code: "+strconv.FormatUint(uint64(code.CodeTypeBadNonce), 10))
-			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
-		}
 		f, err := os.OpenFile("./log/timelock.db/timelock.txt", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0755)
 		if err != nil{
 			lib.Log.Warning("write timelock.txt error!")
+			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
+		}
+
+		if !SettlementTxVerify(app, txmap, f) {
+			lib.Log.Warning("Code: "+strconv.FormatUint(uint64(code.CodeTypeBadNonce), 10))
 			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
 		}
 		txstripe := strings.Replace(string(req.Tx), "[{", "", -1)
