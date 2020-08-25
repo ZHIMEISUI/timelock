@@ -207,11 +207,15 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 			lib.Log.Warning("Code: "+strconv.FormatUint(uint64(code.CodeTypeBadNonce), 10))
 			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
 		}
-		err := ioutil.WriteFile("./log/timelock.db/timelock.txt", []byte(string(req.Tx)+"\n"), os.ModeAppend)
+
+		// err := ioutil.WriteFile("./log/timelock.db/timelock.txt", []byte(string(req.Tx)+"\n"), os.ModeAppend)
+		f, err := os.Open("./log/timelock.db/timelock.txt", os.O_RDWR|os.O_CREATE, 0755)
 		if err != nil{
 			lib.Log.Warning("write timelock.txt error!")
 			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
 		}
+		txline, err := f.Write([]byte(string(req.Tx)+"\n"))
+		defer f.Close()
 
 	} else if txmap["Flag"] == "TriggerTx" {
 		logTx("DeliverTx", txmap)
@@ -219,22 +223,28 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 			lib.Log.Warning("Code: "+strconv.FormatUint(uint64(code.CodeTypeBadNonce), 10))
 			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
 		}
-		err := ioutil.WriteFile("./log/timelock.db/timelock.txt", []byte(string(req.Tx)+"\n"), os.ModeAppend)
+		// err := ioutil.WriteFile("./log/timelock.db/timelock.txt", []byte(string(req.Tx)+"\n"), os.ModeAppend)
+		f, err := os.Open("./log/timelock.db/timelock.txt", os.O_RDWR|os.O_CREATE, 0755)
 		if err != nil{
 			lib.Log.Warning("write timelock.txt error!")
 			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
 		}
+		txline, err := f.Write([]byte(string(req.Tx)+"\n"))
+		defer f.Close()
 	} else if txmap["Flag"] == "SettlementTx" {
 		logTx("DeliverTx", txmap)
 		if !SettlementTxVerify(txmap) {
 			lib.Log.Warning("Code: "+strconv.FormatUint(uint64(code.CodeTypeBadNonce), 10))
 			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
 		}
-		err := ioutil.WriteFile("./log/timelock.db/timelock.txt", []byte(string(req.Tx)+"\n"), os.ModeAppend)
+		// err := ioutil.WriteFile("./log/timelock.db/timelock.txt", []byte(string(req.Tx)+"\n"), os.ModeAppend)
+		f, err := os.Open("./log/timelock.db/timelock.txt", os.O_RDWR|os.O_CREATE, 0755)
 		if err != nil{
 			lib.Log.Warning("write timelock.txt error!")
 			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
 		}
+		txline, err := f.Write([]byte(string(req.Tx)+"\n"))
+		defer f.Close()
 	}
 	setStateTx(txmap, app)
 	lib.Log.Debug("app.state.Tx ---> ")
