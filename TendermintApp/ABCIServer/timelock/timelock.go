@@ -62,10 +62,10 @@ func setStateTx(txmap map[string]string, app *TimelockApplication){
 	app.state.Tx.ID, _ = strconv.ParseInt(txmap["ID"], 10, 64)
 	app.state.Tx.Flag = txmap["Flag"]
 	// app.state.Tx.Height, _ = strconv.ParseUint(txmap["Height"], 10, 64)
-	app.state.Tx.PreTxId, _ = strconv.ParseInt(txmap["PreTxId"], 10, 64)
+	app.state.Tx.From, _ = strconv.ParseInt(txmap["From"], 10, 64)
 	timelock,_ := strconv.ParseUint(txmap["TimeLock"], 10, 8)
 	app.state.Tx.TimeLock = uint8(timelock)
-	app.state.Tx.From = txmap["From"]
+	// app.state.Tx.From = txmap["From"]
 	app.state.Tx.To = txmap["To"]
 	coin,_ := strconv.ParseFloat(txmap["Coin"], 32)
 	app.state.Tx.Coin = float32(coin)
@@ -79,7 +79,9 @@ func clearTx(app *TimelockApplication)  {
 	app.state.Tx.ID, _ = strconv.ParseInt("", 10, 64)
 	app.state.Tx.Flag = ""
 	// app.state.Tx.Height, _ = strconv.ParseUint("", 10, 64)
-	app.state.Tx.From = ""
+	timelock,_ := strconv.ParseUint("", 10, 8)
+	app.state.Tx.TimeLock = timelock
+	app.state.Tx.From = strconv.ParseInt("", 10, 64)
 	app.state.Tx.To = ""
 	coin,_ := strconv.ParseFloat("", 32)
 	app.state.Tx.Coin = float32(coin)
@@ -121,7 +123,7 @@ func logTx(funcname string, txmap map[string]string){
 	lib.Log.Debug(funcname+" starts Debug...")
 	lib.Log.Debug("Transaction ID: "+txmap["ID"])
 	lib.Log.Debug("Transaction Type: "+txmap["Flag"])
-	lib.Log.Debug("Current Time: "+txmap["CurrentTime"])
+	lib.Log.Debug("TimeLock: "+txmap["TimeLock"])
 	lib.Log.Debug("From: "+txmap["From"])
 	lib.Log.Debug("To: "+txmap["To"])
 	lib.Log.Debug("Deposit Coins: "+txmap["Coin"])
@@ -159,99 +161,104 @@ func FundingTxVerify(tx map[string]string) bool {
 }
 
 func TriggerTxVerify(app *TimelockApplication, tx map[string]string, f *os.File) bool {
-
-	var chunk []byte
-    buf := make([]byte, 1024)
-
-    for {
-        //从file读取到buf中
-        n, err := f.Read(buf)
-        if err != nil && err != io.EOF{
-            fmt.Println("read buf fail", err)
-            return false
-		}
-        //说明读取结束
-        if n == 0 {
-            break
-        }
-        //读取到最终的缓冲区中
-        chunk = append(chunk, buf[:n]...)
-	}
-
-	lib.Log.Notice(string(chunk))
-	txs := strings.Split(string(chunk), "\\n")
-	pti := strconv.FormatInt(app.state.Tx.PreTxId, 10)
-	
-
-	txstring, b := has(txs, pti, "PreTxId")
-	if !b {
-		return false
-	}
-	var txarray []string
-	txarray = append(txarray, txstring)
-	if _, b = has(txarray, "FundingTx", "Flag"); !b {
-		return false
-	}
-
 	if tx["Flag"] == "TriggerTx"{
-		from,_ := tx["From"]
-		if from != "Alice&&Bob" {
+		var chunk []byte
+		buf := make([]byte, 1024)
+
+		for {
+			//从file读取到buf中
+			n, err := f.Read(buf)
+			if err != nil && err != io.EOF{
+				fmt.Println("read buf fail", err)
+				return false
+			}
+			//说明读取结束
+			if n == 0 {
+				break
+			}
+			//读取到最终的缓冲区中
+			chunk = append(chunk, buf[:n]...)
+		}
+
+		lib.Log.Notice(string(chunk))
+		txs := strings.Split(string(chunk), "\\n")
+		from := strconv.FormatInt(app.state.Tx.From, 10)
+		
+
+		txstring, b := has(txs, from, "From")
+		if !b {
 			lib.Log.Warning("Your Trigger Transaction is not valid")
 			lib.Log.Warning(tx["Flag"]+" should send to both Alice and Bob!")
 			return false
 		}
-		lib.Log.Notice("Your Trigger Transaction is recorded successfully!")
-		return true
+		var txarray []string
+		txarray = append(txarray, txstring)
+		if _, b = has(txarray, "FundingTx", "Flag"); !b {
+			lib.Log.Warning("Your Trigger Transaction is not valid")
+			lib.Log.Warning(tx["Flag"]+" should send to both Alice and Bob!")
+			return false
+		}
+
+			lib.Log.Notice("Your Trigger Transaction is recorded successfully!")
+			return true
 	}
 	return false
 }
 
 func SettlementTxVerify(app *TimelockApplication, tx map[string]string, f *os.File) bool {
-
-	var chunk []byte
-    buf := make([]byte, 1024)
-
-    for {
-        //从file读取到buf中
-        n, err := f.Read(buf)
-        if err != nil && err != io.EOF{
-            fmt.Println("read buf fail", err)
-            return false
-		}
-        //说明读取结束
-        if n == 0 {
-            break
-        }
-        //读取到最终的缓冲区中
-        chunk = append(chunk, buf[:n]...)
-	}
-
-	lib.Log.Notice(string(chunk))
-	txs := strings.Split(string(chunk), "\\n")
-	pti := strconv.FormatInt(app.state.Tx.PreTxId, 10)
-	
-
-	txstring, b := has(txs, pti, "PreTxId")
-	if !b {
-		return false
-	}
-	var txarray []string
-	txarray = append(txarray, txstring)
-	if _, b = has(txarray, "TriggerTx", "Flag"); !b {
-		return false
-	}
-	
-
-
 	if tx["Flag"] == "SettlementTx"{
-		from,_ := tx["From"]
-		if from != "Alice&&Bob" {
+
+		var chunk []byte
+		buf := make([]byte, 1024)
+
+		for {
+			//从file读取到buf中
+			n, err := f.Read(buf)
+			if err != nil && err != io.EOF{
+				fmt.Println("read buf fail", err)
+				return false
+			}
+			//说明读取结束
+			if n == 0 {
+				break
+			}
+			//读取到最终的缓冲区中
+			chunk = append(chunk, buf[:n]...)
+		}
+
+		lib.Log.Notice(string(chunk))
+		txs := strings.Split(string(chunk), "\\n")
+		from := strconv.FormatInt(app.state.Tx.From, 10)
+		
+
+		txstring, b := has(txs, from, "From")
+		if !b {
 			lib.Log.Warning("Your Settlement Transaction is not valid")
 			lib.Log.Warning(tx["Flag"]+" should send from both Alice and Bob!")
 			return false
 		}
-		lib.Log.Notice("Your Settlement Transaction is recorded successfully!")
-		return true
+		var txarray []string
+		txarray = append(txarray, txstring)
+		if _, b = has(txarray, "TriggerTx", "Flag"); !b {
+			lib.Log.Warning("Your Settlement Transaction is not valid")
+			lib.Log.Warning(tx["Flag"]+" should send from both Alice and Bob!")
+			return false
+		}
+		txmap := txHandle(txarray)
+		
+		if app.state.Tx.Height <= strconv.FormatUint(txmap["BlockHeight"],10)+strconv.FormatUint(txmap["TimeLock"],10){
+			if app.state.Tx.NCommit > strconv.FormatUint(txmap["NCommit"],10) { // 若另一方提供更高版本的NCommit
+				// 该交易owner(不同于TriggerTx的owner)可以拿走全部deposit
+			} else { // 若另一方不提供更高版本的NCommit
+				// 验证t_alice
+				// 该交易owner(不同于triggerTx的owner)分配FundingTx中的钱给双方
+			}
+		} else {
+			// 该交易owner(与TriggerTx的owner一致)可以拿走全部deposit
+		}
+
+			lib.Log.Notice("Your Settlement Transaction is recorded successfully!")
+			return true
 	}
 	return false
 }
@@ -349,10 +356,10 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 			Type: "app",
 			Attributes: []types.EventAttribute{
 				{Key:[]byte("Transaction Type"), Value:[]byte(txmap["Flag"]), Index:true},
-				{Key:[]byte("Previous Transaction ID"), Value:[]byte(txmap["PreTxId"]), Index:true},
+				{Key:[]byte("Previous Transaction ID"), Value:[]byte(txmap["From"]), Index:true},
 				{Key:[]byte("Transaction ID"), Value:[]byte(txmap["ID"]), Index:true},
 				{Key:[]byte("Blockheight"), Value:[]byte(strconv.FormatInt(app.state.Height, 10)), Index:true},
-				{Key:[]byte("From"), Value:[]byte(txmap["From"]), Index:true},
+				// {Key:[]byte("From"), Value:[]byte(txmap["From"]), Index:true},
 				{Key:[]byte("To"), Value:[]byte(txmap["To"]), Index:true},
 				{Key:[]byte("Deposit Coins"), Value:[]byte(txmap["Coin"]), Index:true},
 				{Key:[]byte("Channel Version"), Value:[]byte(txmap["NCommit"]), Index:true},

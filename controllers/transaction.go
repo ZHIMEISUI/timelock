@@ -8,10 +8,11 @@ Transaction
 type Transaction struct {
 	ID      	int64   `bson:"id" 				json:"id"`
 	Flag 		string 	`bson:"flag" 			json:"flag"`
-	PreTxId		int64	`bson:"pretxid" 		json:"pretxid"`
+	// PreTxId		int64	`bson:"pretxid" 		json:"pretxid"`
 	// Height  	uint64	`bson:"height" 			json:"height"`
 	TimeLock	uint8	`bson:"timelock"		json:"timelock"`
-	From    	string  `bson:"from" 			json:"from"`
+	From    	int64  	`bson:"from" 			json:"from"`
+	// From    	string  `bson:"from" 			json:"from"`
 	To      	string  `bson:"to" 				json:"to"`
 	Coin 		float32 `bson:"coin" 			json:"coin"`
 	NCommit 	uint8 	`bson:"channelversion" 	json:"channelversion"`
