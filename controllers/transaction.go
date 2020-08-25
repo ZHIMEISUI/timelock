@@ -50,7 +50,6 @@ func (t *Transaction) Create() (bool, error) {
 func (t *Transaction) CreateFundingTx(From int64, To string, Coin float32, Sig string) (bool, error) {
 	t.ID, _ = lib.GetNewUID()
 	t.Flag = "FundingTx"
-	t.PreTxId = 0
 	t.TimeLock = 0
 	t.From = From
 	t.To = To
