@@ -184,11 +184,13 @@ func TriggerTxVerify(app *TimelockApplication, tx map[string]string, f *os.File)
 	pti := strconv.FormatInt(app.state.Tx.PreTxId, 10)
 	
 
-	txs, b := has(txs, pti, "PreTxId")
+	txstring, b := has(txs, pti, "PreTxId")
 	if !b {
 		return false
 	}
-	if _, b = has(txs, "FundingTx", "Flag"); !b {
+	var txarray []string
+	txarray = append(txstring)
+	if _, b = has(txarray, "FundingTx", "Flag"); !b {
 		return false
 	}
 
