@@ -3,6 +3,7 @@ package timelock
 import (
 
 	"os"
+	"io"
 	"fmt"
 	"strconv"
 	// "bytes"
@@ -140,7 +141,7 @@ func FundingTxVerify(tx map[string]string) bool {
 	return false
 }
 
-func TriggerTxVerify(app *TimelockApplication, tx map[string]string, f *os.OpenFile) bool {
+func TriggerTxVerify(app *TimelockApplication, tx map[string]string, f *os.File) bool {
 	// b,_ := app.state.DB.Has([]byte(strconv.FormatInt(app.state.Tx.PreTxId, 10)))
 	// lib.Log.Notice(b)
 	var chunk []byte
