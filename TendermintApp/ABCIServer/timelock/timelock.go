@@ -245,11 +245,11 @@ func SettlementTxVerify(app *TimelockApplication, tx map[string]string, f *os.Fi
 			return false
 		}
 		txmap := txHandle(txstring)
-		bh,_ := strconv.ParseUint(txmap["BlockHeight"],10,8)
-		tl,_ := strconv.ParseUint(txmap["TimeLock"],10,8)
-		nc,_ := strconv.ParseUint(txmap["NCommit"],10,8)
-		if app.state.Height <= bh+tl {
-			if app.state.Tx.NCommit > nc { // 若另一方提供更高版本的NCommit
+		bh, _ := strconv.ParseUint(txmap["BlockHeight"],10,8)
+		tl, _ := strconv.ParseUint(txmap["TimeLock"],10,8)
+		nc, _ := strconv.ParseUint(txmap["NCommit"],10,8)
+		if app.state.Height <= uint8(bh)+uint8(tl) {
+			if app.state.Tx.NCommit > uint8(nc) { // 若另一方提供更高版本的NCommit
 				// 该交易owner(不同于TriggerTx的owner)可以拿走全部deposit
 			} else { // 若另一方不提供更高版本的NCommit
 				// 验证t_alice
