@@ -182,12 +182,13 @@ func TriggerTxVerify(app *TimelockApplication, tx map[string]string, f *os.File)
 	lib.Log.Notice(string(chunk))
 	txs := strings.Split(string(chunk), "\\n")
 	pti := strconv.FormatInt(app.state.Tx.PreTxId, 10)
+	
 
-	txhas, b := has(txs, "FundingTx", "Flag")
+	txs, b := has(txs, pti, "PreTxId")
 	if !b {
 		return false
 	}
-	if txhas, b = has(txhas, pti, "PreTxId"); !b {
+	if _, b = has(txs, "FundingTx", "Flag"); !b {
 		return false
 	}
 
