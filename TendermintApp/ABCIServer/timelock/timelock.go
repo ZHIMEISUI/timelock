@@ -131,7 +131,7 @@ func logTx(funcname string, txmap map[string]string){
 func has(strs []string, str string, index string) bool {
 	// txs:= strings.Split(string(chunk), "\\n")
 	
-	for t := range strs{
+	for _,t := range strs{
 		txmap := txHandle(t)
 		if str == txmap[index] {
 			return true
