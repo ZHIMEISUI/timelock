@@ -229,10 +229,10 @@ func SettlementTxVerify(app *TimelockApplication, tx map[string]string, f *os.Fi
 
 		lib.Log.Notice(string(chunk))
 		txs := strings.Split(string(chunk), "\\n")
-		from := strconv.FormatInt(app.state.Tx.From, 10)
+		// from := strconv.FormatInt(app.state.Tx.From, 10)
 		
 
-		txstring, b := has(txs, from, "ID")
+		txstring, b := has(txs, tx["From"], "ID")
 		if !b {
 			lib.Log.Warning("Your Settlement Transaction is not valid")
 			return false
