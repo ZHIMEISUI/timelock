@@ -74,6 +74,7 @@ func setStateTx(txmap map[string]string, app *TimelockApplication){
 	app.state.Tx.Sig = txmap["Sig"]
 	lib.Log.Notice(app.state.Tx)
 }
+
 func clearTx(app *TimelockApplication)  {
 	app.state.Tx.ID, _ = strconv.ParseInt("", 10, 64)
 	app.state.Tx.Flag = ""
@@ -295,7 +296,8 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 			lib.Log.Warning("write timelock.txt error!")
 			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
 		}
-		txline, err := f.Write([]byte(string(req.Tx)+"\n"))
+		
+		txline, err := f.Write([]byte(string(req.Tx)+", BlockHeight:\""+strconv.FormatInt(app.state.Height,10)+"\""+"\n"))
 		lib.Log.Notice(txline)
 		defer f.Close()
 
@@ -312,7 +314,7 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
 		}
 		
-		txline, err := f.Write([]byte(string(req.Tx)+"\n"))
+		txline, err := f.Write([]byte(string(req.Tx)+", BlockHeight:\""+strconv.FormatInt(app.state.Height,10)+"\""+"\n"))
 		lib.Log.Notice(txline)
 		defer f.Close()
 	} else if txmap["Flag"] == "SettlementTx" {
@@ -326,7 +328,7 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 			lib.Log.Warning("write timelock.txt error!")
 			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
 		}
-		txline, err := f.Write([]byte(string(req.Tx)+"\n"))
+		txline, err := f.Write([]byte(string(req.Tx)+", BlockHeight:\""+strconv.FormatInt(app.state.Height,10)+"\""+"\n"))
 		lib.Log.Notice(txline)
 		defer f.Close()
 	}
