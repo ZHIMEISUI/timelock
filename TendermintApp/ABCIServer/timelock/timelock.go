@@ -137,6 +137,7 @@ func has(strs []string, str string, index string) bool {
 	for _,t := range strs{
 		txmap := txHandle(t)
 		if str == txmap[index] {
+			lib.Log.Notice(str+ "==?" +txmap[index])
 			return true
 		}
 	}
@@ -185,17 +186,6 @@ func TriggerTxVerify(app *TimelockApplication, tx map[string]string, f *os.File)
 	if !has(txs, "FundingTx", "Flag") && !has(txs, pti, "PreTxId") {
 		return false
 	}
-
-
-	// for t := range txs{
-	// 	txmap := txHandle(txs)
-	// }
-
-	// pti, _ := strconv.ParseInt(txmap["PreTxId"], 10, 64)
-	// if txmap["PreTxId"] == "FundingTx" && app.state.Tx.PreTxId != pti {
-	// 	return false
-	// }
-	
 
 	if tx["Flag"] == "TriggerTx"{
 		from,_ := tx["From"]
@@ -298,7 +288,7 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 		}
 		txstripe := strings.Replace(string(req.Tx), "[{", "", -1)
 		txstripe = strings.Replace(string(req.Tx), "}]", "", -1)
-		txline, err := f.Write([]byte("[{" +txstripe+ ", 'BlockHeight':'" +strconv.FormatInt(app.state.Height,10)+ "' }]" + "\n"))
+		txline, err := f.Write([]byte("[{" +txstripe+ ",'BlockHeight':'" +strconv.FormatInt(app.state.Height,10)+ "'}]" + "\n"))
 		lib.Log.Notice(txline)
 		defer f.Close()
 
@@ -315,8 +305,8 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
 		}
 		txstripe := strings.Replace(string(req.Tx), "[{", "", -1)
-		txstripe = strings.Replace(string(req.Tx), "}]", "", -1)
-		txline, err := f.Write([]byte("[{" +txstripe+ ", 'BlockHeight':'" +strconv.FormatInt(app.state.Height,10)+ "' }]" + "\n"))
+		txstripe = strings.Replace(txstripe, "}]", "", -1)
+		txline, err := f.Write([]byte("[{" +txstripe+ ",'BlockHeight':'" +strconv.FormatInt(app.state.Height,10)+ "'}]" + "\n"))
 		lib.Log.Notice(txline)
 		defer f.Close()
 	} else if txmap["Flag"] == "SettlementTx" {
@@ -331,8 +321,8 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
 		}
 		txstripe := strings.Replace(string(req.Tx), "[{", "", -1)
-		txstripe = strings.Replace(string(req.Tx), "}]", "", -1)
-		txline, err := f.Write([]byte("[{" +txstripe+ ", 'BlockHeight':'" +strconv.FormatInt(app.state.Height,10)+ "' }]" + "\n"))
+		txstripe = strings.Replace(txstripe, "}]", "", -1)
+		txline, err := f.Write([]byte("[{" +txstripe+ ",'BlockHeight':'" +strconv.FormatInt(app.state.Height,10)+ "'}]" + "\n"))
 		lib.Log.Notice(txline)
 		defer f.Close()
 	}
