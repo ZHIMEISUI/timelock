@@ -63,6 +63,8 @@ func setStateTx(txmap map[string]string, app *TimelockApplication){
 	app.state.Tx.Flag = txmap["Flag"]
 	// app.state.Tx.Height, _ = strconv.ParseUint(txmap["Height"], 10, 64)
 	app.state.Tx.PreTxId, _ = strconv.ParseInt(txmap["PreTxId"], 10, 64)
+	timelock,_ := strconv.ParseUint(txmap["TimeLock"], 10, 8)
+	app.state.Tx.TimeLock = uint8(timelock)
 	app.state.Tx.From = txmap["From"]
 	app.state.Tx.To = txmap["To"]
 	coin,_ := strconv.ParseFloat(txmap["Coin"], 32)
