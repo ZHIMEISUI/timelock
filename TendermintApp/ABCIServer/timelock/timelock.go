@@ -189,7 +189,7 @@ func TriggerTxVerify(app *TimelockApplication, tx map[string]string, f *os.File)
 		return false
 	}
 	var txarray []string
-	txarray = append(txstring)
+	txarray = append(txarray, txstring)
 	if _, b = has(txarray, "FundingTx", "Flag"); !b {
 		return false
 	}
