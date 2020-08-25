@@ -296,8 +296,9 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 			lib.Log.Warning("write timelock.txt error!")
 			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
 		}
-		
-		txline, err := f.Write([]byte(string(req.Tx)+", BlockHeight:\""+strconv.FormatInt(app.state.Height,10)+"\""+"\n"))
+		txstripe := strings.Replace(string(req.Tx), "[{", "", -1)
+		txstripe = strings.Replace(string(req.Tx), "}]", "", -1)
+		txline, err := f.Write([]byte("[{" +txstripe+ ", \'BlockHeight\':\'" +strconv.FormatInt(app.state.Height,10)+ "\' }]" + "\n"))
 		lib.Log.Notice(txline)
 		defer f.Close()
 
@@ -328,7 +329,7 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 			lib.Log.Warning("write timelock.txt error!")
 			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
 		}
-		txline, err := f.Write([]byte(string(req.Tx)+", BlockHeight:\""+strconv.FormatInt(app.state.Height,10)+"\""+"\n"))
+		txline, err := f.Write([]byte(string(req.Tx)+", \'BlockHeight\':\""+strconv.FormatInt(app.state.Height,10)+"\""+"\n"))
 		lib.Log.Notice(txline)
 		defer f.Close()
 	}
