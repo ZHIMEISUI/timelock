@@ -307,7 +307,7 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 		}
 		txstripe := strings.Replace(string(req.Tx), "[{", "", -1)
 		txstripe = strings.Replace(string(req.Tx), "}]", "", -1)
-		txline, err := f.Write([]byte("[{" +txstripe+ ",'BlockHeight':'" +strconv.FormatUint(uint64(app.state.Height),10)+ "'}]" + "\n"))
+		txline, err := f.Write([]byte(txstripe+ ",'BlockHeight':'" +strconv.FormatUint(uint64(app.state.Height),10)+ "'}]" + "\n"))
 		lib.Log.Notice(txline)
 		defer f.Close()
 
@@ -325,7 +325,7 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 		}
 		txstripe := strings.Replace(string(req.Tx), "[{", "", -1)
 		txstripe = strings.Replace(txstripe, "}]", "", -1)
-		txline, err := f.Write([]byte("[{" +txstripe+ ",'BlockHeight':'" +strconv.FormatUint(uint64(app.state.Height),10)+ "'}]" + "\n"))
+		txline, err := f.Write([]byte(txstripe+ ",'BlockHeight':'" +strconv.FormatUint(uint64(app.state.Height),10)+ "'}]" + "\n"))
 		lib.Log.Notice(txline)
 		defer f.Close()
 	} else if txmap["Flag"] == "SettlementTx" {
@@ -342,7 +342,7 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 		}
 		txstripe := strings.Replace(string(req.Tx), "[{", "", -1)
 		txstripe = strings.Replace(txstripe, "}]", "", -1)
-		txline, err := f.Write([]byte("[{" +txstripe+ ",'BlockHeight':'" +strconv.FormatUint(uint64(app.state.Height),10)+ "'}]" + "\n"))
+		txline, err := f.Write([]byte(txstripe+ ",'BlockHeight':'" +strconv.FormatUint(uint64(app.state.Height),10)+ "'}]" + "\n"))
 		lib.Log.Notice(txline)
 		defer f.Close()
 	}
