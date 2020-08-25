@@ -215,6 +215,7 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
 		}
 		txline, err := f.Write([]byte(string(req.Tx)+"\n"))
+		lib.Log.Notice(txline)
 		defer f.Close()
 
 	} else if txmap["Flag"] == "TriggerTx" {
@@ -230,6 +231,7 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
 		}
 		txline, err := f.Write([]byte(string(req.Tx)+"\n"))
+		lib.Log.Notice(txline)
 		defer f.Close()
 	} else if txmap["Flag"] == "SettlementTx" {
 		logTx("DeliverTx", txmap)
@@ -244,6 +246,7 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 			return types.ResponseDeliverTx{Code: code.CodeTypeBadNonce}
 		}
 		txline, err := f.Write([]byte(string(req.Tx)+"\n"))
+		lib.Log.Notice(txline)
 		defer f.Close()
 	}
 	setStateTx(txmap, app)
