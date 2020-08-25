@@ -47,7 +47,7 @@ func (t *Transaction) Create() (bool, error) {
 	return true, nil
 }
 
-func (t *Transaction) CreateFundingTx(From string, To string, Coin float32, Sig string) (bool, error) {
+func (t *Transaction) CreateFundingTx(From int64, To string, Coin float32, Sig string) (bool, error) {
 	t.ID, _ = lib.GetNewUID()
 	t.Flag = "FundingTx"
 	t.PreTxId = 0
@@ -61,10 +61,9 @@ func (t *Transaction) CreateFundingTx(From string, To string, Coin float32, Sig 
 	return true, nil
 }
 
-func (t *Transaction) CreateTriggerTx(PreTxId int64, From string, To string, Coin float32, NCommit uint8, Sig string) (bool, error) {
+func (t *Transaction) CreateTriggerTx(From int64, To string, Coin float32, NCommit uint8, Sig string) (bool, error) {
 	t.ID, _ = lib.GetNewUID()
 	t.Flag = "TriggerTx"
-	t.PreTxId = PreTxId
 	t.TimeLock = 100
 	t.From = From
 	t.To = To
@@ -75,10 +74,9 @@ func (t *Transaction) CreateTriggerTx(PreTxId int64, From string, To string, Coi
 	return true, nil
 }
 
-func (t *Transaction) CreateSettlementTx(PreTxId int64, From string, To string, Coin float32, NCommit uint8, Sig string) (bool, error) {
+func (t *Transaction) CreateSettlementTx(From int64, To string, Coin float32, NCommit uint8, Sig string) (bool, error) {
 	t.ID, _ = lib.GetNewUID()
 	t.Flag = "SettlementTx"
-	t.PreTxId = PreTxId
 	t.From = From
 	t.To = To
 	t.Coin = Coin
