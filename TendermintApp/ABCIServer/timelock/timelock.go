@@ -134,8 +134,6 @@ func logTx(funcname string, txmap map[string]string){
 
 
 func has(strs []string, str string, index string) (string, bool) {
-	// txs:= strings.Split(string(chunk), "\\n")
-	lib.Log.Notice(strs[1])
 	for _,t := range strs{
 		txmap := txHandle(t)
 		lib.Log.Notice(t)
@@ -182,7 +180,7 @@ func TriggerTxVerify(app *TimelockApplication, tx map[string]string, f *os.File)
 		}
 
 		lib.Log.Notice(string(chunk))
-		txs := strings.Split(string(chunk), "\\n")
+		txs := strings.Split(string(chunk), "***")
 		// from := tx["From"]
 		// strconv.FormatInt(app.state.Tx.From, 10)
 		lib.Log.Notice(txs)
@@ -228,7 +226,7 @@ func SettlementTxVerify(app *TimelockApplication, tx map[string]string, f *os.Fi
 		}
 
 		lib.Log.Notice(string(chunk))
-		txs := strings.Split(string(chunk), "\\n")
+		txs := strings.Split(string(chunk), "***")
 		// from := strconv.FormatInt(app.state.Tx.From, 10)
 		
 
@@ -309,7 +307,7 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 		}
 		txstripe := strings.Replace(string(req.Tx), "[{", "", -1)
 		txstripe = strings.Replace(string(req.Tx), "}]", "", -1)
-		txline, err := f.Write([]byte(txstripe+ ",'BlockHeight':'" +strconv.FormatUint(uint64(app.state.Height),10)+ "'}]" + "\n"))
+		txline, err := f.Write([]byte(txstripe+ ",'BlockHeight':'" +strconv.FormatUint(uint64(app.state.Height),10)+ "'}]" + "***"))
 		lib.Log.Notice(txline)
 		defer f.Close()
 
@@ -327,7 +325,7 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 		}
 		txstripe := strings.Replace(string(req.Tx), "[{", "", -1)
 		txstripe = strings.Replace(txstripe, "}]", "", -1)
-		txline, err := f.Write([]byte("[{"+txstripe+ ",'BlockHeight':'" +strconv.FormatUint(uint64(app.state.Height),10)+ "'}]" + "\n"))
+		txline, err := f.Write([]byte("[{"+txstripe+ ",'BlockHeight':'" +strconv.FormatUint(uint64(app.state.Height),10)+ "'}]" + "***"))
 		lib.Log.Notice(txline)
 		defer f.Close()
 	} else if txmap["Flag"] == "SettlementTx" {
@@ -344,7 +342,7 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 		}
 		txstripe := strings.Replace(string(req.Tx), "[{", "", -1)
 		txstripe = strings.Replace(txstripe, "}]", "", -1)
-		txline, err := f.Write([]byte("[{"+txstripe+ ",'BlockHeight':'" +strconv.FormatUint(uint64(app.state.Height),10)+ "'}]" + "\n"))
+		txline, err := f.Write([]byte("[{"+txstripe+ ",'BlockHeight':'" +strconv.FormatUint(uint64(app.state.Height),10)+ "'}]" + "***"))
 		lib.Log.Notice(txline)
 		defer f.Close()
 	}
