@@ -252,6 +252,7 @@ func SettlementTxVerify(app *TimelockApplication, tx map[string]string, f *os.Fi
 				// 该交易owner(不同于TriggerTx的owner)可以拿走全部deposit
 				if app.state.Tx.Sig != txmap["Sig"]{
 					lib.Log.Notice("Your Settlement Transaction is recorded successfully!")
+					lib.Log.Notice("Settlement 1")
 					return true
 				}
 			} else { // 若另一方不提供更高版本的NCommit
@@ -259,6 +260,7 @@ func SettlementTxVerify(app *TimelockApplication, tx map[string]string, f *os.Fi
 				// 该交易owner(不同于triggerTx的owner)分配FundingTx中的钱给双方
 				if app.state.Tx.Sig != txmap["Sig"]{
 					lib.Log.Notice("Your Settlement Transaction is recorded successfully!")
+					lib.Log.Notice("Settlement 2")
 					return true
 				}
 			}
@@ -266,6 +268,7 @@ func SettlementTxVerify(app *TimelockApplication, tx map[string]string, f *os.Fi
 			// 该交易owner(与TriggerTx的owner一致)可以拿走全部deposit
 			if app.state.Tx.Sig == txmap["Sig"]{
 				lib.Log.Notice("Your Settlement Transaction is recorded successfully!")
+				lib.Log.Notice("Settlement 3")
 				return true
 			}
 		}
