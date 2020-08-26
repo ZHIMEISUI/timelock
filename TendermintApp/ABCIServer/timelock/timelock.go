@@ -173,12 +173,12 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 	lib.Log.Debug("DeliverTx")
 	lib.Log.Notice(string(req.Tx))
 
-	txmap:= lib.txHandle(string(req.Tx))
+	txmap:= lib.TxHandle(string(req.Tx))
 
 	// lib.Log.Debug("app.state: ")
 	// lib.Log.Debug(app.state)
 	if txmap["Flag"] == "FundingTx" {
-		lib.logTx("DeliverTx", txmap)
+		lib.LogTx("DeliverTx", txmap)
 		statejson, _ := json.Marshal(app.state)
 		lib.Log.Debug(string(statejson))
 		if !FundingTxVerify(txmap) {
@@ -198,7 +198,7 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 		defer f.Close()
 
 	} else if txmap["Flag"] == "TriggerTx" {
-		lib.logTx("DeliverTx", txmap)
+		lib.LogTx("DeliverTx", txmap)
 		f, err := os.OpenFile("./log/timelock.db/timelock.txt", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0755)
 		if err != nil{
 			lib.Log.Warning("write timelock.txt error!")
@@ -215,7 +215,7 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 		lib.Log.Notice(txline)
 		defer f.Close()
 	} else if txmap["Flag"] == "SettlementTx" {
-		lib.logTx("DeliverTx", txmap)
+		lib.LogTx("DeliverTx", txmap)
 		f, err := os.OpenFile("./log/timelock.db/timelock.txt", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0755)
 		if err != nil{
 			lib.Log.Warning("write timelock.txt error!")

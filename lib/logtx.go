@@ -1,7 +1,7 @@
 package lib
 
 
-func logTx(funcname string, txmap map[string]string){
+func LogTx(funcname string, txmap map[string]string){
 	Log.Debug(funcname+" starts Debug...")
 	Log.Debug("Transaction ID: "+txmap["ID"])
 	Log.Debug("Transaction Type: "+txmap["Flag"])

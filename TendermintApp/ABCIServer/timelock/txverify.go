@@ -60,14 +60,14 @@ func TriggerTxVerify(app *TimelockApplication, tx map[string]string, f *os.File)
 		txs := strings.Split(string(chunk), "***")
 		
 
-		txstring, b := lib.has(txs, tx["From"], "ID")
+		txstring, b := lib.Has(txs, tx["From"], "ID")
 		if !b {
 			lib.Log.Warning("Your Trigger Transaction is not valid")
 			return false
 		}
 		var txarray []string
 		txarray = append(txarray, txstring)
-		if _, b = lib.has(txarray, "FundingTx", "Flag"); !b {
+		if _, b = lib.Has(txarray, "FundingTx", "Flag"); !b {
 			lib.Log.Warning("Your Trigger Transaction is not valid")
 			return false
 		}
@@ -104,18 +104,18 @@ func SettlementTxVerify(app *TimelockApplication, tx map[string]string, f *os.Fi
 		// from := strconv.FormatInt(app.state.Tx.From, 10)
 		
 
-		txstring, b := lib.has(txs, tx["From"], "ID")
+		txstring, b := lib.Has(txs, tx["From"], "ID")
 		if !b {
 			lib.Log.Warning("Your Settlement Transaction is not valid")
 			return false
 		}
 		var txarray []string
 		txarray = append(txarray, txstring)
-		if txstring, b = lib.has(txarray, "TriggerTx", "Flag"); !b {
+		if txstring, b = lib.Has(txarray, "TriggerTx", "Flag"); !b {
 			lib.Log.Warning("Your Settlement Transaction is not valid")
 			return false
 		}
-		txmap := txHandle(txstring)
+		txmap := lib.TxHandle(txstring)
 		bh, _ := strconv.ParseUint(txmap["BlockHeight"],10,8)
 		tl, _ := strconv.ParseUint(txmap["TimeLock"],10,8)
 		nc, _ := strconv.ParseUint(txmap["NCommit"],10,8)

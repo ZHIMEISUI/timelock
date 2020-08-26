@@ -5,7 +5,7 @@ import(
 	"strings"
 )
 
-func txHandle(tx string) map[string]string {
+func TxHandle(tx string) map[string]string {
 	txhandle := strings.Replace(tx, "'", "", -1)
 	txhandle = strings.Replace(string(txhandle), "{", "", -1)
 	txhandle = strings.Replace(string(txhandle), "[", "", -1)
