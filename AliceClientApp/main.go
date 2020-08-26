@@ -19,7 +19,7 @@ func main() {
 	flag.Int64Var(&From, "from", From, "set previous transaction id")
 	flag.Int64Var(&SecretT, "st", SecretT, "set the owner's secret T")
 	flag.Parse()
-	err := Execute(txFlag, From, uint8(ChannelVersion), Coins)
+	err := Execute(txFlag, From, uint8(ChannelVersion), Coins, SecretT)
 	if err != nil {
 		lib.Log.Error(err)
 		os.Exit(1)
