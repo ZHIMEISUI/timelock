@@ -18,7 +18,7 @@ import (
 	jsoniter "github.com/json-iterator/go"
 )
 
-func Execute(flag string, From int64, ChannelVersion uint8, Coins float64) error {
+func Execute(flag string, From int64, ChannelVersion uint8, Coins float64, SecretT int64) error {
 	lib.Log.Notice("Starting Alice UI Client... ")
 
 	f, err := os.Create("logs/client.log")
@@ -52,7 +52,7 @@ func Execute(flag string, From int64, ChannelVersion uint8, Coins float64) error
 				}else if flag == "TriggerTx"{
 					_, _ = tran.CreateTriggerTx(From, "Alice&&Bob", float32(Coins), ChannelVersion, "AliceSig")
 				}else if flag == "SettlementTx"{
-					_, _ = tran.CreateSettlementTx(From, "Alice", float32(Coins), ChannelVersion, "AliceSig")
+					_, _ = tran.CreateSettlementTx(From, "Alice", float32(Coins), ChannelVersion, SecretT, "AliceSig")
 				}
 				transactions = append(transactions, tran)
 			}

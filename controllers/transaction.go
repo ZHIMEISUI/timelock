@@ -16,6 +16,7 @@ type Transaction struct {
 	To      	string  `bson:"to" 				json:"to"`
 	Coin 		float32 `bson:"coin" 			json:"coin"`
 	NCommit 	uint8 	`bson:"channelversion" 	json:"channelversion"`
+	SecretT		int64	`bson:"secrett" 		json:"secrett"`
 	Sig 		string 	`bson:"sig" 			json:"sig"`
 }
 
@@ -73,13 +74,14 @@ func (t *Transaction) CreateTriggerTx(From int64, To string, Coin float32, NComm
 	return true, nil
 }
 
-func (t *Transaction) CreateSettlementTx(From int64, To string, Coin float32, NCommit uint8, Sig string) (bool, error) {
+func (t *Transaction) CreateSettlementTx(From int64, To string, Coin float32, NCommit uint8, SecretT int64, Sig string) (bool, error) {
 	t.ID, _ = lib.GetNewUID()
 	t.Flag = "SettlementTx"
 	t.From = From
 	t.To = To
 	t.Coin = Coin
 	t.NCommit = NCommit
+	t.SecretT = SecretT
 	t.Sig = Sig
 	lib.Log.Debug("Create Settlement Transaction:", t)
 	return true, nil

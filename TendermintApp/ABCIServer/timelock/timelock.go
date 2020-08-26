@@ -48,7 +48,7 @@ func loadState(db dbm.DB) State{
 		panic(err)
 	}
 	if len(stateBytes) == 0 {
-		lib.Log.Error("stateBytes is nil...")
+		lib.Log.Warning("stateBytes is nil...")
 		return state
 	}
 	err = json.Unmarshal(stateBytes, &state)
@@ -71,8 +71,9 @@ func setStateTx(txmap map[string]string, app *TimelockApplication){
 	app.state.Tx.Coin = float32(coin)
 	ncommit,_ := strconv.ParseUint(txmap["NCommit"], 10, 8)
 	app.state.Tx.NCommit = uint8(ncommit)
+	app.state.Tx.SecretT, _ = strconv.ParseInt(txmap["SecretT"], 10, 64)
 	app.state.Tx.Sig = txmap["Sig"]
-	lib.Log.Notice(app.state.Tx)
+	// lib.Log.Notice(app.state.Tx)
 }
 
 func clearTx(app *TimelockApplication)  {
@@ -128,6 +129,7 @@ func logTx(funcname string, txmap map[string]string){
 	lib.Log.Debug("To: "+txmap["To"])
 	lib.Log.Debug("Deposit Coins: "+txmap["Coin"])
 	lib.Log.Debug("Channel Version: "+txmap["NCommit"])
+	lib.Log.Debug("Secret T: "+txmap["SecretT"])
 	lib.Log.Debug("Sig: "+txmap["Sig"])
 	lib.Log.Debug(funcname+" ends Debug...")
 }
@@ -136,8 +138,8 @@ func logTx(funcname string, txmap map[string]string){
 func has(strs []string, str string, index string) (string, bool) {
 	for _,t := range strs{
 		txmap := txHandle(t)
-		lib.Log.Notice(t)
-		lib.Log.Notice(str+ "==?" +txmap[index])
+		// lib.Log.Notice(t)
+		// lib.Log.Notice(str+ "==?" +txmap[index])
 		if str == txmap[index] {
 			return t, true
 		}
@@ -183,7 +185,7 @@ func TriggerTxVerify(app *TimelockApplication, tx map[string]string, f *os.File)
 		txs := strings.Split(string(chunk), "***")
 		// from := tx["From"]
 		// strconv.FormatInt(app.state.Tx.From, 10)
-		lib.Log.Notice(txs)
+		// lib.Log.Notice(txs)
 		
 
 		txstring, b := has(txs, tx["From"], "ID")
@@ -248,17 +250,27 @@ func SettlementTxVerify(app *TimelockApplication, tx map[string]string, f *os.Fi
 		if app.state.Height <= uint8(bh)+uint8(tl) {
 			if app.state.Tx.NCommit > uint8(nc) { // 若另一方提供更高版本的NCommit
 				// 该交易owner(不同于TriggerTx的owner)可以拿走全部deposit
+				if app.state.Tx.Sig != txmap["Sig"]{
+					lib.Log.Notice("Your Settlement Transaction is recorded successfully!")
+					return true
+				}
 			} else { // 若另一方不提供更高版本的NCommit
 				// 验证t_alice
 				// 该交易owner(不同于triggerTx的owner)分配FundingTx中的钱给双方
+				if app.state.Tx.Sig != txmap["Sig"]{
+					lib.Log.Notice("Your Settlement Transaction is recorded successfully!")
+					return true
+				}
 			}
 		} else {
 			// 该交易owner(与TriggerTx的owner一致)可以拿走全部deposit
+			if app.state.Tx.Sig == txmap["Sig"]{
+				lib.Log.Notice("Your Settlement Transaction is recorded successfully!")
+				return true
+			}
 		}
-
-			lib.Log.Notice("Your Settlement Transaction is recorded successfully!")
-			return true
 	}
+	lib.Log.Warning("Your Settlement Transaction is not valid")
 	return false
 }
 
@@ -289,8 +301,8 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 
 	txmap:= txHandle(string(req.Tx))
 
-	lib.Log.Debug("app.state: ")
-	lib.Log.Debug(app.state)
+	// lib.Log.Debug("app.state: ")
+	// lib.Log.Debug(app.state)
 	if txmap["Flag"] == "FundingTx" {
 		logTx("DeliverTx", txmap)
 		statejson, _ := json.Marshal(app.state)
@@ -360,7 +372,9 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 				{Key:[]byte("Blockheight"), Value:[]byte(strconv.FormatUint(uint64(app.state.Height), 10)), Index:true},
 				// {Key:[]byte("From"), Value:[]byte(txmap["From"]), Index:true},
 				{Key:[]byte("To"), Value:[]byte(txmap["To"]), Index:true},
+				{Key:[]byte("TimeLock"), Value:[]byte(txmap["TimeLock"]), Index:true},
 				{Key:[]byte("Deposit Coins"), Value:[]byte(txmap["Coin"]), Index:true},
+				{Key:[]byte("Secret T"), Value:[]byte(txmap["SecretT"]), Index:true},
 				{Key:[]byte("Channel Version"), Value:[]byte(txmap["NCommit"]), Index:true},
 				{Key:[]byte("Sig"), Value:[]byte(txmap["Sig"]), Index:true},
 			},
