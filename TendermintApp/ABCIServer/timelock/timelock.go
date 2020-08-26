@@ -272,7 +272,7 @@ func (app *TimelockApplication) Commit() types.ResponseCommit {
 	app.state.Height++
 	saveState(app)
 
-	stateDBjson, _ := json.Marshal(app.state.DB)
+	// stateDBjson, _ := json.Marshal(app.state.DB)
 	// lib.Log.Debug("stateDBjson: "+string(stateDBjson))
 	statejson, errs := json.Marshal(app.state)
 	// lib.Log.Debug("statejson: "+string(statejson))
