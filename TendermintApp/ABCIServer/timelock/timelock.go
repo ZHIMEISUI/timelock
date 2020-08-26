@@ -3,7 +3,7 @@ package timelock
 import (
 
 	"os"
-	"io"
+	// "io"
 	"fmt"
 	"strconv"
 	// "bytes"
@@ -76,7 +76,7 @@ func setStateTx(txmap map[string]string, app *TimelockApplication){
 	// lib.Log.Notice(app.state.Tx)
 }
 
-func clearTx(app *TimelockApplication)  {
+func clearStateTx(app *TimelockApplication)  {
 	app.state.Tx.ID, _ = strconv.ParseInt("", 10, 64)
 	app.state.Tx.Flag = ""
 	// app.state.Tx.Height, _ = strconv.ParseUint("", 10, 64)
@@ -104,178 +104,49 @@ func saveState(app *TimelockApplication) {
 	}
 }
 
-func txHandle(tx string) map[string]string {
-	txhandle := strings.Replace(tx, "'", "", -1)
-	txhandle = strings.Replace(string(txhandle), "{", "", -1)
-	txhandle = strings.Replace(string(txhandle), "[", "", -1)
-	txhandle = strings.Replace(string(txhandle), "]", "", -1)
-	txhandle = strings.Replace(string(txhandle), "}", "", -1)
-	txs := strings.Split(string(txhandle), ",")
-	txmap := make(map[string]string)
+// func txHandle(tx string) map[string]string {
+// 	txhandle := strings.Replace(tx, "'", "", -1)
+// 	txhandle = strings.Replace(string(txhandle), "{", "", -1)
+// 	txhandle = strings.Replace(string(txhandle), "[", "", -1)
+// 	txhandle = strings.Replace(string(txhandle), "]", "", -1)
+// 	txhandle = strings.Replace(string(txhandle), "}", "", -1)
+// 	txs := strings.Split(string(txhandle), ",")
+// 	txmap := make(map[string]string)
 	
-	for _ , t := range txs {
-		tsplit := strings.Split(string(t), ":")
-		txmap[tsplit[0]] = tsplit[1]
-	}
-	return txmap
+// 	for _ , t := range txs {
+// 		tsplit := strings.Split(string(t), ":")
+// 		txmap[tsplit[0]] = tsplit[1]
+// 	}
+// 	return txmap
 }
 
-func logTx(funcname string, txmap map[string]string){
-	lib.Log.Debug(funcname+" starts Debug...")
-	lib.Log.Debug("Transaction ID: "+txmap["ID"])
-	lib.Log.Debug("Transaction Type: "+txmap["Flag"])
-	lib.Log.Debug("TimeLock: "+txmap["TimeLock"])
-	lib.Log.Debug("From: "+txmap["From"])
-	lib.Log.Debug("To: "+txmap["To"])
-	lib.Log.Debug("Deposit Coins: "+txmap["Coin"])
-	lib.Log.Debug("Channel Version: "+txmap["NCommit"])
-	lib.Log.Debug("Secret T: "+txmap["SecretT"])
-	lib.Log.Debug("Sig: "+txmap["Sig"])
-	lib.Log.Debug(funcname+" ends Debug...")
-}
+// func logTx(funcname string, txmap map[string]string){
+// 	lib.Log.Debug(funcname+" starts Debug...")
+// 	lib.Log.Debug("Transaction ID: "+txmap["ID"])
+// 	lib.Log.Debug("Transaction Type: "+txmap["Flag"])
+// 	lib.Log.Debug("TimeLock: "+txmap["TimeLock"])
+// 	lib.Log.Debug("From: "+txmap["From"])
+// 	lib.Log.Debug("To: "+txmap["To"])
+// 	lib.Log.Debug("Deposit Coins: "+txmap["Coin"])
+// 	lib.Log.Debug("Channel Version: "+txmap["NCommit"])
+// 	lib.Log.Debug("Secret T: "+txmap["SecretT"])
+// 	lib.Log.Debug("Sig: "+txmap["Sig"])
+// 	lib.Log.Debug(funcname+" ends Debug...")
+// }
 
 
-func has(strs []string, str string, index string) (string, bool) {
-	for _,t := range strs{
-		txmap := txHandle(t)
-		// lib.Log.Notice(t)
-		// lib.Log.Notice(str+ "==?" +txmap[index])
-		if str == txmap[index] {
-			return t, true
-		}
-	}
-	return "",false
-}
+// func has(strs []string, str string, index string) (string, bool) {
+// 	for _,t := range strs{
+// 		txmap := lib.txHandle(t)
+// 		// lib.Log.Notice(t)
+// 		// lib.Log.Notice(str+ "==?" +txmap[index])
+// 		if str == txmap[index] {
+// 			return t, true
+// 		}
+// 	}
+// 	return "",false
+// }
 
-func FundingTxVerify(tx map[string]string) bool {
-	if tx["Flag"] == "FundingTx"{
-		coin,_ := strconv.Atoi(tx["Coin"])
-		if coin <= 0 {
-			lib.Log.Warning("Your Funding Transaction is not valid")
-			lib.Log.Warning(tx["From"]+" deposits coin is: "+ tx["Coin"] + ". The expected deposits in Funding Transaction is higher than 0.")
-			return false
-		}
-		lib.Log.Notice("Your Funding Transaction is recorded successfully!")
-		return true
-	}
-	return false
-}
-
-func TriggerTxVerify(app *TimelockApplication, tx map[string]string, f *os.File) bool {
-	if tx["Flag"] == "TriggerTx"{
-		var chunk []byte
-		buf := make([]byte, 1024)
-
-		for {
-			//从file读取到buf中
-			n, err := f.Read(buf)
-			if err != nil && err != io.EOF{
-				fmt.Println("read buf fail", err)
-				return false
-			}
-			//说明读取结束
-			if n == 0 {
-				break
-			}
-			//读取到最终的缓冲区中
-			chunk = append(chunk, buf[:n]...)
-		}
-
-		lib.Log.Notice(string(chunk))
-		txs := strings.Split(string(chunk), "***")
-		// from := tx["From"]
-		// strconv.FormatInt(app.state.Tx.From, 10)
-		// lib.Log.Notice(txs)
-		
-
-		txstring, b := has(txs, tx["From"], "ID")
-		if !b {
-			lib.Log.Warning("Your Trigger Transaction is not valid")
-			return false
-		}
-		var txarray []string
-		txarray = append(txarray, txstring)
-		if _, b = has(txarray, "FundingTx", "Flag"); !b {
-			lib.Log.Warning("Your Trigger Transaction is not valid")
-			return false
-		}
-
-			lib.Log.Notice("Your Trigger Transaction is recorded successfully!")
-			return true
-	}
-	return false
-}
-
-func SettlementTxVerify(app *TimelockApplication, tx map[string]string, f *os.File) bool {
-	if tx["Flag"] == "SettlementTx"{
-
-		var chunk []byte
-		buf := make([]byte, 1024)
-
-		for {
-			//从file读取到buf中
-			n, err := f.Read(buf)
-			if err != nil && err != io.EOF{
-				fmt.Println("read buf fail", err)
-				return false
-			}
-			//说明读取结束
-			if n == 0 {
-				break
-			}
-			//读取到最终的缓冲区中
-			chunk = append(chunk, buf[:n]...)
-		}
-
-		lib.Log.Notice(string(chunk))
-		txs := strings.Split(string(chunk), "***")
-		// from := strconv.FormatInt(app.state.Tx.From, 10)
-		
-
-		txstring, b := has(txs, tx["From"], "ID")
-		if !b {
-			lib.Log.Warning("Your Settlement Transaction is not valid")
-			return false
-		}
-		var txarray []string
-		txarray = append(txarray, txstring)
-		if txstring, b = has(txarray, "TriggerTx", "Flag"); !b {
-			lib.Log.Warning("Your Settlement Transaction is not valid")
-			return false
-		}
-		txmap := txHandle(txstring)
-		bh, _ := strconv.ParseUint(txmap["BlockHeight"],10,8)
-		tl, _ := strconv.ParseUint(txmap["TimeLock"],10,8)
-		nc, _ := strconv.ParseUint(txmap["NCommit"],10,8)
-		if app.state.Height <= uint8(bh)+uint8(tl) {
-			if app.state.Tx.NCommit > uint8(nc) { // 若另一方提供更高版本的NCommit
-				// 该交易owner(不同于TriggerTx的owner)可以拿走全部deposit
-				if app.state.Tx.Sig != txmap["Sig"]{
-					lib.Log.Notice("Your Settlement Transaction is recorded successfully!")
-					lib.Log.Notice("Settlement 1")
-					return true
-				}
-			} else { // 若另一方不提供更高版本的NCommit
-				// 验证t_alice
-				// 该交易owner(不同于triggerTx的owner)分配FundingTx中的钱给双方
-				if app.state.Tx.Sig != txmap["Sig"]{
-					lib.Log.Notice("Your Settlement Transaction is recorded successfully!")
-					lib.Log.Notice("Settlement 2")
-					return true
-				}
-			}
-		} else {
-			// 该交易owner(与TriggerTx的owner一致)可以拿走全部deposit
-			if app.state.Tx.Sig == txmap["Sig"]{
-				lib.Log.Notice("Your Settlement Transaction is recorded successfully!")
-				lib.Log.Notice("Settlement 3")
-				return true
-			}
-		}
-	}
-	lib.Log.Warning("Your Settlement Transaction is not valid")
-	return false
-}
 
 
 // -------------------------------------------------------------------
@@ -302,12 +173,12 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 	lib.Log.Debug("DeliverTx")
 	lib.Log.Notice(string(req.Tx))
 
-	txmap:= txHandle(string(req.Tx))
+	txmap:= lib.txHandle(string(req.Tx))
 
 	// lib.Log.Debug("app.state: ")
 	// lib.Log.Debug(app.state)
 	if txmap["Flag"] == "FundingTx" {
-		logTx("DeliverTx", txmap)
+		lib.logTx("DeliverTx", txmap)
 		statejson, _ := json.Marshal(app.state)
 		lib.Log.Debug(string(statejson))
 		if !FundingTxVerify(txmap) {
@@ -327,7 +198,7 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 		defer f.Close()
 
 	} else if txmap["Flag"] == "TriggerTx" {
-		logTx("DeliverTx", txmap)
+		lib.logTx("DeliverTx", txmap)
 		f, err := os.OpenFile("./log/timelock.db/timelock.txt", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0755)
 		if err != nil{
 			lib.Log.Warning("write timelock.txt error!")
@@ -344,7 +215,7 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 		lib.Log.Notice(txline)
 		defer f.Close()
 	} else if txmap["Flag"] == "SettlementTx" {
-		logTx("DeliverTx", txmap)
+		lib.logTx("DeliverTx", txmap)
 		f, err := os.OpenFile("./log/timelock.db/timelock.txt", os.O_RDWR|os.O_CREATE|os.O_APPEND, 0755)
 		if err != nil{
 			lib.Log.Warning("write timelock.txt error!")
@@ -405,7 +276,7 @@ func (app *TimelockApplication) Commit() types.ResponseCommit {
 	lib.Log.Debug("stateDBjson: "+string(stateDBjson))
 	statejson, errs := json.Marshal(app.state)
 	lib.Log.Debug("statejson: "+string(statejson))
-	clearTx(app)
+	clearStateTx(app)
 	if errs != nil {return types.ResponseCommit{}}
 	return types.ResponseCommit{Data: statejson}
 }

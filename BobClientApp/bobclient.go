@@ -37,8 +37,6 @@ func Execute(flag string, From int64, ChannelVersion uint8, Coins float64, Secre
 	go func() {
 		blocksNumber := 1                                     // how many blocks
 		transactionsPerBlock := 1                            // how many transactions in each block
-		// players := []string{"Lei", "Jack", "Pony", "Richard"} // 4 players
-		// random := rand.New(rand.NewSource(time.Now().UnixNano()))
 		json := jsoniter.ConfigCompatibleWithStandardLibrary
 		
 		for i := 0; i < blocksNumber; i++ {
@@ -56,24 +54,11 @@ func Execute(flag string, From int64, ChannelVersion uint8, Coins float64, Secre
 				}
 				transactions = append(transactions, tran)
 			}
-			// fmt.Printf("szm log transactions in go func()...: %s \n", transactions)
-			// fmt.Printf("szm log transactions type in go func()...: %T \n", transactions)
-
 			bytes, _ := json.Marshal(&transactions)
-			// fmt.Printf("szm log bytes in go func()...: ")
-			// fmt.Println(bytes)
 			data := strings.Replace(string(bytes), "\"", "'", -1)
-			// lib.Log.Notice("szm log data in go func()...:"+data)
-			// fmt.Printf("szm log data type in go func()...: %T \n", data)
-			// fmt.Printf("\n")
 
-			// tx := "id=" + lib.Int64ToString(tran.ID) + "&flag=" + tran.flag
 			tx := data
-			// fmt.Printf("szm log tx in go func()...: %s \n", tx)
-			// fmt.Printf("szm log tx type in go func()...: %T \n", tx)
-			
-			// tmAsync(tx)
-			// tmCommit(lib.Int64ToString(transactions[0].ID))
+
 			tmCommit(tx)
 		}
 	}()
