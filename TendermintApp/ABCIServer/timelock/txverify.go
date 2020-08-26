@@ -22,9 +22,9 @@ import (
 	// cmn "github.com/tendermint/tendermint/tmlibs/common"
 )
 
-func SigVerify() bool {}
+func SigVerify() bool {return true}
 
-func NCommitVerify() bool {}
+func NCommitVerify() bool {return true}
 
 func FundingTxVerify(tx map[string]string) bool {
 	if tx["Flag"] == "FundingTx"{
