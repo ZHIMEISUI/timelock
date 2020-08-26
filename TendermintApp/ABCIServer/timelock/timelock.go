@@ -118,7 +118,7 @@ func saveState(app *TimelockApplication) {
 // 		txmap[tsplit[0]] = tsplit[1]
 // 	}
 // 	return txmap
-}
+// }
 
 // func logTx(funcname string, txmap map[string]string){
 // 	lib.Log.Debug(funcname+" starts Debug...")
