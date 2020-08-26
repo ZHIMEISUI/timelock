@@ -67,7 +67,7 @@ func (t *Transaction) CreateTriggerTx(From int64, To string, Coin float32, NComm
 	t.TimeLock = 100
 	t.From = From
 	t.To = To
-	t.Coin = Coin
+	t.Coin = 0
 	t.NCommit = NCommit
 	t.Sig = Sig
 	lib.Log.Debug("Create Trigger Transaction:", t)
@@ -79,7 +79,7 @@ func (t *Transaction) CreateSettlementTx(From int64, To string, Coin float32, NC
 	t.Flag = "SettlementTx"
 	t.From = From
 	t.To = To
-	t.Coin = Coin
+	t.Coin = 0
 	t.NCommit = NCommit
 	t.SecretT = SecretT
 	t.Sig = Sig

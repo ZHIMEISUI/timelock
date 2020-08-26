@@ -22,6 +22,10 @@ import (
 	// cmn "github.com/tendermint/tendermint/tmlibs/common"
 )
 
+func SigVerify() bool {}
+
+func NCommitVerify() bool {}
+
 func FundingTxVerify(tx map[string]string) bool {
 	if tx["Flag"] == "FundingTx"{
 		coin,_ := strconv.Atoi(tx["Coin"])
