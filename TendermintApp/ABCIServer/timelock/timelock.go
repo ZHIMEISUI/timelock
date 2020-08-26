@@ -273,9 +273,9 @@ func (app *TimelockApplication) Commit() types.ResponseCommit {
 	saveState(app)
 
 	stateDBjson, _ := json.Marshal(app.state.DB)
-	lib.Log.Debug("stateDBjson: "+string(stateDBjson))
+	// lib.Log.Debug("stateDBjson: "+string(stateDBjson))
 	statejson, errs := json.Marshal(app.state)
-	lib.Log.Debug("statejson: "+string(statejson))
+	// lib.Log.Debug("statejson: "+string(statejson))
 	clearStateTx(app)
 	if errs != nil {return types.ResponseCommit{}}
 	return types.ResponseCommit{Data: statejson}
