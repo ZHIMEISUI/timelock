@@ -46,7 +46,7 @@ func Execute(flag string, From int64, ChannelVersion uint8, Coins float64, Secre
 
 			for j := 0; j < transactionsPerBlock; j++ {
 				if flag == "FundingTx"{
-					_, _ = tran.CreateFundingTx(From, "Alice&&Bob", float32(Coins), "BobSig")
+					_, _ = tran.CreateFundingTx(From, "Bob", float32(Coins), "BobSig")
 				}else if flag == "TriggerTx"{
 					_, _ = tran.CreateTriggerTx(From, "Alice&&Bob", float32(Coins), ChannelVersion, "BobSig")
 				}else if flag == "SettlementTx"{

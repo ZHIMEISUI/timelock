@@ -61,7 +61,6 @@ func loadState(db dbm.DB) State{
 func setStateTx(txmap map[string]string, app *TimelockApplication){
 	app.state.Tx.ID, _ = strconv.ParseInt(txmap["ID"], 10, 64)
 	app.state.Tx.Flag = txmap["Flag"]
-	// app.state.Tx.Height, _ = strconv.ParseUint(txmap["Height"], 10, 64)
 	app.state.Tx.From, _ = strconv.ParseInt(txmap["From"], 10, 64)
 	timelock,_ := strconv.ParseUint(txmap["TimeLock"], 10, 8)
 	app.state.Tx.TimeLock = uint8(timelock)
@@ -79,7 +78,6 @@ func setStateTx(txmap map[string]string, app *TimelockApplication){
 func clearStateTx(app *TimelockApplication)  {
 	app.state.Tx.ID, _ = strconv.ParseInt("", 10, 64)
 	app.state.Tx.Flag = ""
-	// app.state.Tx.Height, _ = strconv.ParseUint("", 10, 64)
 	timelock,_ := strconv.ParseUint("", 10, 8)
 	app.state.Tx.TimeLock = uint8(timelock)
 	app.state.Tx.From, _ = strconv.ParseInt("", 10, 64)
@@ -103,50 +101,6 @@ func saveState(app *TimelockApplication) {
 		panic(err)
 	}
 }
-
-// func txHandle(tx string) map[string]string {
-// 	txhandle := strings.Replace(tx, "'", "", -1)
-// 	txhandle = strings.Replace(string(txhandle), "{", "", -1)
-// 	txhandle = strings.Replace(string(txhandle), "[", "", -1)
-// 	txhandle = strings.Replace(string(txhandle), "]", "", -1)
-// 	txhandle = strings.Replace(string(txhandle), "}", "", -1)
-// 	txs := strings.Split(string(txhandle), ",")
-// 	txmap := make(map[string]string)
-	
-// 	for _ , t := range txs {
-// 		tsplit := strings.Split(string(t), ":")
-// 		txmap[tsplit[0]] = tsplit[1]
-// 	}
-// 	return txmap
-// }
-
-// func logTx(funcname string, txmap map[string]string){
-// 	lib.Log.Debug(funcname+" starts Debug...")
-// 	lib.Log.Debug("Transaction ID: "+txmap["ID"])
-// 	lib.Log.Debug("Transaction Type: "+txmap["Flag"])
-// 	lib.Log.Debug("TimeLock: "+txmap["TimeLock"])
-// 	lib.Log.Debug("From: "+txmap["From"])
-// 	lib.Log.Debug("To: "+txmap["To"])
-// 	lib.Log.Debug("Deposit Coins: "+txmap["Coin"])
-// 	lib.Log.Debug("Channel Version: "+txmap["NCommit"])
-// 	lib.Log.Debug("Secret T: "+txmap["SecretT"])
-// 	lib.Log.Debug("Sig: "+txmap["Sig"])
-// 	lib.Log.Debug(funcname+" ends Debug...")
-// }
-
-
-// func has(strs []string, str string, index string) (string, bool) {
-// 	for _,t := range strs{
-// 		txmap := lib.txHandle(t)
-// 		// lib.Log.Notice(t)
-// 		// lib.Log.Notice(str+ "==?" +txmap[index])
-// 		if str == txmap[index] {
-// 			return t, true
-// 		}
-// 	}
-// 	return "",false
-// }
-
 
 
 // -------------------------------------------------------------------
@@ -244,7 +198,6 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 				{Key:[]byte("Previous Transaction ID"), Value:[]byte(txmap["From"]), Index:true},
 				{Key:[]byte("Transaction ID"), Value:[]byte(txmap["ID"]), Index:true},
 				{Key:[]byte("Blockheight"), Value:[]byte(strconv.FormatUint(uint64(app.state.Height), 10)), Index:true},
-				// {Key:[]byte("From"), Value:[]byte(txmap["From"]), Index:true},
 				{Key:[]byte("To"), Value:[]byte(txmap["To"]), Index:true},
 				{Key:[]byte("TimeLock"), Value:[]byte(txmap["TimeLock"]), Index:true},
 				{Key:[]byte("Deposit Coins"), Value:[]byte(txmap["Coin"]), Index:true},
@@ -272,10 +225,7 @@ func (app *TimelockApplication) Commit() types.ResponseCommit {
 	app.state.Height++
 	saveState(app)
 
-	// stateDBjson, _ := json.Marshal(app.state.DB)
-	// lib.Log.Debug("stateDBjson: "+string(stateDBjson))
 	statejson, errs := json.Marshal(app.state)
-	// lib.Log.Debug("statejson: "+string(statejson))
 	clearStateTx(app)
 	if errs != nil {return types.ResponseCommit{}}
 	return types.ResponseCommit{Data: statejson}

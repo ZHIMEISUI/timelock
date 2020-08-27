@@ -40,14 +40,6 @@ var (
 	flagHeight int
 	flagProve  bool
 
-	// counter
-	// flagAddrC  string
-	// flagSerial bool
-
-	// dummy
-	// flagAddrD   string
-	// flagPersist string
-
 	// timelock
 	flagAddrT string
 	flagtimelock bool
