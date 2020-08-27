@@ -124,6 +124,11 @@ func SettlementTxVerify(app *TimelockApplication, tx map[string]string, f *os.Fi
 		tl, _ := strconv.ParseUint(txmap["TimeLock"],10,8)
 		nc, _ := strconv.ParseUint(txmap["NCommit"],10,8)
 		if app.state.Height <= uint8(bh)+uint8(tl) {
+
+			lib.Log.Notice(app.state.Tx.Sig)
+			lib.Log.Notice(txmap["Sig"])
+			lib.Log.Notice(app.state.Tx.NCommit)
+			lib.Log.Notice(nc)
 			if app.state.Tx.NCommit > uint8(nc) { // 若另一方提供更高版本的NCommit
 				// 该交易owner(不同于TriggerTx的owner)可以拿走全部deposit
 				if app.state.Tx.Sig != txmap["Sig"]{
