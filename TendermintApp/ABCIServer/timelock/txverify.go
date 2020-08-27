@@ -60,7 +60,7 @@ func TriggerTxVerify(app *TimelockApplication, tx map[string]string, f *os.File)
 			chunk = append(chunk, buf[:n]...)
 		}
 
-		lib.Log.Notice(string(chunk))
+		// lib.Log.Notice(string(chunk))
 		txs := strings.Split(string(chunk), "***")
 		
 
@@ -103,7 +103,7 @@ func SettlementTxVerify(app *TimelockApplication, tx map[string]string, f *os.Fi
 			chunk = append(chunk, buf[:n]...)
 		}
 
-		lib.Log.Notice(string(chunk))
+		// lib.Log.Notice(string(chunk))
 		txs := strings.Split(string(chunk), "***")
 		// from := strconv.FormatInt(app.state.Tx.From, 10)
 		
