@@ -138,6 +138,7 @@ func SettlementTxVerify(app *TimelockApplication, tx map[string]string, f *os.Fi
 			if uint8(stnc) > uint8(tgnc) { // 若另一方提供更高版本的NCommit
 				// 该交易owner(不同于TriggerTx的owner)可以拿走全部deposit
 				if tx["Sig"] != txmap["Sig"]{
+					lib.Log.Notice(tx["Sig"]+" provides a higher version and takes all coins.")
 					lib.Log.Notice("Your Settlement Transaction is recorded successfully!")
 					lib.Log.Notice("Settlement 1")
 					return true
@@ -149,7 +150,7 @@ func SettlementTxVerify(app *TimelockApplication, tx map[string]string, f *os.Fi
 				// 验证t_alice
 				// 该交易owner(不同于triggerTx的owner)分配FundingTx中的钱给双方
 				if tx["Sig"] != txmap["Sig"]{
-					lib.Log.Notice("Your Settlement Transaction is recorded successfully!")
+					lib.Log.Notice("Your Settlement Transaction is recorded successfully! Each party retrieves their funding coins.")
 					lib.Log.Notice("Settlement 2")
 					return true
 				}
@@ -160,6 +161,7 @@ func SettlementTxVerify(app *TimelockApplication, tx map[string]string, f *os.Fi
 		} else {
 			// 该交易owner(与TriggerTx的owner一致)可以拿走全部deposit
 			if tx["Sig"] == txmap["Sig"]{
+				lib.Log.Notice(tx["Sig"]+" fails to release his/her secret. So "+ txmap["Sig"]+" takes all coins.")
 				lib.Log.Notice("Your Settlement Transaction is recorded successfully!")
 				lib.Log.Notice("Settlement 3")
 				return true
