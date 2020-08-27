@@ -131,6 +131,7 @@ func SettlementTxVerify(app *TimelockApplication, tx map[string]string, f *os.Fi
 					lib.Log.Notice("Settlement 1")
 					return true
 				}
+				lib.Log.Warning("Settlement 1 failed")
 			} else { // 若另一方不提供更高版本的NCommit
 				// 验证t_alice
 				// 该交易owner(不同于triggerTx的owner)分配FundingTx中的钱给双方
@@ -139,6 +140,7 @@ func SettlementTxVerify(app *TimelockApplication, tx map[string]string, f *os.Fi
 					lib.Log.Notice("Settlement 2")
 					return true
 				}
+				lib.Log.Warning("Settlement 2 failed")
 			}
 		} else {
 			// 该交易owner(与TriggerTx的owner一致)可以拿走全部deposit
@@ -147,6 +149,7 @@ func SettlementTxVerify(app *TimelockApplication, tx map[string]string, f *os.Fi
 				lib.Log.Notice("Settlement 3")
 				return true
 			}
+			lib.Log.Warning("Settlement 3 failed")
 		}
 	}
 	lib.Log.Warning("Your Settlement Transaction is not valid")
