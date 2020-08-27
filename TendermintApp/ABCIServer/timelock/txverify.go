@@ -130,17 +130,13 @@ func SettlementTxVerify(app *TimelockApplication, tx map[string]string, f *os.Fi
 		stnc, _ := strconv.ParseUint(tx["NCommit"],10,8)
 
 		if uint8(stbh) <= uint8(tgbh)+uint8(tgtl) {
-
-			lib.Log.Notice(tx["Sig"])
-			lib.Log.Notice(txmap["Sig"])
-			lib.Log.Notice(stnc)
-			lib.Log.Notice(tgnc)
 			if uint8(stnc) > uint8(tgnc) { // 若另一方提供更高版本的NCommit
 				// 该交易owner(不同于TriggerTx的owner)可以拿走全部deposit
 				if tx["Sig"] != txmap["Sig"]{
+					lib.Log.Notice("Settlement Scenario 1")
 					lib.Log.Notice(tx["Sig"]+" provides a higher version and takes all coins.")
 					lib.Log.Notice("Your Settlement Transaction is recorded successfully!")
-					lib.Log.Notice("Settlement 1")
+					
 					return true
 				}
 				lib.Log.Warning(tx["Sig"])
@@ -150,8 +146,9 @@ func SettlementTxVerify(app *TimelockApplication, tx map[string]string, f *os.Fi
 				// 验证t_alice
 				// 该交易owner(不同于triggerTx的owner)分配FundingTx中的钱给双方
 				if tx["Sig"] != txmap["Sig"]{
+					lib.Log.Notice("Settlement Scenario 2")
 					lib.Log.Notice("Your Settlement Transaction is recorded successfully! Each party retrieves their funding coins.")
-					lib.Log.Notice("Settlement 2")
+					
 					return true
 				}
 				lib.Log.Warning(tx["Sig"])
@@ -161,9 +158,10 @@ func SettlementTxVerify(app *TimelockApplication, tx map[string]string, f *os.Fi
 		} else {
 			// 该交易owner(与TriggerTx的owner一致)可以拿走全部deposit
 			if tx["Sig"] == txmap["Sig"]{
+				lib.Log.Notice("Settlement Scenario 3")
 				lib.Log.Notice(tx["Sig"]+" fails to release his/her secret. So "+ txmap["Sig"]+" takes all coins.")
 				lib.Log.Notice("Your Settlement Transaction is recorded successfully!")
-				lib.Log.Notice("Settlement 3")
+				
 				return true
 			}
 			lib.Log.Warning(tx["Sig"])
