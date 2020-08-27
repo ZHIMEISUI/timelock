@@ -129,13 +129,13 @@ func SettlementTxVerify(app *TimelockApplication, tx map[string]string, f *os.Fi
 		stbh, _ := strconv.ParseUint(tx["BlockHeight"],10,8)
 		stnc, _ := strconv.ParseUint(tx["NCommit"],10,8)
 
-		if stbh <= uint8(tgbh)+uint8(tgtl) {
+		if uint8(stbh) <= uint8(tgbh)+uint8(tgtl) {
 
 			lib.Log.Notice(tx["Sig"])
 			lib.Log.Notice(txmap["Sig"])
 			lib.Log.Notice(stnc)
-			lib.Log.Notice(nc)
-			if stnc > uint8(tgnc) { // 若另一方提供更高版本的NCommit
+			lib.Log.Notice(tgnc)
+			if uint8(stnc) > uint8(tgnc) { // 若另一方提供更高版本的NCommit
 				// 该交易owner(不同于TriggerTx的owner)可以拿走全部deposit
 				if tx["Sig"] != txmap["Sig"]{
 					lib.Log.Notice("Your Settlement Transaction is recorded successfully!")
