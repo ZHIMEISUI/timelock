@@ -119,46 +119,52 @@ func SettlementTxVerify(app *TimelockApplication, tx map[string]string, f *os.Fi
 			lib.Log.Warning("Your Settlement Transaction is not valid")
 			return false
 		}
+		// previous/trigger tx info
 		txmap := lib.TxHandle(txstring)
-		bh, _ := strconv.ParseUint(txmap["BlockHeight"],10,8)
-		tl, _ := strconv.ParseUint(txmap["TimeLock"],10,8)
-		nc, _ := strconv.ParseUint(txmap["NCommit"],10,8)
-		if app.state.Height <= uint8(bh)+uint8(tl) {
+		tgbh, _ := strconv.ParseUint(txmap["BlockHeight"],10,8)
+		tgtl, _ := strconv.ParseUint(txmap["TimeLock"],10,8)
+		tgnc, _ := strconv.ParseUint(txmap["NCommit"],10,8)
 
-			lib.Log.Notice(app.state.Tx.Sig)
+		//this settlement tx info
+		stbh, _ := strconv.ParseUint(tx["BlockHeight"],10,8)
+		stnc, _ := strconv.ParseUint(tx["NCommit"],10,8)
+
+		if stbh <= uint8(tgbh)+uint8(tgtl) {
+
+			lib.Log.Notice(tx["Sig"])
 			lib.Log.Notice(txmap["Sig"])
-			lib.Log.Notice(app.state.Tx.NCommit)
+			lib.Log.Notice(stnc)
 			lib.Log.Notice(nc)
-			if app.state.Tx.NCommit > uint8(nc) { // 若另一方提供更高版本的NCommit
+			if stnc > uint8(tgnc) { // 若另一方提供更高版本的NCommit
 				// 该交易owner(不同于TriggerTx的owner)可以拿走全部deposit
-				if app.state.Tx.Sig != txmap["Sig"]{
+				if tx["Sig"] != txmap["Sig"]{
 					lib.Log.Notice("Your Settlement Transaction is recorded successfully!")
 					lib.Log.Notice("Settlement 1")
 					return true
 				}
-				lib.Log.Warning(app.state.Tx.Sig)
+				lib.Log.Warning(tx["Sig"])
 				lib.Log.Warning(txmap["Sig"])
 				lib.Log.Warning("Settlement 1 failed")
 			} else { // 若另一方不提供更高版本的NCommit
 				// 验证t_alice
 				// 该交易owner(不同于triggerTx的owner)分配FundingTx中的钱给双方
-				if app.state.Tx.Sig != txmap["Sig"]{
+				if tx["Sig"] != txmap["Sig"]{
 					lib.Log.Notice("Your Settlement Transaction is recorded successfully!")
 					lib.Log.Notice("Settlement 2")
 					return true
 				}
-				lib.Log.Warning(app.state.Tx.Sig)
+				lib.Log.Warning(tx["Sig"])
 				lib.Log.Warning(txmap["Sig"])
 				lib.Log.Warning("Settlement 2 failed")
 			}
 		} else {
 			// 该交易owner(与TriggerTx的owner一致)可以拿走全部deposit
-			if app.state.Tx.Sig == txmap["Sig"]{
+			if tx["Sig"] == txmap["Sig"]{
 				lib.Log.Notice("Your Settlement Transaction is recorded successfully!")
 				lib.Log.Notice("Settlement 3")
 				return true
 			}
-			lib.Log.Warning(app.state.Tx.Sig)
+			lib.Log.Warning(tx["Sig"])
 			lib.Log.Warning(txmap["Sig"])
 			lib.Log.Warning("Settlement 3 failed")
 		}
