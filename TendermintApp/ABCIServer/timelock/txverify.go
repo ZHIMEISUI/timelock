@@ -131,6 +131,8 @@ func SettlementTxVerify(app *TimelockApplication, tx map[string]string, f *os.Fi
 					lib.Log.Notice("Settlement 1")
 					return true
 				}
+				lib.Log.Warning(app.state.Tx.Sig)
+				lib.Log.Warning(txmap["Sig"])
 				lib.Log.Warning("Settlement 1 failed")
 			} else { // 若另一方不提供更高版本的NCommit
 				// 验证t_alice
@@ -140,6 +142,8 @@ func SettlementTxVerify(app *TimelockApplication, tx map[string]string, f *os.Fi
 					lib.Log.Notice("Settlement 2")
 					return true
 				}
+				lib.Log.Warning(app.state.Tx.Sig)
+				lib.Log.Warning(txmap["Sig"])
 				lib.Log.Warning("Settlement 2 failed")
 			}
 		} else {
@@ -149,6 +153,8 @@ func SettlementTxVerify(app *TimelockApplication, tx map[string]string, f *os.Fi
 				lib.Log.Notice("Settlement 3")
 				return true
 			}
+			lib.Log.Warning(app.state.Tx.Sig)
+			lib.Log.Warning(txmap["Sig"])
 			lib.Log.Warning("Settlement 3 failed")
 		}
 	}
