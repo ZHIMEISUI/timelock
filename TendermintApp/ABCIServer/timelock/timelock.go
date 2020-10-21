@@ -19,6 +19,7 @@ import (
 	dbm "github.com/tendermint/tm-db"
 	"github.com/tendermint/tendermint/abci/types"
 	"github.com/tendermint/tendermint/abci/example/code"
+	sdk "github.com/cosmos/cosmos-sdk/types"
 	// cmn "github.com/tendermint/tendermint/tmlibs/common"
 )
 
@@ -207,6 +208,17 @@ func (app *TimelockApplication) DeliverTx(req types.RequestDeliverTx) types.Resp
 			},
 		},
 	}
+
+	// add block gas meter
+	var gasMeter sdk.GasMeter
+	if maxGas := app.getMaximumBlockGas(app.deliverState.ctx); maxGas > 0 {
+		gasMeter = sdk.NewGasMeter(maxGas)
+	} else {
+		gasMeter = sdk.NewInfiniteGasMeter()
+	}
+
+	// app.deliverState.ctx = app.deliverState.ctx.WithBlockGasMeter(gasMeter)
+	lib.Log.Notice("GasMeter", gasMeter)
 	return types.ResponseDeliverTx{Code: code.CodeTypeOK, Events: events}
 }
 

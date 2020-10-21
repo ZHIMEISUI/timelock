@@ -1,5 +1,0 @@
-package bench
-
-// import (
-// 	"testing"
-// )

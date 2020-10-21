@@ -9,6 +9,7 @@
 //
 // These functions are also compatible with the “Ed25519” function defined in
 // RFC 8032.
+
 package ed25519
 
 // This code is a port of the public domain, “ref10” implementation of ed25519
@@ -23,7 +24,8 @@ import (
 	"io"
 	"strconv"
 
-	"github.com/HyperspaceApp/ed25519/internal/edwards25519"
+	// "github.com/HyperspaceApp/ed25519/internal/edwards25519"
+	"edwards25519"
 )
 
 const (
@@ -144,10 +146,10 @@ func GenerateKey(rand io.Reader) (publicKey PublicKey, privateKey PrivateKey, er
 	privateKey = make([]byte, PrivateKeySize)
 	publicKey = make([]byte, PublicKeySize)
 	_, err = io.ReadFull(rand, privateKey[:32])
+	fmt.Printf("  %s %s\n", "privateKey[:32]:    		", hex.EncodeToString(privateKey[:32]))
 	if err != nil {
 		return nil, nil, err
 	}
-
 	// https://tools.ietf.org/html/rfc8032#page-13
 	// Prune the buffer: The lowest three bits of the first octet are
 	// cleared, the highest bit of the last octet is cleared, and the

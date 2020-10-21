@@ -1,10 +1,11 @@
 // Copyright 2016 The Go Authors
 // Copyright 2018 The Hyperspace Developers
 // All rights reserved.
-// Use of this source code is governed by a BSD-style
+// Use off this source code is governed by a BSD-style
 // license that can be found in the LICENSE file.
 
 package ed25519
+
 
 import (
 	"bufio"
@@ -18,7 +19,8 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/HyperspaceApp/ed25519/internal/edwards25519"
+	// "github.com/HyperspaceApp/ed25519/internal/edwards25519"
+	"edwards25519"
 )
 
 type zeroReader struct{}
